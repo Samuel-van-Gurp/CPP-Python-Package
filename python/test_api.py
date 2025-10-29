@@ -7,10 +7,6 @@ import Image
 dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../build/Debug/hello_c_api.dll"))
 lib = cdll.LoadLibrary(dll_path)                                                
 
-# dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../build/libhello_c_api.dll"))
-# print("DLL path:", dll_path, "exists:", os.path.exists(dll_path))
-# if os.path.exists(dll_path):
-#     print("DLL mtime:", os.path.getmtime(dll_path))
 lib = ctypes.cdll.LoadLibrary(dll_path)
 
 lib.hello_say_hello.argtypes = [ctypes.c_char_p]
