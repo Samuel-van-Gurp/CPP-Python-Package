@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 #ifdef __cplusplus // if this is compiled by a C++ compiler
   extern "C" { // tell the C++ compiler to treat the following code as C code
@@ -19,6 +20,8 @@ EXPORT_API const char* hello_get_message(void);
 
 // Prints a greeting to the console
 EXPORT_API void hello_say_hello(const char* name);
+
+EXPORT_API void transverImage(const uint8_t *data, int width, int height, int stride);
 
 #ifdef __cplusplus
 }
