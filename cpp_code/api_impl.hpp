@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "Image.hpp"
+#include "cpp_code/DataObjects/Image.hpp"
 
 #ifdef __cplusplus
 extern "C" {
