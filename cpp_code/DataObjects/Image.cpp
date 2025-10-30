@@ -1,11 +1,13 @@
 #include "Image.hpp"
+#include "Point.hpp"
 
 Image::Image(const uint8_t *data, int width, int height, int stride)
-    : m_data(data), m_width(width), m_height(height), m_stride(stride)
+    : m_width(width), m_height(height), m_stride(stride)
 {
-    ReconstructImage();
-    BlurImage(5);
+    ReconstructImage(data);
+    BlurImage(8);
     ConstructImageGradient();
+    BlurImage(3);
     normaliseImageIntensity();
 }
 
@@ -31,15 +33,37 @@ void Image::normaliseImageIntensity()
     }
 }
 
+
+
+int Image::GetWidth() const
+{
+    return m_width;
+}
+
+int Image::GetHeight() const
+{
+    return m_height;
+}
+
+const std::vector<std::vector<uint8_t>>& Image::GetImageVector() const
+{
+    return m_image;
+}
+
+Point Image::GetCenter() const
+{
+    return Point(m_width / 2, m_height / 2);
+}   
+
 // convert the image back to vector of vectors
-void Image::ReconstructImage()
+void Image::ReconstructImage(const uint8_t *data)
 {
     m_image.resize(m_height, std::vector<uint8_t>(m_width));
     for (int y = 0; y < m_height; ++y)
     {
         for (int x = 0; x < m_width; ++x)
         {
-            m_image[y][x] = m_data[y * m_stride + x];
+            m_image[y][x] = data[y * m_stride + x];
         }
     }
 }
@@ -107,89 +131,15 @@ void Image::BlurImage(int blurAmount)
     m_image = std::move(blurredImage);
 }
 
-// function save intermediate image as PGM file, for debugging purpose
-void Image::SaveAsPGM()
+std::vector<std::vector<uint8_t>> Image::scaleIntensity(int factor) const
 {
-    // Validate input
-    if (!m_data) {
-        std::cerr << "SaveAsPGM error: m_data is null\n";
-        return;
-    }
-    if (m_width <= 0 || m_height <= 0) {
-        std::cerr << "SaveAsPGM error: invalid dimensions (w=" << m_width
-                  << " h=" << m_height << ")\n";
-        return;
-    }
-    if (static_cast<int>(m_image.size()) != m_height) {
-        std::cerr << "SaveAsPGM error: m_image height mismatch (" << m_image.size() << " != " << m_height << ")\n";
-        return;
-    }
-
-    std::string filename = "C:\\Users\\svangurp\\Desktop\\CPP_PY_package\\DebugImage\\gradient.pgm";
-
-    // Build a single contiguous buffer from m_image (removes any row-fragmentation issues)
-    std::vector<uint8_t> buffer;
-    buffer.reserve(static_cast<size_t>(m_width) * static_cast<size_t>(m_height));
-    for (int y = 0; y < m_height; ++y) {
-        if (static_cast<int>(m_image[y].size()) < m_width) {
-            std::cerr << "SaveAsPGM error: m_image row " << y << " too small (" << m_image[y].size() << ")\n";
-            return;
+    std::vector<std::vector<uint8_t>> scaledImage = m_image;
+    for (auto& row : scaledImage)
+    {
+        for (auto& pixel : row)
+        {
+            pixel = static_cast<uint8_t>(std::clamp(static_cast<int>(pixel) / factor, 0, 255));
         }
-        buffer.insert(buffer.end(), m_image[y].begin(), m_image[y].begin() + m_width);
     }
-
-    // debug: range check
-    uint8_t minv = 255, maxv = 0;
-    for (uint8_t v : buffer) { if (v < minv) minv = v; if (v > maxv) maxv = v; }
-    std::cout << "SaveAsPGM: writing buffer (w=" << m_width << " h=" << m_height << ") min=" << int(minv) << " max=" << int(maxv) << "\n";
-
-    std::ofstream out(filename, std::ios::binary | std::ios::trunc);
-    if (!out.is_open()) {
-        std::cerr << "SaveAsPGM error: failed to open '" << filename << "' for writing\n";
-        return;
-    }
-
-    out << "P5\n" << m_width << " " << m_height << "\n255\n";
-    out.write(reinterpret_cast<const char*>(buffer.data()), static_cast<std::streamsize>(buffer.size()));
-    out.close();
-
-    if (!out) {
-        std::cerr << "SaveAsPGM error: write failed\n";
-        return;
-    }
-
-    // validate file size matches expected bytes (header + data)
-    std::ifstream in(filename, std::ios::binary);
-    if (!in.is_open()) {
-        std::cerr << "SaveAsPGM error: cannot re-open '" << filename << "' for validation\n";
-        return;
-    }
-
-    // read header (skip comments), then compute remaining bytes
-    std::string magic;
-    in >> magic;
-    if (magic != "P5") {
-        std::cerr << "SaveAsPGM validation: unexpected magic '" << magic << "'\n";
-        in.close();
-        return;
-    }
-    int w = 0, h = 0, maxv_read = 0;
-    in >> w >> h >> maxv_read;
-    // consume single whitespace char after header (per PGM spec)
-    in.get();
-
-    std::streampos pos = in.tellg();
-    in.seekg(0, std::ios::end);
-    std::streamoff fileSize = in.tellg();
-    std::streamoff dataBytes = fileSize - pos;
-    in.close();
-
-    std::streamoff expected = static_cast<std::streamoff>(w) * static_cast<std::streamoff>(h);
-    if (dataBytes != expected) {
-        std::cerr << "SaveAsPGM validation FAILED: data bytes=" << dataBytes << " expected=" << expected << "\n";
-    } else {
-        std::cout << "SaveAsPGM validation OK: wrote " << dataBytes << " bytes\n";
-    }
-
-    std::cout << "Image saved as " << filename << " (w=" << m_width << " h=" << m_height << " stride=" << m_stride << ")\n";
+    return scaledImage;
 }
