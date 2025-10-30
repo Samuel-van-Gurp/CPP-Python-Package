@@ -1,4 +1,4 @@
-#include "contour.hpp"
+#include "Contour.hpp"
 
 Contour::Contour(int radius, Point center, int numPoints)
     : m_radius(radius), m_center(center), m_numPoints(numPoints)
@@ -16,3 +16,5 @@ void Contour::FillContourPoints()
         m_ContourPoints.emplace_back(x, y);
     }
 }
+
+Point& Contour::operator[](std::size_t idx) { return m_ContourPoints.at(idx); }

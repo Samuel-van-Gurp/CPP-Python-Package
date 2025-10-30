@@ -17,4 +17,7 @@ class Contour
     std::vector<Point> m_ContourPoints;
 
     void FillContourPoints();
+
+    public:
+        Point& operator[](std::size_t idx);
 };
