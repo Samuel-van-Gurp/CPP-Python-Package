@@ -6,6 +6,11 @@ Contour::Contour(int radius, Point center, int numPoints)
     FillContourPoints();
 }
 
+int Contour::Size() const
+{
+    return m_numPoints;
+}
+
 void Contour::FillContourPoints()
 {
     for (int i = 0; i < m_numPoints; ++i)
@@ -18,3 +23,4 @@ void Contour::FillContourPoints()
 }
 
 Point& Contour::operator[](std::size_t idx) { return m_ContourPoints.at(idx); }
+const Point& Contour::operator[](std::size_t idx) const { return m_ContourPoints.at(idx); }
