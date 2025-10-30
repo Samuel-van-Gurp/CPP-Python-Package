@@ -27,7 +27,7 @@ class Image:
         self.image = self.image.convert("L")
         print("Processed image: converted to grayscale")
 
-    def downSapleImage(self, factor):
+    def downsampleImage(self, factor):
         if self.image is None:
             print("No image to downsample")
             return
