@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "../cpp_code/api_impl.hpp"
+#include "cpp_code/api_impl.hpp"
 #include "api.h"
 
 // ______ test calls ______
