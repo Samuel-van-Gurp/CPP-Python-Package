@@ -53,7 +53,37 @@ const std::vector<std::vector<uint8_t>>& Image::GetImageVector() const
 Point Image::GetCenter() const
 {
     return Point(m_width / 2, m_height / 2);
-}   
+}
+
+Point Image::GetCoordinateOfHighestValueDirection(const Point &p) const
+{
+    // get the highest gradient direction around point p (8 connectivity)
+    uint8_t maxGradient = 0;
+    if (p.X >= 0 && p.X < m_width && p.Y >= 0 && p.Y < m_height)
+    {
+        maxGradient = m_image[p.Y][p.X];
+    }
+    Point bestPoint = p;
+    for (int dy = -1; dy <= 1; ++dy)
+    {
+        for (int dx = -1; dx <= 1; ++dx)
+        {
+            if (dx == 0 && dy == 0) continue; // skip the center point
+            int nx = p.X + dx;
+            int ny = p.Y + dy;
+            if (nx >= 0 && nx < m_width && ny >= 0 && ny < m_height)
+            {
+                uint8_t gradientValue = m_image[ny][nx];
+                if (gradientValue > maxGradient)
+                {
+                    maxGradient = gradientValue;
+                    bestPoint = Point(nx, ny);
+                }
+            }
+        }
+    }
+    return bestPoint;
+}
 
 // convert the image back to vector of vectors
 void Image::ReconstructImage(const uint8_t *data)

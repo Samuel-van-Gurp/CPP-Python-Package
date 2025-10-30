@@ -21,6 +21,8 @@ public:
     const std::vector<std::vector<uint8_t>>& GetImageVector() const;
     Point GetCenter() const;
 
+    Point GetCoordinateOfHighestValueDirection(const Point& p) const;
+
 private:
     int m_width;
     int m_height;
