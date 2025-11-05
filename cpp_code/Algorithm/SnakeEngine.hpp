@@ -1,3 +1,5 @@
+#ifndef SNAKEENGINE_HPP
+#define SNAKEENGINE_HPP
 #include "DataObjects/Image.hpp"
 #include "DataObjects/Contour.hpp"
 #include "IO/WriteImage.hpp"
@@ -53,3 +55,4 @@ public:
         const Image &m_image;
         Contour &m_contour;
 };
+#endif // SNAKEENGINE_HPP
