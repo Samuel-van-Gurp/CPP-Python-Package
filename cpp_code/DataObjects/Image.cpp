@@ -10,9 +10,9 @@ Image::Image(const uint8_t *data, int width, int height, int stride)
 
 void Image::PrepImage()
 {
-    BlurImage(8);
+    BlurImage(8999999);
     ComputeGradientMagnitude();
-    BlurImage(3);
+    BlurImage(399999);
     normaliseImageIntensity();
 }
 
@@ -211,40 +211,24 @@ void Image::ComputeGradientMagnitude()
     }
 }
 
-void Image::BlurImage(int blurAmount)
+void Image::BlurImage(int blurAmount) // todo: either remove argument or use it!
 {
-    // Take vector of vectors m_image and apply a simple box blur with the given blurAmount
-    std::vector<std::vector<uint8_t>> blurredImage = m_image;
-    int kernelSize = 2 * blurAmount + 1;
-    int halfKernel = blurAmount;
-
-    for (int y = 0; y < m_height; ++y)
-    {
-        for (int x = 0; x < m_width; ++x)
-        {
-            int sum = 0;
-            int count = 0;
-
-            for (int ky = -halfKernel; ky <= halfKernel; ++ky)
-            {
-                for (int kx = -halfKernel; kx <= halfKernel; ++kx)
-                {
-                    int ny = y + ky;
-                    int nx = x + kx;
-                    if (ny >= 0 && ny < m_height && nx >= 0 && nx < m_width)
-                    {
-                        sum += m_image[ny][nx];
-                        count++;
-                    }
-                }
-            }
-
-            blurredImage[y][x] = static_cast<uint8_t>(sum / count);
-        }
-    }
-
-    m_image = std::move(blurredImage);
+    // Normalised gaussian kernel
+    std::vector<std::vector<float>> smallBlurKernel = {
+        { 1/16.0f, 2/16.0f, 1/16.0f },
+        { 2/16.0f, 4/16.0f, 2/16.0f },
+        { 1/16.0f, 2/16.0f, 1/16.0f }
+    };
+    std::vector<std::vector<float>> mediumBlurKernel = {
+        { 1/273.0f, 4/273.0f, 7/273.0f, 4/273.0f, 1/273.0f },
+        { 4/273.0f,16/273.0f,26/273.0f,16/273.0f, 4/273.0f },
+        { 7/273.0f,26/273.0f,41/273.0f,26/273.0f, 7/273.0f },
+        { 4/273.0f,16/273.0f,26/273.0f,16/273.0f, 4/273.0f },
+        { 1/273.0f, 4/273.0f, 7/273.0f, 4/273.0f, 1/273.0f }
+    };
+    ConvolveImage(mediumBlurKernel);
 }
+
 
 std::vector<std::vector<uint8_t>> Image::scaleIntensity(int factor) const
 {
