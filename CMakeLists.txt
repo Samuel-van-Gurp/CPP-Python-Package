@@ -17,6 +17,7 @@ add_library(hello_c_api SHARED C_API/api.cpp
                             cpp_code/DataObjects/Point.cpp
                             cpp_code/DataObjects/Contour.cpp
                             cpp_code/DataObjects/Image.cpp
+                            cpp_code/DataObjects/Force.cpp
                             cpp_code/IO/WriteImage.cpp
                             cpp_code/Algorithm/SnakeEngine.cpp )
 
@@ -26,8 +27,12 @@ target_compile_definitions(hello_c_api PRIVATE BUILDING_API)
 # testing 
 add_executable(runTests
     cpp_code/Tests/DataObjects_Test.cpp
+    cpp_code/Tests/Image_Test.cpp
+    cpp_code/Tests/SnakeEngine_Test.cpp
     cpp_code/DataObjects/Point.cpp
     cpp_code/DataObjects/Contour.cpp
+    cpp_code/DataObjects/Image.cpp
+    cpp_code/Algorithm/SnakeEngine.cpp
 )
 
 target_link_libraries(runTests
