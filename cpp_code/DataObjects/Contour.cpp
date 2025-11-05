@@ -38,16 +38,12 @@ float Contour::CurveEnergyAtPoint(int idx, Point newPoint) const
 {
     int left_index = (idx - 1 + m_numPoints) % m_numPoints;
     int right_index = (idx + 1) % m_numPoints;
-    int far_left_index = (idx - 2 + m_numPoints) % m_numPoints;
-    int far_right_index = (idx + 2) % m_numPoints;
+
     Point leftPoint = m_ContourPoints[left_index];
     Point rightPoint = m_ContourPoints[right_index];
-    Point farLeftPoint = m_ContourPoints[far_left_index];
-    Point farRightPoint = m_ContourPoints[far_right_index];
 
-    float fx = (farLeftPoint.X - 4 * leftPoint.X + 6 * newPoint.X - 4 * rightPoint.X + farRightPoint.X);
-    float fy = (farLeftPoint.Y - 4 * leftPoint.Y + 6 * newPoint.Y - 4 * rightPoint.Y + farRightPoint.Y);
-
+    float fx = (leftPoint.X - newPoint.X) - (newPoint.X - rightPoint.X);
+    float fy = (leftPoint.Y - newPoint.Y) - (newPoint.Y - rightPoint.Y);
     return (fx * fx) + (fy * fy);
 }
 
