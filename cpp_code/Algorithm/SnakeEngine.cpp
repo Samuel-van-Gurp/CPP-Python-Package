@@ -26,23 +26,23 @@ void SnakeEngine::EvolveContour()
         Point& p = m_contour[i];
 
         // get next step based on image gradient at point location
-        Point nextStep = getNextStep(p);
+        Point nextStep = getNextStep(i, p);
         newContour[i] = nextStep;
 
         // print initial and new point for debugging
-        // std::cout << "Point " << i << ": (" << p.X << ", " << p.Y << ") -> ("
-        //           << nextStep.X << ", " << nextStep.Y << ")\n";
+        std::cout << "Point " << i << ": (" << p.X << ", " << p.Y << ") -> ("
+                  << nextStep.X << ", " << nextStep.Y << ")\n";
 
     }
     // move new contour to the old contour
     m_contour = std::move(newContour);
 }
 
-Point SnakeEngine::getNextStep(Point& p)
+Point SnakeEngine::getNextStep(int index, Point& p)
 {
     // get internal and external energy matrices
-    auto InternalEnergyMatrix = constructInternalEnergyMatrix(p);
-    auto ExternalEnergyMatrix = constructTotalEnergyMatrix(p);
+    auto InternalEnergyMatrix = constructInternalEnergyMatrix(index, p);
+    auto ExternalEnergyMatrix = constructExternalEnergyMatrix(p);
 
     // combine energies
     std::vector<std::vector<uint8_t>> TotalEnergyMatrix(3, std::vector<uint8_t>(3, 0));
@@ -57,7 +57,7 @@ Point SnakeEngine::getNextStep(Point& p)
         }
     }
     // find minimum energy position
-    uint8_t minEnergy = 255;
+    uint8_t minEnergy = TotalEnergyMatrix[1][1];
     Point bestPoint = p;
     for (int dy = -1; dy <= 1; ++dy)    
     {
@@ -75,48 +75,32 @@ Point SnakeEngine::getNextStep(Point& p)
     return bestPoint;
 }
 
-std::vector<std::vector<uint8_t>> SnakeEngine::constructTotalEnergyMatrix(Point& p)
+std::vector<std::vector<uint8_t>> SnakeEngine::constructExternalEnergyMatrix(Point& p)
 {
+    // normalise external energy to 0-255    
     std::vector<std::vector<uint8_t>> ExternalEnergyMatrix = m_image.getNeighbourhood(p);
+    ExternalEnergyMatrix = normalizeEnergyMatrix(ExternalEnergyMatrix);
 
     return ExternalEnergyMatrix;
 }
 
-std::vector<std::vector<uint8_t>> SnakeEngine::constructInternalEnergyMatrix(Point& p)
+
+
+std::vector<std::vector<uint8_t>> SnakeEngine::constructInternalEnergyMatrix(int index, const Point& p)
 {
-    std::vector<std::vector<uint8_t>> InternalEnergyMatrix;
-    InternalEnergyMatrix.resize(3, std::vector<uint8_t>(3, 0));
+    std::vector<std::vector<float>> InternalEnergyMatrix(3, std::vector<float>(3, 0.0f));
 
-    // Collect all energy values to find min/max
-    std::vector<float> energies;
-    for (int dy = -1; dy <= 1; ++dy)
-    {
-        for (int dx = -1; dx <= 1; ++dx)
-        {
-            float tension = alpha * m_contour.TensionEnergyAtPoint(0, p);
-            float curve = beta * m_contour.CurveEnergyAtPoint(0, p);
-            // std::cout << "Tension: " << tension << ", Curve: " << curve << "\n";
-            energies.push_back(tension + curve);
-        }
-    }
-
-    // Find min and max
-    float minEnergy = *std::min_element(energies.begin(), energies.end());
-    float maxEnergy = *std::max_element(energies.begin(), energies.end());
-    float range = maxEnergy - minEnergy;
-    if (range == 0) range = 1; // avoid division by zero
-
-    // Fill matrix with normalized values
     int idx = 0;
     for (int dy = -1; dy <= 1; ++dy)
     {
         for (int dx = -1; dx <= 1; ++dx)
         {
-            float energy = energies[idx++];
-            uint8_t norm = static_cast<uint8_t>(255.0f * (energy - minEnergy) / range);
-            InternalEnergyMatrix[dy + 1][dx + 1] = norm;
+            Point candidatePoint(p.X + dx, p.Y + dy);
+            float tension = alpha * m_contour.TensionEnergyAtPoint(index, candidatePoint);
+            float curve = beta * m_contour.CurveEnergyAtPoint(index, candidatePoint);
+            InternalEnergyMatrix[dy + 1][dx + 1] = tension + curve;
         }
     }
 
-    return InternalEnergyMatrix;
+    return normalizeEnergyMatrix(InternalEnergyMatrix);
 }
