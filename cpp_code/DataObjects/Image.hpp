@@ -12,6 +12,7 @@ class Image
 {
 public:    
     Image(const uint8_t *data, int width, int height, int stride);
+    void PrepImage();
     std::vector<std::vector<uint8_t>> scaleIntensity(int factor) const;
     void normaliseImageIntensity();
 
@@ -23,13 +24,16 @@ public:
 
     Point GetCoordinateOfHighestValueDirection(const Point& p) const;
 
+    std::vector<std::vector<uint8_t>> getNeighbourhood(const Point &p) const;
+
 private:
     int m_width;
     int m_height;
     int m_stride;
     std::vector<std::vector<uint8_t>> m_image;
     void ReconstructImage(const uint8_t *data);
-    void ConstructImageGradient();
+    void ConvolveImage(const std::vector<std::vector<float>>& kernel, bool OnlyAbsoluteValues = true);
+    void ComputeGradientMagnitude();
     void BlurImage(int blurAmount);
 };
 

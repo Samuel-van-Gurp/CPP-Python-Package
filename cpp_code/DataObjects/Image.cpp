@@ -1,12 +1,17 @@
 #include "Image.hpp"
 #include "Point.hpp"
 
+
 Image::Image(const uint8_t *data, int width, int height, int stride)
     : m_width(width), m_height(height), m_stride(stride)
 {
     ReconstructImage(data);
+}
+
+void Image::PrepImage()
+{
     BlurImage(8);
-    ConstructImageGradient();
+    ComputeGradientMagnitude();
     BlurImage(3);
     normaliseImageIntensity();
 }
@@ -32,8 +37,6 @@ void Image::normaliseImageIntensity()
         }
     }
 }
-
-
 
 int Image::GetWidth() const
 {
@@ -85,6 +88,26 @@ Point Image::GetCoordinateOfHighestValueDirection(const Point &p) const
     return bestPoint;
 }
 
+std::vector<std::vector<uint8_t>> Image::getNeighbourhood(const Point &p) const
+{
+    std::vector<std::vector<uint8_t>> neighbourhood;
+    
+    neighbourhood.resize(3, std::vector<uint8_t>(3, 0));
+    for (int dy = -1; dy <= 1; ++dy)
+    {
+        for (int dx = -1; dx <= 1; ++dx)
+        {
+            int nx = p.X + dx;
+            int ny = p.Y + dy;
+            if (nx >= 0 && nx < m_width && ny >= 0 && ny < m_height)
+            {
+                neighbourhood[dy + 1][dx + 1] = m_image[ny][nx];
+            }
+        }
+    }
+    return neighbourhood;
+}
+
 // convert the image back to vector of vectors
 void Image::ReconstructImage(const uint8_t *data)
 {
@@ -98,32 +121,94 @@ void Image::ReconstructImage(const uint8_t *data)
     }
 }
 
-void Image::ConstructImageGradient()
+void Image::ConvolveImage(const std::vector<std::vector<float>>& kernel, bool OnlyAbsoluteValues)
 {
-    if (m_height <= 0 || m_width <= 0) return;
-    if (m_height < 3 || m_width < 3) {
-        // too small to compute central-difference gradient, leave as-is or zero
-        m_image.assign(m_height, std::vector<uint8_t>(m_width, 0));
-        return;
+    int kHeight = static_cast<int>(kernel.size());
+    int kWidth = static_cast<int>(kernel[0].size());
+    int kHalfHeight = kHeight / 2;
+    int kHalfWidth = kWidth / 2;
+
+    std::vector<std::vector<uint8_t>> convolvedImage(m_height, std::vector<uint8_t>(m_width, 0));
+
+    for (int y = 0; y < m_height; ++y)
+    {
+        for (int x = 0; x < m_width; ++x)
+        {
+            float sum = 0.0f;
+            for (int ky = -kHalfHeight; ky <= kHalfHeight; ++ky)
+            {
+                for (int kx = -kHalfWidth; kx <= kHalfWidth; ++kx)
+                {
+                    int ny = y + ky;
+                    int nx = x + kx;
+                    if (ny >= 0 && ny < m_height && nx >= 0 && nx < m_width)
+                    {
+                        sum += kernel[ky + kHalfHeight][kx + kHalfWidth] * m_image[ny][nx];
+                    }
+                }
+            }
+
+            sum = (OnlyAbsoluteValues) ? std::abs(sum) : sum;
+            convolvedImage[y][x] = static_cast<uint8_t>(std::clamp(static_cast<int>(sum), 0, 255));
+        }
     }
 
-    // Use a separate buffer so we don't overwrite source pixels while computing
-    const auto src = m_image; // copy of current image pixels
-    std::vector<std::vector<uint8_t>> grad(m_height, std::vector<uint8_t>(m_width, 0));
+    m_image = std::move(convolvedImage);
+}
 
+
+void Image::ComputeGradientMagnitude()
+{
+    // compute signed Sobel gradients directly into int buffers (preserve sign)
+    static const int kx[3][3] = {
+        { -1, 0, 1 },
+        { -2, 0, 2 },
+        { -1, 0, 1 }
+    };
+    static const int ky[3][3] = {
+        {  1,  2,  1 },
+        {  0,  0,  0 },
+        { -1, -2, -1 }
+    };
+
+    std::vector<std::vector<int>> gradX(m_height, std::vector<int>(m_width, 0));
+    std::vector<std::vector<int>> gradY(m_height, std::vector<int>(m_width, 0));
+
+    // compute signed gradients (avoid border pixels)
     for (int y = 1; y < m_height - 1; ++y)
     {
         for (int x = 1; x < m_width - 1; ++x)
         {
-            int gx = static_cast<int>(src[y][x + 1]) - static_cast<int>(src[y][x - 1]);
-            int gy = static_cast<int>(src[y + 1][x]) - static_cast<int>(src[y - 1][x]);
-            int magnitude = static_cast<int>(std::sqrt(static_cast<double>(gx * gx + gy * gy)));
-            if (magnitude > 255) magnitude = 255;
-            grad[y][x] = static_cast<uint8_t>(magnitude);
+            int sx = 0;
+            int sy = 0;
+            for (int ky_i = -1; ky_i <= 1; ++ky_i)
+            {
+                for (int kx_i = -1; kx_i <= 1; ++kx_i)
+                {
+                    int px = x + kx_i;
+                    int py = y + ky_i;
+                    int p = static_cast<int>(m_image[py][px]);
+                    sx += kx[ky_i + 1][kx_i + 1] * p;
+                    sy += ky[ky_i + 1][kx_i + 1] * p;
+                }
+            }
+            gradX[y][x] = sx;
+            gradY[y][x] = sy;
         }
     }
 
-    m_image = std::move(grad);
+    // combine signed gradients into magnitude and store as uint8_t
+    for (int y = 0; y < m_height; ++y)
+    {
+        for (int x = 0; x < m_width; ++x)
+        {
+            int gx = gradX[y][x];
+            int gy = gradY[y][x];
+            int magnitude = static_cast<int>(std::sqrt(static_cast<double>(gx * gx + gy * gy)));
+            int clamped = std::clamp(magnitude, 0, 255);
+            m_image[y][x] = static_cast<uint8_t>(255 - clamped);
+        }
+    }
 }
 
 void Image::BlurImage(int blurAmount)
