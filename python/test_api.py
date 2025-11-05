@@ -31,7 +31,7 @@ def send_grayscale_image_to_cpp(img: np.ndarray):
 lib.hello_get_message.restype = c_char_p
 lib.get_info_from_cpp.restype = None
 
-CoinImage = Image.Image("TestImage.png")
+CoinImage = Image.Image("StarImage.png")
 # CoinImage = Image.Image("coin.jpg")
 # CoinImage.downsampleImage(4)
 # CoinImage.show_image()
