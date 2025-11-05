@@ -21,9 +21,12 @@ private:
 
     void FillContourPoints();
 
-    public:
-        Point& operator[](std::size_t idx);
-        const Point& operator[](std::size_t idx) const;
+    
+public:
+    float TensionEnergyAtPoint(int idx, Point newPoint) const;
+    float CurveEnergyAtPoint(int idx, Point newPoint) const;
+    Point &operator[](std::size_t idx);
+    const Point &operator[](std::size_t idx) const;
 };
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
