@@ -20,6 +20,9 @@ public:
     // init from vector
     ImageHolder(std::vector<T> data, int width, int height);
 
+    template<typename U>
+    static ImageHolder<T> StaticFactoryTypeChanger(const U* data, int width, int height, int stride);
+
     int getWidth() const;
     int getHeight() const;
     Point getCenter() const;
@@ -46,6 +49,24 @@ template<typename T>
 ImageHolder<T>::ImageHolder(std::vector<T> data, int width, int height)
     : m_data(std::move(data)), m_width(width), m_height(height), m_stride(width)
 {
+}
+
+// use this static factory method to create ImageHolder from pointer to different data type
+template<typename T>
+template<typename U>
+ImageHolder<T> ImageHolder<T>::StaticFactoryTypeChanger(const U* data, int width, int height, int stride)
+{
+    std::vector<T> buffer;
+    buffer.reserve(static_cast<size_t>(height) * stride);
+    for (int y = 0; y < height; ++y)
+    {
+        const U* row = data + static_cast<size_t>(y) * stride;
+        for (int x = 0; x < stride; ++x)
+        {
+            buffer.push_back(static_cast<T>(row[x]));
+        }
+    }
+    return ImageHolder<T>(std::move(buffer), width, height);
 }
 
 // getters for image properties
