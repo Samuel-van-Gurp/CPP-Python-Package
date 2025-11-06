@@ -1,3 +1,6 @@
+#ifndef CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGEHOLDER_HPP
+#define CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGEHOLDER_HPP
+
 #include <cstdint>
 #include <vector>
 #include "Point.hpp"
@@ -20,12 +23,16 @@ public:
     int getWidth() const;
     int getHeight() const;
     Point getCenter() const;
+    std::vector<T>& getDataVector();
+    void setPixel(int x, int y, T value);
 
     T getPixel(const Point) const;
     T getPixel(int x, int y) const;
 
     // overload [] operator to access pixel values
     T operator[](const Point& p) const;
+
+    bool empty() const;
 };
 
 
@@ -60,6 +67,23 @@ Point ImageHolder<T>::getCenter() const
 }
 
 template<typename T>
+std::vector<T>& ImageHolder<T>::getDataVector()
+{
+    return m_data;
+}
+
+template<typename T>
+void ImageHolder<T>::setPixel(int x, int y, T value)
+{
+    m_data[y * m_stride + x] = value;
+}
+template<typename T>
+bool ImageHolder<T>::empty() const
+{
+    return m_data.empty();
+}
+
+template<typename T>
 T ImageHolder<T>::getPixel(const Point p) const
 {
     return m_data[p.Y * m_stride + p.X];
@@ -76,3 +100,6 @@ T ImageHolder<T>::operator[](const Point& p) const
 {
     return getPixel(p);
 }
+
+
+#endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGEHOLDER_HPP
