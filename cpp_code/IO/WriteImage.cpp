@@ -1,26 +1,27 @@
-#include "DataObjects/Image.hpp"
+#include "DataObjects/ImageProcessor.hpp"
 #include "WriteImage.hpp"
 
 WriteImage::WriteImage()
 {
 }
 
-void WriteImage::saveImage(const Image &image)
+void WriteImage::saveImage(const ImageHolder<uint8_t> &image)
 {
-    SaveAsPGM(image.GetImageVector());
+    SaveAsPGM(image);
 }
 
-void WriteImage::ContourOverLay(const Contour& contour, const Image &image) 
+void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<uint8_t> &image, const ImageProcessor &processor) 
 {
     // scale image intensity down to make the contour more visible
-    auto ImageCopy = image.scaleIntensity(2);
+    ImageHolder<uint8_t> ImageCopy = image;
+    processor.scaleIntensity(2, ImageCopy);
 
     for (size_t i = 0; i < contour.Size(); ++i)
     {
         const Point& pt = contour[i];
-        if (pt.Y >= 0 && pt.Y < image.GetHeight() && pt.X >= 0 && pt.X < image.GetWidth())
+        if (pt.Y >= 0 && pt.Y < image.getHeight() && pt.X >= 0 && pt.X < image.getWidth())
         {
-            ImageCopy[pt.Y][pt.X] = 255; // set contour pixel to white
+            ImageCopy.setPixel(pt.X, pt.Y, 255); // set contour pixel to white
         }
     }
 
@@ -29,35 +30,39 @@ void WriteImage::ContourOverLay(const Contour& contour, const Image &image)
 }
 
 // function save intermediate image as PGM file, for debugging purpose
-void WriteImage::SaveAsPGM(const std::vector<std::vector<uint8_t>>& image)
+void WriteImage::SaveAsPGM(const ImageHolder<uint8_t>& image)
 {
+    std::string filename = "C:\\Users\\svangurp\\Desktop\\CPP_PY_package\\DebugImage\\gradient.pgm";
     // Validate input image
     if (image.empty()) {
         std::cerr << "SaveAsPGM error: image is empty\n";
         return;
     }
-    int h = static_cast<int>(image.size());
-    int w = static_cast<int>(image[0].size());
+    int h = static_cast<int>(image.getHeight());
+    int w = static_cast<int>(image.getWidth());
     if (w <= 0 || h <= 0) {
         std::cerr << "SaveAsPGM error: invalid image dimensions (w=" << w << " h=" << h << ")\n";
         return;
     }
     for (int y = 0; y < h; ++y) {
-        if (static_cast<int>(image[y].size()) != w) {
+        if (static_cast<int>(image.getWidth()) != w) {
             std::cerr << "SaveAsPGM error: inconsistent row width at row " << y
-                      << " (expected " << w << ", got " << image[y].size() << ")\n";
+                      << " (expected " << w << ", got " << image.getWidth() << ")\n";
             return;
         }
     }
 
-    std::string filename = "C:\\Users\\svangurp\\Desktop\\CPP_PY_package\\DebugImage\\gradient.pgm";
-
     // Build a single contiguous buffer from image
     std::vector<uint8_t> buffer;
     buffer.reserve(static_cast<size_t>(w) * static_cast<size_t>(h));
-    for (int y = 0; y < h; ++y) {
-        buffer.insert(buffer.end(), image[y].begin(), image[y].begin() + w);
+    for (int y = 0; y < h; ++y) 
+    {
+        for (int x = 0; x < w; ++x) 
+        {
+            buffer.push_back(image.getPixel(x, y));
+        }
     }
+
 
     // debug: range check
     uint8_t minv = 255, maxv = 0;
