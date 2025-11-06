@@ -1,5 +1,5 @@
 #include "api_impl.hpp"
-#include "DataObjects/Image.hpp"
+#include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "DataObjects/Point.hpp"
 #include "IO/WriteImage.hpp"

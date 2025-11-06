@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <vector>
-#include "cpp_code/DataObjects/Image.hpp"
+#include "cpp_code/DataObjects/ImageProcessor.hpp"
 
 #ifdef __cplusplus
 extern "C" {
