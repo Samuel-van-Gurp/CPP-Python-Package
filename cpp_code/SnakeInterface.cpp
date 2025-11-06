@@ -3,7 +3,7 @@
 SnakeInterface::SnakeInterface(const uint8_t *data, int width, int height, int stride, float alpha, float beta)
     : m_ImageHolder(data, width, height, stride)
     , ImageProcessor()
-    , m_contour(m_ImageHolder.getWidth() / 5, m_ImageHolder.getCenter(), 50)
+    , m_contour(m_ImageHolder.getWidth() / 3, m_ImageHolder.getCenter(), 50)
     , m_engine(ImageProcessor, m_ImageHolder, m_contour, alpha, beta)
 {
     ImageProcessor.PrepImage(m_ImageHolder);

@@ -31,9 +31,9 @@ def send_grayscale_image_to_cpp(img: np.ndarray):
 lib.hello_get_message.restype = c_char_p
 lib.get_info_from_cpp.restype = None
 
-CoinImage = Image.Image("StarImage.png")
-# CoinImage = Image.Image("coin.jpg")
-# CoinImage.downsampleImage(4)
+# CoinImage = Image.Image("StarImage.png")
+CoinImage = Image.Image("coin.jpg")
+CoinImage.downsampleImage(6)
 # CoinImage.show_image()
 CoinArray = CoinImage.convert_to_numpy()
 # print("Numpy array shape:", CoinArray.shape)

@@ -15,7 +15,7 @@ int getHay() {
 void constructImage(const uint8_t *data, int width, int height, int stride)
 {
     SnakeInterface snakeInterface(data, width, height, stride, 1.0f, 0.01f);
-    snakeInterface.run(100);
+    snakeInterface.run(400);
 }
 
 int testFunction()
