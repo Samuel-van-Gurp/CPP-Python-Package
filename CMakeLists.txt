@@ -16,10 +16,9 @@ add_library(hello_c_api SHARED C_API/api.cpp
                             cpp_code/api_impl.cpp
                             cpp_code/DataObjects/Point.cpp
                             cpp_code/DataObjects/Contour.cpp
-                            cpp_code/DataObjects/Image.cpp
+                            cpp_code/DataObjects/ImageProcessor.cpp
                             cpp_code/IO/WriteImage.cpp
                             cpp_code/Algorithm/SnakeEngine.cpp
-                            cpp_code/DataObjects/ImageHolder.hpp
                             cpp_code/SnakeInterface.cpp)
 
 target_include_directories(hello_c_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,9 +31,9 @@ add_executable(runTests
     cpp_code/Tests/SnakeEngine_Test.cpp
     cpp_code/DataObjects/Point.cpp
     cpp_code/DataObjects/Contour.cpp
-    cpp_code/DataObjects/Image.cpp
+    cpp_code/DataObjects/ImageProcessor.cpp
     cpp_code/Algorithm/SnakeEngine.cpp
-    cpp_code/DataObjects/ImageHolder.hpp
+    
 )
 
 target_link_libraries(runTests
