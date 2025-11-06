@@ -1,6 +1,6 @@
 #ifndef SNAKEENGINE_HPP
 #define SNAKEENGINE_HPP
-#include "DataObjects/Image.hpp"
+#include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "IO/WriteImage.hpp"
 
@@ -8,7 +8,7 @@ class SnakeEngine
 {
 public:
 
-        SnakeEngine(const Image &image, Contour &contour, float alpha, float beta);
+        SnakeEngine(const ImageProcessor &image, const ImageHolder<uint8_t> &imageHolder, Contour &contour, float alpha, float beta);
 
         void RunSnake(int iterations);
 
@@ -52,7 +52,8 @@ public:
             return normMatrix;
         }
 
-        const Image &m_image;
+        const ImageProcessor &m_image;
+        const ImageHolder<uint8_t> &m_imageHolder;
         Contour &m_contour;
 };
 #endif // SNAKEENGINE_HPP

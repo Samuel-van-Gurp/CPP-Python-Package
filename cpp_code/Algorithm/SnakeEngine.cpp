@@ -1,7 +1,7 @@
 #include "SnakeEngine.hpp"
 
-SnakeEngine::SnakeEngine(const Image &image, Contour &contour, float alpha, float beta)
-    : m_image(image), m_contour(contour), alpha(alpha), beta(beta)  
+SnakeEngine::SnakeEngine(const ImageProcessor &image, const ImageHolder<uint8_t> &imageHolder, Contour &contour, float alpha, float beta)
+    : m_image(image), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
 
 }
@@ -77,8 +77,8 @@ Point SnakeEngine::getNextStep(int index, Point& p)
 
 std::vector<std::vector<uint8_t>> SnakeEngine::constructExternalEnergyMatrix(Point& p)
 {
-    // normalise external energy to 0-255    
-    std::vector<std::vector<uint8_t>> ExternalEnergyMatrix = m_image.getNeighbourhood(p);
+    // normalise external energy to 0-255
+    std::vector<std::vector<uint8_t>> ExternalEnergyMatrix = m_image.getNeighbourhood(p, m_imageHolder);
     ExternalEnergyMatrix = normalizeEnergyMatrix(ExternalEnergyMatrix);
 
     return ExternalEnergyMatrix;
