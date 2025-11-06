@@ -1,8 +1,9 @@
 #include <cstdint>
-#include "DataObjects/Image.hpp"
+#include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "Algorithm/SnakeEngine.hpp"
 #include "IO/WriteImage.hpp"
+#include "DataObjects/ImageHolder.hpp"
 
 class SnakeInterface
 {
@@ -13,8 +14,10 @@ public:
 
 private:
 
-    Image m_img;
+    ImageHolder<uint8_t> m_ImageHolder;
+    ImageProcessor ImageProcessor;
     Contour m_contour;
     SnakeEngine m_engine;
     WriteImage m_writer;
 };
+ 
