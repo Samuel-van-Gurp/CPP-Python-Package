@@ -36,6 +36,7 @@ void ImageProcessor::normaliseImageIntensity(ImageHolder<uint8_t>& img)
         {
             uint8_t v = img.getPixel(j, i);
             v = static_cast<uint8_t>(std::min(255.0, v * scale));
+            img.setPixel(j, i, v);
         }
     }
 }
