@@ -10,25 +10,29 @@
 #include <cmath>
 #include <algorithm>
 
+enum class BlurType { Small, Medium, Large };
+
 class ImageProcessor
 {
     public:    
     ImageProcessor();
-    void PrepImage(ImageHolder<uint8_t> &image);
-    void normaliseImageIntensity(ImageHolder<uint8_t> &img);
-    void scaleIntensity(int factor, ImageHolder<uint8_t> &image) const;
+    void PrepImage(ImageHolder<float> &image);
+    void normaliseImageIntensity(ImageHolder<float> &img);
+    void scaleIntensity(int factor, ImageHolder<float> &image) const;
 
-    Point GetCoordinateOfHighestValueDirection(const Point &p, const ImageHolder<uint8_t> &image) const;
-    std::vector<std::vector<uint8_t>> getNeighbourhood(const Point &p, const ImageHolder<uint8_t> &image) const;
+    void invertImageIntensity(ImageHolder<float> &image) const;
 
+    Point GetCoordinateOfMaximumNeighborValue(const Point &p, const ImageHolder<float> &image) const;
+    std::vector<std::vector<float>> getNeighbourhood(const Point &p, const ImageHolder<float> &image) const;
+
+    ImageHolder<float> ConvolveImage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
+
+    ImageHolder<float> ComputeGradientMagnitude(const ImageHolder<float> &image);
+
+    void BlurImage(BlurType blurType, ImageHolder<float> &image);
 
 private:
 
-    ImageHolder<uint8_t> ConvolveImage(const std::vector<std::vector<float>>& kernel, const ImageHolder<uint8_t> &image, bool OnlyAbsoluteValues);
-
-    ImageHolder<uint8_t> ComputeGradientMagnitude(const ImageHolder<uint8_t> &image);
-
-    void BlurImage(int blurAmount, ImageHolder<uint8_t> &image);
 };
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGE_HPP
