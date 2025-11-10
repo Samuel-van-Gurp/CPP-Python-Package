@@ -26,14 +26,12 @@ public:
     int getWidth() const;
     int getHeight() const;
     Point getCenter() const;
-    std::vector<T>& getDataVector();
+    const std::vector<T>& getDataVector() const;
+    T getMaxIntensityInImage() const;
     void setPixel(int x, int y, T value);
 
     T getPixel(const Point) const;
     T getPixel(int x, int y) const;
-
-    // overload [] operator to access pixel values
-    T operator[](const Point& p) const;
 
     bool empty() const;
 };
@@ -51,19 +49,24 @@ ImageHolder<T>::ImageHolder(std::vector<T> data, int width, int height)
 {
 }
 
-// use this static factory method to create ImageHolder from pointer to different data type
+
 template<typename T>
 template<typename U>
 ImageHolder<T> ImageHolder<T>::StaticFactoryTypeChanger(const U* data, int width, int height, int stride)
 {
-    std::vector<T> buffer;
-    buffer.reserve(static_cast<size_t>(height) * stride);
+    if (data == nullptr || width <= 0 || height <= 0 || stride < width)
+    {
+        return ImageHolder<T>(std::vector<T>(), 0, 0);
+    }
+
+    std::vector<T> buffer(static_cast<size_t>(width) * static_cast<size_t>(height));
+
     for (int y = 0; y < height; ++y)
     {
-        const U* row = data + static_cast<size_t>(y) * stride;
-        for (int x = 0; x < stride; ++x)
+        const U* row = data + static_cast<size_t>(y) * static_cast<size_t>(stride);
+        for (int x = 0; x < width; ++x)
         {
-            buffer.push_back(static_cast<T>(row[x]));
+            buffer[static_cast<size_t>(y) * static_cast<size_t>(width) + static_cast<size_t>(x)] = static_cast<T>(row[x]);
         }
     }
     return ImageHolder<T>(std::move(buffer), width, height);
@@ -88,14 +91,32 @@ Point ImageHolder<T>::getCenter() const
 }
 
 template<typename T>
-std::vector<T>& ImageHolder<T>::getDataVector()
+const std::vector<T>& ImageHolder<T>::getDataVector() const
 {
     return m_data;
+}
+
+template <typename T>
+inline T ImageHolder<T>::getMaxIntensityInImage() const
+{
+    T maxIntensity = m_data[0];
+    for (const T& value : m_data)
+    {
+        if (value > maxIntensity)
+        {
+            maxIntensity = value;
+        }
+    }
+    return maxIntensity;
 }
 
 template<typename T>
 void ImageHolder<T>::setPixel(int x, int y, T value)
 {
+    // bounds check
+    if (x < 0 || x >= m_width || y < 0 || y >= m_height) {
+        return;
+    }
     m_data[y * m_stride + x] = value;
 }
 template<typename T>
@@ -107,20 +128,23 @@ bool ImageHolder<T>::empty() const
 template<typename T>
 T ImageHolder<T>::getPixel(const Point p) const
 {
+    // bounds check
+    if (p.X < 0 || p.X >= m_width || p.Y < 0 || p.Y >= m_height) {
+        return T(0); // or throw an exception
+    }
+
     return m_data[p.Y * m_stride + p.X];
 }
 
 template<typename T>
 T ImageHolder<T>::getPixel(int x, int y) const
 {
+    // bounds check
+    if (x < 0 || x >= m_width || y < 0 || y >= m_height) {
+        return T(0); 
+    }
+
     return m_data[y * m_stride + x];
 }
-
-template<typename T>
-T ImageHolder<T>::operator[](const Point& p) const
-{
-    return getPixel(p);
-}
-
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGEHOLDER_HPP
