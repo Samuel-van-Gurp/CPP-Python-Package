@@ -26,6 +26,14 @@ EXPORT_API void get_info_from_cpp(void) {
 
 EXPORT_API void transverImage(const uint8_t* data, int width, int height, int stride) {
     printf("transverImage called\n");
+    printf("transverImage: width=%d height=%d stride=%d\n", width, height, stride);
+    // print first up-to-10 bytes of the first row (guard width)
+    int show = width < 10 ? width : 10;
+    if (show > 0 && data != nullptr) {
+        printf("transverImage: first row bytes:");
+        for (int i = 0; i < show; ++i) printf(" %u", static_cast<unsigned>(data[i]));
+        printf("\n");
+    }
     constructImage(data, width, height, stride);
 }
 
