@@ -5,15 +5,15 @@ WriteImage::WriteImage()
 {
 }
 
-void WriteImage::saveImage(const ImageHolder<uint8_t> &image)
+void WriteImage::saveImage(const ImageHolder<float> &image)
 {
     SaveAsPGM(image);
 }
 
-void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<uint8_t> &image, const ImageProcessor &processor) 
+void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<float> &image, const ImageProcessor &processor) 
 {
     // scale image intensity down to make the contour more visible
-    ImageHolder<uint8_t> ImageCopy = image;
+    ImageHolder<float> ImageCopy = image;
     processor.scaleIntensity(2, ImageCopy);
 
     for (size_t i = 0; i < contour.Size(); ++i)
@@ -21,7 +21,7 @@ void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<uint8_
         const Point& pt = contour[i];
         if (pt.Y >= 0 && pt.Y < image.getHeight() && pt.X >= 0 && pt.X < image.getWidth())
         {
-            ImageCopy.setPixel(pt.X, pt.Y, 255); // set contour pixel to white
+            ImageCopy.setPixel(pt.X, pt.Y, 1); // set contour pixel to white
         }
     }
 
@@ -30,7 +30,7 @@ void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<uint8_
 }
 
 // function save intermediate image as PGM file, for debugging purpose
-void WriteImage::SaveAsPGM(const ImageHolder<uint8_t>& image)
+void WriteImage::SaveAsPGM(const ImageHolder<float>& image)
 {
     std::string filename = "C:\\Users\\svangurp\\Desktop\\CPP_PY_package\\DebugImage\\gradient.pgm";
     // Validate input image
@@ -53,21 +53,40 @@ void WriteImage::SaveAsPGM(const ImageHolder<uint8_t>& image)
     }
 
     // Build a single contiguous buffer from image
-    std::vector<uint8_t> buffer;
+    // build float buffer (values expected in 0..255)
+    std::vector<float> buffer;
     buffer.reserve(static_cast<size_t>(w) * static_cast<size_t>(h));
-    for (int y = 0; y < h; ++y) 
+    for (int y = 0; y < h; ++y)
     {
-        for (int x = 0; x < w; ++x) 
+        for (int x = 0; x < w; ++x)
         {
             buffer.push_back(image.getPixel(x, y));
         }
     }
 
+    // debug: range check on float values
+    float minv = std::numeric_limits<float>::infinity();
+    float maxv = -std::numeric_limits<float>::infinity();
+    for (float v : buffer) { if (v < minv) minv = v; if (v > maxv) maxv = v; }
+    std::cout << "SaveAsPGM: writing buffer (w=" << w << " h=" << h << ") min=" << minv << " max=" << maxv << "\n";
 
-    // debug: range check
-    uint8_t minv = 255, maxv = 0;
-    for (uint8_t v : buffer) { if (v < minv) minv = v; if (v > maxv) maxv = v; }
-    std::cout << "SaveAsPGM: writing buffer (w=" << w << " h=" << h << ") min=" << int(minv) << " max=" << int(maxv) << "\n";
+    // decide if we need to scale floats from [0,1] -> [0,255]
+    float scale = 1.0f;
+    if (maxv <= 1.0f && minv >= 0.0f) {
+        scale = 255.0f;
+        std::cout << "SaveAsPGM: detected float range [0,1], scaling by 255\n";
+    }
+
+    // convert floats to bytes with scaling and clamping
+    std::vector<uint8_t> outbuf;
+    outbuf.reserve(buffer.size());
+    for (float v : buffer) {
+        float vs = v * scale;
+        int vi = static_cast<int>(std::round(vs));
+        if (vi < 0) vi = 0;
+        if (vi > 255) vi = 255;
+        outbuf.push_back(static_cast<uint8_t>(vi));
+    }
 
     std::ofstream out(filename, std::ios::binary | std::ios::trunc);
     if (!out.is_open()) {
@@ -76,7 +95,7 @@ void WriteImage::SaveAsPGM(const ImageHolder<uint8_t>& image)
     }
 
     out << "P5\n" << w << " " << h << "\n255\n";
-    out.write(reinterpret_cast<const char*>(buffer.data()), static_cast<std::streamsize>(buffer.size()));
+    out.write(reinterpret_cast<const char*>(outbuf.data()), static_cast<std::streamsize>(outbuf.size()));
     out.close();
 
     if (!out) {
