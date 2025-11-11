@@ -28,7 +28,9 @@ target_compile_definitions(hello_c_api PRIVATE BUILDING_API)
 add_executable(runTests
     cpp_code/Tests/DataObjects_Test.cpp
     cpp_code/Tests/Image_Test.cpp
+    cpp_code/Tests/ImageHolderTest.cpp
     cpp_code/Tests/SnakeEngine_Test.cpp
+    
     cpp_code/DataObjects/Point.cpp
     cpp_code/DataObjects/Contour.cpp
     cpp_code/DataObjects/ImageProcessor.cpp

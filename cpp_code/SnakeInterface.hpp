@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <cassert>
 #include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "Algorithm/SnakeEngine.hpp"
@@ -14,7 +15,7 @@ public:
 
 private:
 
-    ImageHolder<uint8_t> m_ImageHolder;
+    ImageHolder<float> m_ImageHolder;
     ImageProcessor ImageProcessor;
     Contour m_contour;
     SnakeEngine m_engine;

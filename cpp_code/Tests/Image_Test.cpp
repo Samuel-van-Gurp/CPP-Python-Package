@@ -1,66 +1,175 @@
 #include <gtest/gtest.h>
 #include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Point.hpp"
+#include "DataObjects/ImageHolder.hpp"
 #include <vector>
 #include <cstdint>
 
+
+ImageProcessor processor;
+
 // Basic checks: width/height/center and GetImageVector dimensions
-// TEST(ImageTest, BasicProperties) {
-//     int w = 4, h = 3, stride = 4;
-//     std::vector<uint8_t> data(w * h);
-//     for (int i = 0; i < w * h; ++i) data[i] = static_cast<uint8_t>(i % 256);
+TEST(ImageProcessorTest, normaliseImageIntensity) 
+{
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+        0.0f, 0.5f, 1.0f, 1.5f,
+        2.0f, 2.5f, 3.0f, 3.5f,
+        4.0f, 4.5f, 5.0f, 5.5f,
+        6.0f, 6.5f, 7.0f, 7.5f
+    };
+    ImageHolder<float> imageHolder(data, width, height);
+    processor.normaliseImageIntensity(imageHolder);
 
-//     Image img(data.data(), w, h, stride);
+    float maxIntensity = imageHolder.getMaxIntensityInImage();
+    float pixelValue11 = imageHolder.getPixel(1,1);
 
-//     EXPECT_EQ(img.GetWidth(), w);
-//     EXPECT_EQ(img.GetHeight(), h);
+    EXPECT_NEAR(pixelValue11, 0.333333f, 1e-5f);
+    EXPECT_NEAR(maxIntensity, 1.0f, 1e-5f);
+}
 
-//     Point c = img.GetCenter();
-//     EXPECT_EQ(c.X, w / 2);
-//     EXPECT_EQ(c.Y, h / 2);
+TEST(ImageProcessorTest, GetCoordinateOfMaximumNeighborValueTest) 
+{
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+        0.0f, 0.5f, 1.0f, 1.5f,
+        2.0f, 2.5f, 3.0f, 3.5f,
+        4.0f, 4.5f, 5.0f, 5.5f,
+        6.0f, 6.5f, 7.0f, 7.5f
+    };
 
-//     const auto &vec = img.GetImageVector();
-//     EXPECT_EQ(static_cast<int>(vec.size()), h);
-//     EXPECT_EQ(static_cast<int>(vec[0].size()), w);
-// }
+    ImageHolder<float> imageHolder(data, width, height);
+    Point testPoint(2, 2);
+    Point maxNeighbor = processor.GetCoordinateOfMaximumNeighborValue(testPoint, imageHolder);
 
-// // scaleIntensity should divide each pixel by factor (integer division)
-// TEST(ImageTest, ScaleIntensity) {
-//     int w = 5, h = 5, stride = 5;
-//     std::vector<uint8_t> data(w * h);
-//     for (int i = 0; i < w * h; ++i) data[i] = static_cast<uint8_t>((i * 7) % 256);
+    EXPECT_EQ(maxNeighbor.X, 3);
+    EXPECT_EQ(maxNeighbor.Y, 3);
+}
 
-//     Image img(data.data(), w, h, stride);
-//     const auto &orig = img.GetImageVector();
-//     auto scaled = img.scaleIntensity(2);
+TEST(ImageProcessorTest, getNeighbourhoodTest) 
+{
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+        0.0f, 0.5f, 1.0f, 1.5f,
+        2.0f, 2.5f, 3.0f, 3.5f,
+        4.0f, 4.5f, 5.0f, 5.5f,
+        6.0f, 6.5f, 7.0f, 7.5f
+    };
 
-//     ASSERT_EQ(static_cast<int>(scaled.size()), h);
-//     for (int y = 0; y < h; ++y) {
-//         for (int x = 0; x < w; ++x) {
-//             uint8_t expected = static_cast<uint8_t>(orig[y][x] / 2);
-//             EXPECT_EQ(scaled[y][x], expected) << "at (" << x << "," << y << ")";
-//         }
-//     }
-// }
+    ImageHolder<float> imageHolder(data, width, height);
+    Point testPoint(1, 1);
+    auto neighborhood = processor.getNeighbourhood(testPoint, imageHolder);
 
-// // getNeighbourhood should return a 3x3 matrix and the center element matches the image pixel
-// TEST(ImageTest, NeighbourhoodCenterAndBorder) {
-//     int w = 5, h = 5, stride = 5;
-//     std::vector<uint8_t> data(w * h, 0);
-//     // make a simple pattern
-//     data[2 * w + 2] = 128;
-//     data[0] = 10;
+    std::vector<std::vector<float>> expectedNeighborhood = {
+        {0.0f, 0.5f, 1.0f},
+        {2.0f, 2.5f, 3.0f},
+        {4.0f, 4.5f, 5.0f}
+    };
 
-//     Image img(data.data(), w, h, stride);
-//     const auto &vec = img.GetImageVector();
+    EXPECT_EQ(neighborhood, expectedNeighborhood);
+}
 
-//     Point center(2, 2);
-//     auto neigh = img.getNeighbourhood(center);
-//     ASSERT_EQ(neigh.size(), 3);
-//     ASSERT_EQ(neigh[1].size(), 3);
-//     EXPECT_EQ(neigh[1][1], vec[2][2]);
+TEST(ImageProcessorTest, ConvolveImage) 
+{
 
-//     Point corner(0, 0);
-//     auto neigh0 = img.getNeighbourhood(corner);
-//     EXPECT_EQ(neigh0[0][0], vec[0][0]);
-// }
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+      0.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 1.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f
+    };
+
+    ImageHolder<float> imageHolder(data, width, height);
+
+    std::vector<std::vector<float>> kernel = {
+        {0.0f, 0.2f, 0.0f},
+        {0.2f, 0.2f, 0.2f},
+        {0.0f, 0.2f, 0.0f}
+    };
+
+    ImageHolder<float> convolvedImage = processor.ConvolveImage(kernel, imageHolder);
+
+    float centerPixelValue = convolvedImage.getPixel(2, 1);
+    EXPECT_NEAR(centerPixelValue, 0.2f, 1e-5f);
+}
+
+
+TEST(ImageProcessorTest, ComputeGradientMagnitude) 
+{
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+      0.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 1.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f,
+      0.0f, 0.0f, 0.0f, 0.0f
+    };
+
+    ImageHolder<float> imageHolder(data, width, height);
+
+    ImageHolder<float> gradientImage = processor.ComputeGradientMagnitude(imageHolder);
+
+    float centerPixelValue = gradientImage.getPixel(1, 1);
+    float otherPixelValue = gradientImage.getPixel(1, 2);
+    EXPECT_NEAR(centerPixelValue, 0.0f, 1e-5f);
+    EXPECT_NEAR(otherPixelValue, 2.0f, 1e-5f);
+}
+
+TEST(ImageProcessorTest, scaleIntensity) 
+{
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+        0.0f, 0.5f, 0.0f, 1.5f,
+        2.0f, 2.5f, 3.0f, 3.5f,
+        4.0f, 4.5f, 5.0f, 5.5f,
+        6.0f, 6.5f, 7.0f, 7.5f
+    };
+    ImageHolder<float> imageHolder(data, width, height);
+    processor.scaleIntensity(2, imageHolder);
+
+    float pixelValue11 = imageHolder.getPixel(1,1);
+    float pixelValue33 = imageHolder.getPixel(3,3);
+
+    // print pixel values for debugging
+    EXPECT_NEAR(pixelValue11, 1.25f, 1e-5f);
+    EXPECT_NEAR(pixelValue33, 3.75f, 1e-5f);
+}
+
+TEST(ImageProcessorTest, invertImageIntensity)
+{
+    // construct dummy imageHolder from a vector
+    int width = 4;
+    int height = 4;
+    std::vector<float> data = {
+        0.0f, 0.2f, 0.4f, 0.6f,
+        0.8f, 1.0f, 0.5f, 0.3f,
+        0.7f, 0.9f, 0.1f, 0.05f,
+        0.15f, 0.25f, 0.35f, 0.45f
+    };
+    ImageHolder<float> imageHolder(data, width, height);
+    processor.invertImageIntensity(imageHolder);
+
+    float pixelValue00 = imageHolder.getPixel(0,0);
+    float pixelValue11 = imageHolder.getPixel(1,1);
+    float pixelValue23 = imageHolder.getPixel(3,2);
+
+    EXPECT_NEAR(pixelValue00, 1.0f, 1e-5f);
+    EXPECT_NEAR(pixelValue11, 0.0f, 1e-5f);
+    EXPECT_NEAR(pixelValue23, 0.95f, 1e-5f);
+}
+
+// TEST(ImageProcessorTest, GetMaxIntensityInImage)
