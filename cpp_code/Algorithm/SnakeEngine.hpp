@@ -27,7 +27,7 @@ public:
 
         std::vector<std::vector<float>> combineEnergyMatrix(const std::vector<std::vector<float>> &EnergyMatrix1, const std::vector<std::vector<float>> &EnergyMatrix2, float weight1, float weight2);
 
-        // Helper function to normalize a 3x3 matrix of float energies to uint8_t (0-255)
+        // Helper function to normalize a 3x3 matrix of float energies to float (0-1)
         template <typename T>
         std::vector<std::vector<float>> normalizeEnergyMatrix(const std::vector<std::vector<T>>& energyMatrix)
         {

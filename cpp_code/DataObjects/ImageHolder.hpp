@@ -99,6 +99,8 @@ const std::vector<T>& ImageHolder<T>::getDataVector() const
 template <typename T>
 inline T ImageHolder<T>::getMaxIntensityInImage() const
 {
+    if (m_data.empty())
+        return T();
     T maxIntensity = m_data[0];
     for (const T& value : m_data)
     {
