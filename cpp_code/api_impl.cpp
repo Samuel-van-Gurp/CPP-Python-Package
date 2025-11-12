@@ -6,21 +6,19 @@
 #include "Algorithm/SnakeEngine.hpp"
 #include "SnakeInterface.hpp"
 
-int hay = 42;
-
-int getHay() {
-    return testFunction();
-}
-
-void constructImage(const uint8_t *data, int width, int height, int stride)
+SnakeInterface* setupSnake(ImageHolder<float>* imageHolder_ptr, float alpha, float beta, float iterations, float contour_center_x, float contour_center_y, float contour_radius, int contour_points)
 {
-    SnakeInterface snakeInterface(data, width, height, stride, 0.5f, 0.01f);
-    snakeInterface.run(100);
+    // construct classed needed for SnakeInterface
+    ImageProcessor imageProcessor;
+
+    Contour contour(contour_radius, Point(contour_center_x, contour_center_y), contour_points);
+    SnakeEngine engine(imageProcessor, *imageHolder_ptr, contour, alpha, beta); 
+
+    SnakeInterface* snakeInterface = new SnakeInterface(*imageHolder_ptr, imageProcessor, contour, alpha, beta);
+    return snakeInterface;
 }
 
-int testFunction()
+ImageHolder<float>* constructImage(const uint8_t * data, int width, int height, int stride)
 {
-    return 123;
+    return new ImageHolder<float>(ImageHolder<float>::StaticFactoryTypeChanger(data, width, height, stride));
 }
-
-

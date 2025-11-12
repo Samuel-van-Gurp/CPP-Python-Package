@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include "cpp_code/SnakeInterface.hpp"
 
 #ifdef __cplusplus // if this is compiled by a C++ compiler
   extern "C" { // tell the C++ compiler to treat the following code as C code
@@ -15,14 +16,27 @@
   #define EXPORT_API
 #endif
 
-// Returns a simple greeting message
-EXPORT_API const char* hello_get_message(void);
+typedef struct 
+{
+    float alpha;
+    float beta;
+    int iterations;
+    float contour_center_x;
+    float contour_center_y;
+    float contour_radius;
+    int contour_points;
+} SnakeParams;
 
-// Prints a greeting to the console
-EXPORT_API void hello_say_hello(const char* name);
+typedef struct 
+{
+  uint8_t* data;
+  int width;
+  int height;
+  int stride;
+} ImageInfo;
 
-EXPORT_API void transverImage(const uint8_t *data, int width, int height, int stride);
-
+EXPORT_API void PrepImageAndSnake(ImageInfo const* imageInfo, SnakeParams const* params);
 #ifdef __cplusplus
 }
 #endif
+
