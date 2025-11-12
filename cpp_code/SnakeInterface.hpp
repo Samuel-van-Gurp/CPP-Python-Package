@@ -1,3 +1,6 @@
+#ifndef SNAKEINTERFACE_HPP
+#define SNAKEINTERFACE_HPP
+
 #include <cstdint>
 #include <cassert>
 #include "DataObjects/ImageProcessor.hpp"
@@ -8,17 +11,16 @@
 
 class SnakeInterface
 {
-    
 public:
-    SnakeInterface(const uint8_t *data, int width, int height, int stride, float alpha, float beta);
+    SnakeInterface(ImageHolder<float> imageHolder, ImageProcessor imageProcessor, Contour contour, float alpha, float beta);
     void run(int iterations);
 
 private:
-
-    ImageHolder<float> m_ImageHolder;
-    ImageProcessor ImageProcessor;
+    ImageHolder<float> m_imageHolder;
+    ImageProcessor m_imageProcessor;
     Contour m_contour;
     SnakeEngine m_engine;
     WriteImage m_writer;
 };
- 
+
+#endif // SNAKEINTERFACE_HPP
