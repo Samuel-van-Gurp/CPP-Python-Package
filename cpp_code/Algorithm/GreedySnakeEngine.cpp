@@ -1,12 +1,12 @@
-#include "SnakeEngine.hpp"
+#include "GreedySnakeEngine.hpp"
 
-SnakeEngine::SnakeEngine(const ImageProcessor &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
+GreedySnakeEngine::GreedySnakeEngine(const ImageProcessor &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
     : m_image(image), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
 
 }
 
-void SnakeEngine::RunSnake(int iterations)
+void GreedySnakeEngine::RunSnake(int iterations)
 {
     for (int i = 0; i < iterations; ++i)
     {
@@ -14,7 +14,7 @@ void SnakeEngine::RunSnake(int iterations)
     }
 }
 
-void SnakeEngine::EvolveContour()
+void GreedySnakeEngine::EvolveContour()
 {
     //copy current contour to new contour
     Contour newContour = m_contour;
@@ -38,7 +38,7 @@ void SnakeEngine::EvolveContour()
     m_contour = std::move(newContour);
 }
 
-Point SnakeEngine::getNextStep(int index, Point& p)
+Point GreedySnakeEngine::getNextStep(int index, Point& p)
 {
     // get internal and external energy matrices
     auto InternalEnergyMatrix = constructInternalEnergyMatrix(index, p);
@@ -68,7 +68,7 @@ Point SnakeEngine::getNextStep(int index, Point& p)
     return bestPoint;
 }
 
-std::vector<std::vector<float>> SnakeEngine::constructExternalEnergyMatrix(Point& p)
+std::vector<std::vector<float>> GreedySnakeEngine::constructExternalEnergyMatrix(Point& p)
 {
     // normalise external energy to [0,1]
     std::vector<std::vector<float>> ExternalEnergyMatrix = m_image.getNeighbourhood(p, m_imageHolder);
@@ -77,7 +77,7 @@ std::vector<std::vector<float>> SnakeEngine::constructExternalEnergyMatrix(Point
     return ExternalEnergyMatrix;
 }
 
-std::vector<std::vector<float>> SnakeEngine::constructInternalEnergyMatrix(int index, const Point& p)
+std::vector<std::vector<float>> GreedySnakeEngine::constructInternalEnergyMatrix(int index, const Point& p)
 {
     std::vector<std::vector<float>> TentionEnergyMatrix(3, std::vector<float>(3, 0.0f));
     std::vector<std::vector<float>> CurveEnergyMatrix(3, std::vector<float>(3, 0.0f));
@@ -103,7 +103,7 @@ std::vector<std::vector<float>> SnakeEngine::constructInternalEnergyMatrix(int i
     return combineEnergyMatrix(TentionEnergyMatrix, CurveEnergyMatrix, alpha, beta);
 }
 
-std::vector<std::vector<float>> SnakeEngine::combineEnergyMatrix(const std::vector<std::vector<float>>& EnergyMatrix1, const std::vector<std::vector<float>>& EnergyMatrix2, float weight1, float weight2)
+std::vector<std::vector<float>> GreedySnakeEngine::combineEnergyMatrix(const std::vector<std::vector<float>>& EnergyMatrix1, const std::vector<std::vector<float>>& EnergyMatrix2, float weight1, float weight2)
 {
     // calculate wighted sum of two energy matrices
     std::vector<std::vector<float>> CombinedMatrix(3, std::vector<float>(3, 0.0f));

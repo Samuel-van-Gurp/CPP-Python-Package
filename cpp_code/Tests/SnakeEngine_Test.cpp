@@ -2,7 +2,7 @@
 #include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "DataObjects/Point.hpp"
-#include "Algorithm/SnakeEngine.hpp"
+#include "Algorithm/GreedySnakeEngine.hpp"
 #include <vector>
 
 // TEST(SnakeEngineTest, ContourEvolvesAndStaysInBounds) {

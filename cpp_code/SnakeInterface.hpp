@@ -5,21 +5,21 @@
 #include <cassert>
 #include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
-#include "Algorithm/SnakeEngine.hpp"
+#include "Algorithm/GreedySnakeEngine.hpp"
 #include "IO/WriteImage.hpp"
 #include "DataObjects/ImageHolder.hpp"
 
-class SnakeInterface
+class SnakeController
 {
 public:
-    SnakeInterface(ImageHolder<float> imageHolder, ImageProcessor imageProcessor, Contour contour, float alpha, float beta);
+    SnakeController(ImageHolder<float> imageHolder, ImageProcessor imageProcessor, Contour contour, float alpha, float beta);
     void run(int iterations);
 
 private:
     ImageHolder<float> m_imageHolder;
     ImageProcessor m_imageProcessor;
     Contour m_contour;
-    SnakeEngine m_engine;
+    GreedySnakeEngine m_engine;
     WriteImage m_writer;
 };
 

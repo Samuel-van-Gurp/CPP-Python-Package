@@ -3,25 +3,25 @@
 #include "DataObjects/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "IO/WriteImage.hpp"
+#include "Algorithm/ISnakeEngine.hpp"
 
-class SnakeEngine
+class GreedySnakeEngine : public ISnakeEngine
 {
 public:
 
-        SnakeEngine(const ImageProcessor &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta);
+        GreedySnakeEngine(const ImageProcessor &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta);
 
         void RunSnake(int iterations);
 
         void EvolveContour();
-        Point getNextStep(int index, Point &p);
-        Point constructEnergyMatrix();
-
         
-    private:
-
+        private:
+        
         const float alpha;    
         const float beta;
-
+        
+        Point constructEnergyMatrix();
+        Point getNextStep(int index, Point &p);
         std::vector<std::vector<float>> constructExternalEnergyMatrix(Point& p);
         std::vector<std::vector<float>> constructInternalEnergyMatrix(int index, const Point &p);
 
