@@ -1,6 +1,6 @@
 #ifndef SNAKEENGINE_HPP
 #define SNAKEENGINE_HPP
-#include "DataObjects/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "IO/WriteImage.hpp"
 #include "Algorithm/ISnakeEngine.hpp"

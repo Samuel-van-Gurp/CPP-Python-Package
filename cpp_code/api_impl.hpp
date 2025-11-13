@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <vector>
-#include "cpp_code/DataObjects/ImageProcessor.hpp"
+#include "cpp_code/ImageProcessing/ImageProcessor.hpp"
 #include "cpp_code/SnakeInterface.hpp"
 
 #ifdef __cplusplus

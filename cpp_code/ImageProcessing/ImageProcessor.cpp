@@ -1,7 +1,8 @@
 #include "ImageProcessor.hpp"
 
 
-ImageProcessor::ImageProcessor()
+ImageProcessor::ImageProcessor(std::unique_ptr<IConvolver> convolver)
+    : m_convolver(std::move(convolver))
 {    
 }
 
@@ -84,45 +85,6 @@ std::vector<std::vector<float>> ImageProcessor::getNeighbourhood(const Point &p,
     return neighbourhood;
 }
 
-
-ImageHolder<float> ImageProcessor::ConvolveImage(const std::vector<std::vector<float>>& kernel, const ImageHolder<float> &image) const
-{
-    if (kernel.empty() || kernel[0].empty()) 
-    {
-        return image;
-    }
-    int kHeight = static_cast<int>(kernel.size());
-    int kWidth = static_cast<int>(kernel[0].size());
-    int kHalfHeight = kHeight / 2;
-    int kHalfWidth = kWidth / 2;
-
-    std::vector<float> convolvedImage(image.getHeight() * image.getWidth(), 0);
-    ImageHolder<float> convolvedHolder(std::move(convolvedImage), image.getWidth(), image.getHeight());
-
-    for (int y = 0; y < image.getHeight(); ++y)
-    {
-        for (int x = 0; x < image.getWidth(); ++x)
-        {
-            float sum = 0.0f;
-            for (int ky = -kHalfHeight; ky <= kHalfHeight; ++ky)
-            {
-                for (int kx = -kHalfWidth; kx <= kHalfWidth; ++kx)
-                {
-                    int ny = y + ky;
-                    int nx = x + kx;
-                    if (ny >= 0 && ny < image.getHeight() && nx >= 0 && nx < image.getWidth())
-                    {
-                        sum += kernel[ky + kHalfHeight][kx + kHalfWidth] * image.getPixel(nx, ny);
-                    }
-                }
-            }
-            convolvedHolder.setPixel(x, y, sum);
-        }
-    }
-    return convolvedHolder;
-}
-
-
 ImageHolder<float> ImageProcessor::ComputeGradientMagnitude(const ImageHolder<float> &image)
 {
     // compute signed Sobel gradients directly into vector buffers (preserve sign)
@@ -142,8 +104,8 @@ ImageHolder<float> ImageProcessor::ComputeGradientMagnitude(const ImageHolder<fl
 
     ImageHolder<float> gradMagHolder(std::vector<float>(w * h, 0), w, h);
 
-    ImageHolder<float> gradXHolder = ConvolveImage(kx, image);
-    ImageHolder<float> gradYHolder = ConvolveImage(ky, image);
+    ImageHolder<float> gradXHolder = m_convolver->Convolve(kx, image); //ConvolveImage(kx, image);
+    ImageHolder<float> gradYHolder = m_convolver->Convolve(ky, image); //ConvolveImage(ky, image);
 
     // combine signed gradients into magnitude
     for (int y = 0; y < h; ++y)
@@ -190,16 +152,16 @@ void ImageProcessor::BlurImage(BlurType blurType, ImageHolder<float> &image)
     switch (blurType)
     {
     case BlurType::Small:
-        image = ConvolveImage(smallBlurKernel, image);
+        image = m_convolver->Convolve(smallBlurKernel, image);
         break;
     case BlurType::Medium:
-        image = ConvolveImage(mediumBlurKernel, image);
+        image = m_convolver->Convolve(mediumBlurKernel, image);
         break;
     case BlurType::Large:
-        image = ConvolveImage(largeBlurKernel, image);
+        image = m_convolver->Convolve(largeBlurKernel, image);
         break;
     default:
-        image = ConvolveImage(mediumBlurKernel, image);
+        image = m_convolver->Convolve(mediumBlurKernel, image);
         break;
     }
 }

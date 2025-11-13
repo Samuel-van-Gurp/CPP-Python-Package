@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "DataObjects/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include "DataObjects/Point.hpp"
 #include "Algorithm/GreedySnakeEngine.hpp"

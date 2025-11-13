@@ -1,6 +1,6 @@
 #include "SnakeInterface.hpp"
 
-SnakeController::SnakeController(ImageHolder<float> imageHolder, ImageProcessor imageProcessor, Contour contour, float alpha, float beta)
+SnakeController::SnakeController(ImageHolder<float> imageHolder, ImageProcessor& imageProcessor, Contour contour, float alpha, float beta)
     : m_imageHolder(imageHolder)
     , m_imageProcessor(imageProcessor)
     , m_contour(contour)

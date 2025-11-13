@@ -1,6 +1,6 @@
 #ifndef WRITE_IMAGE_HPP
 #define WRITE_IMAGE_HPP
-#include "DataObjects/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
 #include <iostream>
 #include <fstream>
