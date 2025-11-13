@@ -1,5 +1,7 @@
 #include "NaiveConvolve.hpp"
 
+NaiveConvolve::NaiveConvolve() = default;
+
 ImageHolder<float> NaiveConvolve::Convolve(const std::vector<std::vector<float>>& kernel,
                                         const ImageHolder<float>& image) const
 {

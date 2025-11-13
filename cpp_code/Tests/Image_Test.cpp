@@ -1,12 +1,13 @@
 #include <gtest/gtest.h>
 #include "ImageProcessing/ImageProcessor.hpp"
+#include "ImageProcessing/NaiveConvolve.hpp"
 #include "DataObjects/Point.hpp"
 #include "DataObjects/ImageHolder.hpp"
 #include <vector>
 #include <cstdint>
 
 
-ImageProcessor processor;
+ImageProcessor processor(std::make_unique<NaiveConvolve>());
 
 // Basic checks: width/height/center and GetImageVector dimensions
 TEST(ImageProcessorTest, normaliseImageIntensity) 
@@ -64,7 +65,7 @@ TEST(ImageProcessorTest, getNeighbourhoodTest)
 
     ImageHolder<float> imageHolder(data, width, height);
     Point testPoint(1, 1);
-    auto neighborhood = processor.getNeighbourhood(testPoint, imageHolder);
+    auto neighborhood = imageHolder.getNeighbourhood(testPoint);
 
     std::vector<std::vector<float>> expectedNeighborhood = {
         {0.0f, 0.5f, 1.0f},
@@ -97,7 +98,9 @@ TEST(ImageProcessorTest, ConvolveImage)
         {0.0f, 0.2f, 0.0f}
     };
 
-    ImageHolder<float> convolvedImage = processor.ConvolveImage(kernel, imageHolder);
+    NaiveConvolve convolver;
+
+    ImageHolder<float> convolvedImage = convolver.Convolve(kernel, imageHolder);
 
     float centerPixelValue = convolvedImage.getPixel(2, 1);
     EXPECT_NEAR(centerPixelValue, 0.2f, 1e-5f);
