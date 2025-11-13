@@ -20,6 +20,9 @@ public:
     // init from vector
     ImageHolder(std::vector<T> data, int width, int height);
 
+    std::vector<std::vector<T>> getNeighbourhood(const Point &p) const;
+
+
     template<typename U>
     static ImageHolder<T> StaticFactoryTypeChanger(const U* data, int width, int height, int stride);
 
@@ -49,6 +52,25 @@ ImageHolder<T>::ImageHolder(std::vector<T> data, int width, int height)
 {
 }
 
+template <typename T>
+inline std::vector<std::vector<T>> ImageHolder<T>::getNeighbourhood(const Point &p) const
+{
+    std::vector<std::vector<float>> neighbourhood(3, std::vector<float>(3, 0.0f));
+    
+    for (int dy = -1; dy <= 1; ++dy)
+    {
+        for (int dx = -1; dx <= 1; ++dx)
+        {
+            int nx = p.X + dx;
+            int ny = p.Y + dy;
+            if (nx >= 0 && nx < m_width && ny >= 0 && ny < m_height)
+            {
+                neighbourhood[dy + 1][dx + 1] = getPixel(nx, ny);
+            }
+        }
+    }
+    return neighbourhood;
+}
 
 template<typename T>
 template<typename U>

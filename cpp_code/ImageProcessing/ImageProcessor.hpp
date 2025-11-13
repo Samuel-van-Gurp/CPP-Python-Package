@@ -26,9 +26,8 @@ class ImageProcessor
     void invertImageIntensity(ImageHolder<float> &image) const;
 
     Point GetCoordinateOfMaximumNeighborValue(const Point &p, const ImageHolder<float> &image) const;
-    std::vector<std::vector<float>> getNeighbourhood(const Point &p, const ImageHolder<float> &image) const;
 
-    ImageHolder<float> ConvolveI0mage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
+    ImageHolder<float> ConvolveImage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
 
     ImageHolder<float> ComputeGradientMagnitude(const ImageHolder<float> &image);
 

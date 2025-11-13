@@ -64,27 +64,6 @@ Point ImageProcessor::GetCoordinateOfMaximumNeighborValue(const Point &p, const 
     return bestPoint;
 }
 
-std::vector<std::vector<float>> ImageProcessor::getNeighbourhood(const Point &p, const ImageHolder<float> &image) const
-{
-    int w = image.getWidth();
-    int h = image.getHeight();
-    std::vector<std::vector<float>> neighbourhood(3, std::vector<float>(3, 0.0f));
-    
-    for (int dy = -1; dy <= 1; ++dy)
-    {
-        for (int dx = -1; dx <= 1; ++dx)
-        {
-            int nx = p.X + dx;
-            int ny = p.Y + dy;
-            if (nx >= 0 && nx < w && ny >= 0 && ny < h)
-            {
-                neighbourhood[dy + 1][dx + 1] = image.getPixel(nx, ny);
-            }
-        }
-    }
-    return neighbourhood;
-}
-
 ImageHolder<float> ImageProcessor::ComputeGradientMagnitude(const ImageHolder<float> &image)
 {
     // compute signed Sobel gradients directly into vector buffers (preserve sign)

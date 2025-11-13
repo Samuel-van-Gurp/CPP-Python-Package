@@ -71,7 +71,7 @@ Point GreedySnakeEngine::getNextStep(int index, Point& p)
 std::vector<std::vector<float>> GreedySnakeEngine::constructExternalEnergyMatrix(Point& p)
 {
     // normalise external energy to [0,1]
-    std::vector<std::vector<float>> ExternalEnergyMatrix = m_image.getNeighbourhood(p, m_imageHolder);
+    std::vector<std::vector<float>> ExternalEnergyMatrix = m_imageHolder.getNeighbourhood(p);
     ExternalEnergyMatrix = normalizeEnergyMatrix(ExternalEnergyMatrix);
 
     return ExternalEnergyMatrix;
