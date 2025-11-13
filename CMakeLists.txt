@@ -25,9 +25,7 @@ add_library(hello_c_api SHARED C_API/api.cpp
                             cpp_code/Algorithm/GreedySnakeEngine.cpp
 
                             cpp_code/ImageProcessing/ImageProcessor.cpp
-                            cpp_code/ImageProcessing/NaiveConvolve.cpp
-                            cpp_code/ImageProcessing/INeighbourhoodProvider.hpp
-                            cpp_code/ImageProcessing/NeighbourhoodProvider.cpp)
+                            cpp_code/ImageProcessing/NaiveConvolve.cpp)
 
 target_include_directories(hello_c_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(hello_c_api PRIVATE BUILDING_API)
@@ -44,7 +42,6 @@ add_executable(runTests
     cpp_code/DataObjects/Contour.cpp
     cpp_code/ImageProcessing/ImageProcessor.cpp
     cpp_code/Algorithm/GreedySnakeEngine.cpp
-    cpp_code/ImageProcessing/NeighbourhoodProvider.cpp
 )
 
 target_link_libraries(runTests
