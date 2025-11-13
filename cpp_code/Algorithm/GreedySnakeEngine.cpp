@@ -18,18 +18,15 @@ void GreedySnakeEngine::EvolveContour()
 {
     //copy current contour to new contour
     Contour newContour = m_contour;
-    // loop over contour points
+
     int contourSize = m_contour.Size();
     for (int i = 0; i < contourSize; ++i)
     {
-        // get current point
         Point& p = m_contour[i];
 
-        // get next step based on image gradient at point location
         Point nextStep = getNextStep(i, p);
         newContour[i] = nextStep;
 
-        // print initial and new point for debugging
         std::cout << "Point " << i << ": (" << p.X << ", " << p.Y << ") -> ("
                   << nextStep.X << ", " << nextStep.Y << ")\n";
 

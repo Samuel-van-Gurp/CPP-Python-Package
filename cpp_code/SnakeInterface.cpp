@@ -1,18 +1,20 @@
 #include "SnakeInterface.hpp"
 
-SnakeController::SnakeController(ImageHolder<float> imageHolder, ImageProcessor& imageProcessor, Contour contour, float alpha, float beta)
+SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessor> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta)
     : m_imageHolder(imageHolder)
-    , m_imageProcessor(imageProcessor)
+    , m_imageProcessor(std::move(imageProcessor))
     , m_contour(contour)
-    , m_engine(GreedySnakeEngine(m_imageProcessor, m_imageHolder, m_contour, alpha, beta))
+    , m_engine(std::move(engine))
 {
-    m_imageProcessor.PrepImage(m_imageHolder);
+    
+    m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
+
+    m_imageProcessor->PrepImage(m_imageHolder);
     m_writer.saveImage(m_imageHolder);
 }
 
 void SnakeController::run(int iterations)
 {
-    m_engine.RunSnake(iterations);
-    m_writer.ContourOverLay(m_contour, m_imageHolder, m_imageProcessor);
+    m_engine->RunSnake(iterations);
+    m_writer.ContourOverLay(m_contour, m_imageHolder, *m_imageProcessor);
 }
-

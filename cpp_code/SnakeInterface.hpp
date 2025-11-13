@@ -5,22 +5,24 @@
 #include <cassert>
 #include "ImageProcessing/ImageProcessor.hpp"
 #include "DataObjects/Contour.hpp"
-#include "Algorithm/GreedySnakeEngine.hpp"
+#include "Algorithm/ISnakeEngine.hpp"
 #include "IO/WriteImage.hpp"
 #include "DataObjects/ImageHolder.hpp"
+#include "Algorithm/GreedySnakeEngine.hpp"
+#include <memory>
 
 class SnakeController
 {
 public:
-    // SnakeController(ImageHolder<float> imageHolder, ImageProcessor imageProcessor, Contour contour, float alpha, float beta);
-    SnakeController(ImageHolder<float> imageHolder, ImageProcessor &imageProcessor, Contour contour, float alpha, float beta);
+    
+    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessor> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta);
     void run(int iterations);
 
 private:
     ImageHolder<float> m_imageHolder;
-    ImageProcessor& m_imageProcessor;
+    std::unique_ptr<ImageProcessor> m_imageProcessor;
     Contour m_contour;
-    GreedySnakeEngine m_engine;
+    std::unique_ptr<ISnakeEngine> m_engine;
     WriteImage m_writer;
 };
 

@@ -7,15 +7,16 @@
 #include "Algorithm/GreedySnakeEngine.hpp"
 #include "SnakeInterface.hpp"
 
+#include <memory>
+
 SnakeController* setupSnake(ImageHolder<float>* imageHolder_ptr, float alpha, float beta, float iterations, float contour_center_x, float contour_center_y, float contour_radius, int contour_points)
 {
-    // construct classed needed for SnakeInterface
-    ImageProcessor imageProcessor(std::make_unique<NaiveConvolve>());
+    auto imageProcessor = std::make_unique<ImageProcessor>(std::make_unique<NaiveConvolve>());
 
     Contour contour(contour_radius, Point(contour_center_x, contour_center_y), contour_points);
-    GreedySnakeEngine engine(imageProcessor, *imageHolder_ptr, contour, alpha, beta); 
+    std::unique_ptr<ISnakeEngine> engine = std::make_unique<GreedySnakeEngine>(*imageProcessor, *imageHolder_ptr, contour, alpha, beta);
 
-    SnakeController* snakeInterface = new SnakeController(*imageHolder_ptr, imageProcessor, contour, alpha, beta);
+    SnakeController* snakeInterface = new SnakeController(*imageHolder_ptr, std::move(imageProcessor), contour, std::move(engine), alpha, beta);
     return snakeInterface;
 }
 
