@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-SnakeInterface* setupSnake(ImageHolder<float> *imageHolder_ptr,
+SnakeController* setupSnake(ImageHolder<float> *imageHolder_ptr,
                             float alpha, 
                             float beta, 
                             float iterations, 

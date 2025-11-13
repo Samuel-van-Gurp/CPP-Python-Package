@@ -15,7 +15,7 @@ EXPORT_API void PrepImageAndSnake(ImageInfo const* imageInfo, SnakeParams const*
                                                          imageInfo->height, 
                                                          imageInfo->stride);
     
-    SnakeInterface* snakeInterface_ptr = setupSnake(imageHolder_ptr, params->alpha, 
+    SnakeController* snakeInterface_ptr = setupSnake(imageHolder_ptr, params->alpha, 
                                                                      params->beta, 
                                                                      params->iterations, 
                                                                      params->contour_center_x, 
