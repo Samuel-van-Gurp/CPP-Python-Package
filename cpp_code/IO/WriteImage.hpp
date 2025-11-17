@@ -1,6 +1,6 @@
 #ifndef WRITE_IMAGE_HPP
 #define WRITE_IMAGE_HPP
-#include "ImageProcessing/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/Contour.hpp"
 #include <iostream>
 #include <fstream>
@@ -11,7 +11,7 @@ class WriteImage
         WriteImage();
         void saveImage(const ImageHolder<float> &image);
 
-        void ContourOverLay(const Contour &contour, const ImageHolder<float> &image, const ImageProcessor &processor);
+        void ContourOverLay(const Contour &contour, const ImageHolder<float> &image, const ImageProcessorFacade &processor);
 
         
         private:

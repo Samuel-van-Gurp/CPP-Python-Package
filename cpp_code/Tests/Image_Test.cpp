@@ -1,13 +1,14 @@
 #include <gtest/gtest.h>
-#include "ImageProcessing/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "ImageProcessing/NaiveConvolve.hpp"
+#include "ImageProcessing/IntensityManipulator.hpp"
 #include "DataObjects/Point.hpp"
 #include "DataObjects/ImageHolder.hpp"
 #include <vector>
 #include <cstdint>
 
 
-ImageProcessor processor(std::make_unique<NaiveConvolve>());
+ImageProcessorFacade processor(std::make_unique<NaiveConvolve>(), std::make_unique<IntensityManipulator>());
 
 // Basic checks: width/height/center and GetImageVector dimensions
 TEST(ImageProcessorTest, normaliseImageIntensity) 
@@ -29,26 +30,6 @@ TEST(ImageProcessorTest, normaliseImageIntensity)
 
     EXPECT_NEAR(pixelValue11, 0.333333f, 1e-5f);
     EXPECT_NEAR(maxIntensity, 1.0f, 1e-5f);
-}
-
-TEST(ImageProcessorTest, GetCoordinateOfMaximumNeighborValueTest) 
-{
-    // construct dummy imageHolder from a vector
-    int width = 4;
-    int height = 4;
-    std::vector<float> data = {
-        0.0f, 0.5f, 1.0f, 1.5f,
-        2.0f, 2.5f, 3.0f, 3.5f,
-        4.0f, 4.5f, 5.0f, 5.5f,
-        6.0f, 6.5f, 7.0f, 7.5f
-    };
-
-    ImageHolder<float> imageHolder(data, width, height);
-    Point testPoint(2, 2);
-    Point maxNeighbor = processor.GetCoordinateOfMaximumNeighborValue(testPoint, imageHolder);
-
-    EXPECT_EQ(maxNeighbor.X, 3);
-    EXPECT_EQ(maxNeighbor.Y, 3);
 }
 
 TEST(ImageProcessorTest, getNeighbourhoodTest) 

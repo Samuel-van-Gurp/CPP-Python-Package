@@ -1,6 +1,6 @@
 #include "GreedySnakeEngine.hpp"
 
-GreedySnakeEngine::GreedySnakeEngine(const ImageProcessor &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
+GreedySnakeEngine::GreedySnakeEngine(const ImageProcessorFacade &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
     : m_image(image), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
 

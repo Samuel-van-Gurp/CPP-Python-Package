@@ -1,4 +1,4 @@
-#include "DataObjects/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "WriteImage.hpp"
 
 WriteImage::WriteImage()
@@ -10,7 +10,7 @@ void WriteImage::saveImage(const ImageHolder<float> &image)
     SaveAsPGM(image);
 }
 
-void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<float> &image, const ImageProcessor &processor) 
+void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<float> &image, const ImageProcessorFacade &processor) 
 {
     // scale image intensity down to make the contour more visible
     ImageHolder<float> ImageCopy = image;

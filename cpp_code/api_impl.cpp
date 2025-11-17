@@ -1,6 +1,7 @@
 #include "api_impl.hpp"
-#include "ImageProcessing/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "ImageProcessing/NaiveConvolve.hpp"
+#include "ImageProcessing/IntensityManipulator.hpp"
 #include "DataObjects/Contour.hpp"
 #include "DataObjects/Point.hpp"
 #include "IO/WriteImage.hpp"
@@ -11,7 +12,7 @@
 
 SnakeController* setupSnake(ImageHolder<float>* imageHolder_ptr, float alpha, float beta, float iterations, float contour_center_x, float contour_center_y, float contour_radius, int contour_points)
 {
-    auto imageProcessor = std::make_unique<ImageProcessor>(std::make_unique<NaiveConvolve>());
+    auto imageProcessor = std::make_unique<ImageProcessorFacade>(std::make_unique<NaiveConvolve>(), std::make_unique<IntensityManipulator>());
 
     Contour contour(contour_radius, Point(contour_center_x, contour_center_y), contour_points);
     std::unique_ptr<ISnakeEngine> engine = std::make_unique<GreedySnakeEngine>(*imageProcessor, *imageHolder_ptr, contour, alpha, beta);

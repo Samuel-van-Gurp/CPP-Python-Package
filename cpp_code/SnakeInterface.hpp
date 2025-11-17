@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <cassert>
-#include "ImageProcessing/ImageProcessor.hpp"
+#include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/Contour.hpp"
 #include "Algorithm/ISnakeEngine.hpp"
 #include "IO/WriteImage.hpp"
@@ -15,12 +15,12 @@ class SnakeController
 {
 public:
     
-    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessor> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta);
+    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta);
     void run(int iterations);
 
 private:
     ImageHolder<float> m_imageHolder;
-    std::unique_ptr<ImageProcessor> m_imageProcessor;
+    std::unique_ptr<ImageProcessorFacade> m_imageProcessor;
     Contour m_contour;
     std::unique_ptr<ISnakeEngine> m_engine;
     WriteImage m_writer;

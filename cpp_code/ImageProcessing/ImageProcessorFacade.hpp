@@ -5,6 +5,8 @@
 #include "DataObjects/Point.hpp"
 #include "DataObjects/ImageHolder.hpp"
 #include "ImageProcessing/IConvolve.hpp"
+#include "ImageProcessing/IIntensityManipulator.hpp"
+
 #include <cstdint>
 #include <vector>
 #include <string>
@@ -14,20 +16,19 @@
 
 enum class BlurType { Small, Medium, Large };
 
-class ImageProcessor
+class ImageProcessorFacade
 {
     public:    
 
-    ImageProcessor(std::unique_ptr<IConvolver> convolver);
+    ImageProcessorFacade(std::unique_ptr<IConvolver> convolver, std::unique_ptr<IIntensityManipulator> intensityManipulator);
+
     void PrepImage(ImageHolder<float> &image);
+    
     void normaliseImageIntensity(ImageHolder<float> &img);
     void scaleIntensity(int factor, ImageHolder<float> &image) const;
-
     void invertImageIntensity(ImageHolder<float> &image) const;
 
-    Point GetCoordinateOfMaximumNeighborValue(const Point &p, const ImageHolder<float> &image) const;
-
-    ImageHolder<float> ConvolveImage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
+    // ImageHolder<float> ConvolveImage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
 
     ImageHolder<float> ComputeGradientMagnitude(const ImageHolder<float> &image);
 
@@ -35,6 +36,7 @@ class ImageProcessor
 
 private:
     std::unique_ptr<IConvolver> m_convolver;
+    std::unique_ptr<IIntensityManipulator> m_intensityManipulator;
 };
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGE_HPP

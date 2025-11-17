@@ -1,70 +1,39 @@
-#include "ImageProcessor.hpp"
+#include "ImageProcessorFacade.hpp"
 
 
-ImageProcessor::ImageProcessor(std::unique_ptr<IConvolver> convolver)
+ImageProcessorFacade::ImageProcessorFacade(std::unique_ptr<IConvolver> convolver, std::unique_ptr<IIntensityManipulator> intensityManipulator)
     : m_convolver(std::move(convolver))
+    , m_intensityManipulator(std::move(intensityManipulator))
 {    
 }
 
-void ImageProcessor::PrepImage(ImageHolder<float>& image)
+void ImageProcessorFacade::PrepImage(ImageHolder<float>& image)
 {
     BlurImage(BlurType::Medium, image);
     auto gradientMagnitude = ComputeGradientMagnitude(image);
     BlurImage(BlurType::Medium, gradientMagnitude);
-    normaliseImageIntensity(gradientMagnitude);
-    invertImageIntensity(gradientMagnitude);
+    m_intensityManipulator->normaliseImageIntensity(gradientMagnitude);
+    m_intensityManipulator->invertImageIntensity(gradientMagnitude);
 
     image = std::move(gradientMagnitude);
 }
 
-void ImageProcessor::normaliseImageIntensity(ImageHolder<float>& img)
+void ImageProcessorFacade::normaliseImageIntensity(ImageHolder<float>& img)
 {
-    int w = img.getWidth();
-    int h = img.getHeight();
-
-    float maxVal = img.getMaxIntensityInImage();
-
-    if (maxVal == 0) return; // avoid division by zero
-    float scale = 1.0f / static_cast<float>(maxVal);
-    for (int i = 0; i < h; ++i)
-    {
-        for (int j = 0; j < w; ++j)
-        {
-            float v = img.getPixel(j, i);
-            v = static_cast<float>(std::min(1.0f, v * scale));
-            img.setPixel(j, i, v);
-        }
-    }
+    m_intensityManipulator->normaliseImageIntensity(img);
 }
 
-Point ImageProcessor::GetCoordinateOfMaximumNeighborValue(const Point &p, const ImageHolder<float>& image) const
+void ImageProcessorFacade::scaleIntensity(int factor, ImageHolder<float> &image) const
 {
-    // get the highest value direction around point p (8 connectivity)
-    float maxGradient = -std::numeric_limits<float>::infinity();
-
-    Point bestPoint = p;
-    for (int dy = -1; dy <= 1; ++dy)
-    {
-        for (int dx = -1; dx <= 1; ++dx)
-        {
-            if (dx == 0 && dy == 0) continue; // skip the center point
-            int nx = p.X + dx;
-            int ny = p.Y + dy;
-            if (nx >= 0 && nx < image.getWidth() && ny >= 0 && ny < image.getHeight())
-            {
-                float gradientValue = image.getPixel(nx, ny);
-                if (gradientValue > maxGradient)
-                {
-                    maxGradient = gradientValue;
-                    bestPoint = Point(nx, ny);
-                }
-            }
-        }
-    }
-    return bestPoint;
+    m_intensityManipulator->scaleIntensity(factor, image);
 }
 
-ImageHolder<float> ImageProcessor::ComputeGradientMagnitude(const ImageHolder<float> &image)
+void ImageProcessorFacade::invertImageIntensity(ImageHolder<float> &image) const
+{
+    m_intensityManipulator->invertImageIntensity(image);
+}
+
+ImageHolder<float> ImageProcessorFacade::ComputeGradientMagnitude(const ImageHolder<float> &image)
 {
     // compute signed Sobel gradients directly into vector buffers (preserve sign)
     static const std::vector<std::vector<float>> kx = {
@@ -83,8 +52,8 @@ ImageHolder<float> ImageProcessor::ComputeGradientMagnitude(const ImageHolder<fl
 
     ImageHolder<float> gradMagHolder(std::vector<float>(w * h, 0), w, h);
 
-    ImageHolder<float> gradXHolder = m_convolver->Convolve(kx, image); //ConvolveImage(kx, image);
-    ImageHolder<float> gradYHolder = m_convolver->Convolve(ky, image); //ConvolveImage(ky, image);
+    ImageHolder<float> gradXHolder = m_convolver->Convolve(kx, image); 
+    ImageHolder<float> gradYHolder = m_convolver->Convolve(ky, image); 
 
     // combine signed gradients into magnitude
     for (int y = 0; y < h; ++y)
@@ -100,9 +69,9 @@ ImageHolder<float> ImageProcessor::ComputeGradientMagnitude(const ImageHolder<fl
     return gradMagHolder;   
 }
 
-void ImageProcessor::BlurImage(BlurType blurType, ImageHolder<float> &image)
+void ImageProcessorFacade::BlurImage(BlurType blurType, ImageHolder<float> &image)
 {
-    // Normalised gaussian kernel
+    // Normalised gaussian kernels
     static const std::vector<std::vector<float>> smallBlurKernel = {
         { 1/16.0f, 2/16.0f, 1/16.0f },
         { 2/16.0f, 4/16.0f, 2/16.0f },
@@ -142,44 +111,5 @@ void ImageProcessor::BlurImage(BlurType blurType, ImageHolder<float> &image)
     default:
         image = m_convolver->Convolve(mediumBlurKernel, image);
         break;
-    }
-}
-
-
-void ImageProcessor::scaleIntensity(int factor, ImageHolder<float> &image) const
-{
-    if (factor == 0) return; // avoid division by zero
-    
-    int w = image.getWidth();
-    int h = image.getHeight();
-
-    ImageHolder<float> scaledImage = image; // make a copy to store scaled values
-
-    for (int i = 0; i < h; ++i)
-    {
-        for (int j = 0; j < w; ++j)
-        {
-            float v = image.getPixel(j, i);
-            float vs = v / static_cast<float>(factor);
-            scaledImage.setPixel(j, i, vs);
-        }
-    }
-    image = std::move(scaledImage);
-}
-
-void ImageProcessor::invertImageIntensity(ImageHolder<float> &image) const
-{
-    int w = image.getWidth();
-    int h = image.getHeight();
-
-    // assuming image intensity in range of [0,1]
-    for (int i = 0; i < h; ++i)
-    {
-        for (int j = 0; j < w; ++j)
-        {
-            float v = image.getPixel(j, i);
-            v = 1.0f - v;
-            image.setPixel(j, i, v);
-        }
     }
 }

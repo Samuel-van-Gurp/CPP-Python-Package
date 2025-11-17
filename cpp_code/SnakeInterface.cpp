@@ -1,6 +1,6 @@
 #include "SnakeInterface.hpp"
 
-SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessor> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta)
+SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta)
     : m_imageHolder(imageHolder)
     , m_imageProcessor(std::move(imageProcessor))
     , m_contour(contour)
