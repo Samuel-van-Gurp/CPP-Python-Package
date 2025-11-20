@@ -1,16 +1,24 @@
 #ifndef CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
 #define CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
 
-#include "Point.hpp"
+#include "Point.cpp"
 #include <vector>
 #include <cmath>
 
 class Contour
 {
-    public:
+public:
     Contour(int radius, Point center, int numPoints);
+    
     int Size() const;
+    Point* getContourPoints_ptr();
+    
+    float TensionEnergyAtPoint(int idx, Point newPoint) const;
+    float CurveEnergyAtPoint(int idx, Point newPoint) const;
 
+    Point &operator[](std::size_t idx);
+    const Point &operator[](std::size_t idx) const;
+    
 private:
     static constexpr double PI = 3.14159265358979323846;
     
@@ -22,11 +30,8 @@ private:
     void FillContourPoints();
 
     
-public:
-    float TensionEnergyAtPoint(int idx, Point newPoint) const;
-    float CurveEnergyAtPoint(int idx, Point newPoint) const;
-    Point &operator[](std::size_t idx);
-    const Point &operator[](std::size_t idx) const;
+
 };
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
+

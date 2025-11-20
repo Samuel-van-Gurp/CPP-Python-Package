@@ -1,17 +1,20 @@
-#include "Point.hpp"
+#ifndef POINT_HPP
+#define POINT_HPP
 
-Point::Point(int x, int y)
-    : X(x), Y(y)
-{
+#include <cstdint>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+struct Point {
+    std::int32_t X;
+    std::int32_t Y;
+};
+
+
+#ifdef __cplusplus
 }
+#endif
 
-
-void Point::addX(int deltaX)
-{
-    X += deltaX;
-}
-
-void Point::addY(int deltaY)
-{
-    Y += deltaY;
-}
+#endif // POINT_HPP

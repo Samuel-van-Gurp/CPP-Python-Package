@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "DataObjects/Contour.hpp"
-#include "DataObjects/Point.hpp"
+#include "DataObjects/Point.cpp"
 
 TEST(ContourTest, point_init_Test) {
     Contour contour(2, Point(0,0), 4);

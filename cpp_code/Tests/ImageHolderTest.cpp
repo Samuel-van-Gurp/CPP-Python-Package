@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include "DataObjects/Contour.hpp"
-#include "DataObjects/Point.hpp"
+#include "DataObjects/Point.cpp"
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/ImageHolder.hpp"
 

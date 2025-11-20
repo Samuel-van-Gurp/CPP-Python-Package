@@ -6,12 +6,14 @@ GreedySnakeEngine::GreedySnakeEngine(const ImageProcessorFacade &image, const Im
 
 }
 
-void GreedySnakeEngine::RunSnake(int iterations)
+Point* GreedySnakeEngine::RunSnake(int iterations)
 {
     for (int i = 0; i < iterations; ++i)
     {
         EvolveContour();
     }
+
+    return m_contour.getContourPoints_ptr();
 }
 
 void GreedySnakeEngine::EvolveContour()

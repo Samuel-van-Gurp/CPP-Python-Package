@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/Contour.hpp"
-#include "DataObjects/Point.hpp"
+#include "DataObjects/Point.cpp"
 #include "Algorithm/GreedySnakeEngine.hpp"
 #include <vector>
 

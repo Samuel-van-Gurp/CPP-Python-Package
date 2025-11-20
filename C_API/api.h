@@ -35,7 +35,7 @@ typedef struct
   int stride;
 } ImageInfo;
 
-EXPORT_API void PrepImageAndSnake(ImageInfo const* imageInfo, SnakeParams const* params);
+EXPORT_API void runSnake(ImageInfo const* imageInfo, SnakeParams const* params, Point* outContour_ptr, int* outContourLength_ptr);
 #ifdef __cplusplus
 }
 #endif

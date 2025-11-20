@@ -11,7 +11,7 @@ public:
 
         GreedySnakeEngine(const ImageProcessorFacade &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta);
 
-        void RunSnake(int iterations);
+        Point* RunSnake(int iterations);
 
         void EvolveContour();
         

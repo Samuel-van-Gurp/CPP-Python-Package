@@ -13,8 +13,15 @@ SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr
     m_writer.saveImage(m_imageHolder);
 }
 
-void SnakeController::run(int iterations)
+Point* SnakeController::run(int iterations, int* out_count_ptr)
 {
-    m_engine->RunSnake(iterations);
+    Point* contourPoints = m_engine->RunSnake(iterations);
     m_writer.ContourOverLay(m_contour, m_imageHolder, *m_imageProcessor);
+    
+    if (out_count_ptr) 
+    {
+        *out_count_ptr = m_contour.Size();
+    }
+    return contourPoints;
 }
+

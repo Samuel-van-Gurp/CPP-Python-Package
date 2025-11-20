@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-EXPORT_API void PrepImageAndSnake(ImageInfo const* imageInfo, SnakeParams const* params) 
+EXPORT_API void runSnake(ImageInfo const* imageInfo, SnakeParams const* params, Point* out_contour, int* out_count_ptr) 
 {
 
     ImageHolder<float>* imageHolder_ptr = constructImage(imageInfo->data, 
@@ -23,12 +23,25 @@ EXPORT_API void PrepImageAndSnake(ImageInfo const* imageInfo, SnakeParams const*
                                                                      params->contour_radius, 
                                                                      params->contour_points);
 
-    snakeInterface_ptr->run(params->iterations);                        
-                                                
+     
+    if (out_count_ptr) 
+    {
+        Point* contour_ptr = snakeInterface_ptr->run(params->iterations, out_count_ptr);            
+        std::copy(contour_ptr, 
+                contour_ptr + (*out_count_ptr), 
+                out_contour);
+    }   
+    
+
+
+
     delete imageHolder_ptr;
     delete snakeInterface_ptr;
+
 }
+
 
 #ifdef __cplusplus
 }
 #endif
+

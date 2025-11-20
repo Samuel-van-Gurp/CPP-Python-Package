@@ -11,6 +11,11 @@ int Contour::Size() const
     return m_numPoints;
 }
 
+Point *Contour::getContourPoints_ptr()
+{
+    return m_ContourPoints.data();
+}
+
 void Contour::FillContourPoints()
 {
     for (int i = 0; i < m_numPoints; ++i)
