@@ -1,6 +1,6 @@
 from matplotlib.patches import Ellipse
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Button, EllipseSelector, PolygonSelector
+from matplotlib.widgets import Button, EllipseSelector
 import numpy as np
 
 

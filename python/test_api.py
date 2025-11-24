@@ -1,11 +1,5 @@
-from ctypes import cdll, c_char_p, POINTER, c_uint8
-import ctypes
-import os
-from matplotlib.widgets import EllipseSelector, PolygonSelector
-import numpy as np
 import Image
 import PyAPI
-import matplotlib.pyplot as plt
 from DataClasses.DataClasses import SnakeParams, ImageInfo
 from UI import UI
 

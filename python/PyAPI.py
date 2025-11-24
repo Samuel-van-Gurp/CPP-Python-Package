@@ -1,4 +1,4 @@
-from ctypes import  POINTER, byref, cdll, c_uint8, Structure, c_float, c_int
+from ctypes import  POINTER, byref, cdll, c_uint8, c_float, c_int
 import numpy as np  
 import os
 from DataClasses.DataClasses import SnakeParams, ImageInfo, Point
@@ -63,13 +63,12 @@ class PyAPI:
                                                                out_contour,
                                                                byref(self.outSizeContours))
 
-        return self.reconstructCountours(out_contour, self.outSizeContours.value) 
-        
-
-
-        
-        
+        return self.reconstructCountours(out_contour, self.outSizeContours.value)
 
 
 
-            
+
+
+
+
+

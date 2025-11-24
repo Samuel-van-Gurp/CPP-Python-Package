@@ -1,5 +1,3 @@
-import os
-import PIL as Image
 from PIL import Image as PILImage
 import numpy as np
 
