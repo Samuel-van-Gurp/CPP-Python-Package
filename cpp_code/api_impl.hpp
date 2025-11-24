@@ -9,13 +9,14 @@
 extern "C" {
 #endif
 
-SnakeController* setupSnake(ImageHolder<float> *imageHolder_ptr,
+SnakeController *setupSnake(ImageHolder<float> *imageHolder_ptr, 
                             float alpha, 
                             float beta, 
                             float iterations, 
                             float contour_center_x, 
                             float contour_center_y, 
-                            float contour_radius, 
+                            float contour_radius_x, 
+                            float contour_radius_y, 
                             int contour_points);
 
 ImageHolder<float> *constructImage(const uint8_t *data, int width, int height, int stride);

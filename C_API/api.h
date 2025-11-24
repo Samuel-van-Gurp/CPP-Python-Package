@@ -23,8 +23,10 @@ typedef struct
     int iterations;
     float contour_center_x;
     float contour_center_y;
-    float contour_radius;
+    float contour_radius_x;
+    float contour_radius_y;
     int contour_points;
+
 } SnakeParams;
 
 typedef struct 

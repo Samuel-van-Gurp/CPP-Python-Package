@@ -8,29 +8,29 @@
 class Contour
 {
 public:
-    Contour(int radius, Point center, int numPoints);
-    
+    Contour(int radius, Point center, int numPoints); // circle contour
+
+    Contour(int radius_x, int radius_y, Point center, int numPoints); // ellipse contour
+
     int Size() const;
     Point* getContourPoints_ptr();
+
     
     float TensionEnergyAtPoint(int idx, Point newPoint) const;
     float CurveEnergyAtPoint(int idx, Point newPoint) const;
-
+    
     Point &operator[](std::size_t idx);
     const Point &operator[](std::size_t idx) const;
     
-private:
+    private:
     static constexpr double PI = 3.14159265358979323846;
     
-    int m_radius;
     Point m_center;
     int m_numPoints;
     std::vector<Point> m_ContourPoints;
-
-    void FillContourPoints();
-
     
-
+    void FillCircleContourPoints(int radius, Point center);
+    void FillEllipseContourPoints(int radius_x, int radius_y, Point center);
 };
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP

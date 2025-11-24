@@ -10,11 +10,11 @@
 
 #include <memory>
 
-SnakeController* setupSnake(ImageHolder<float>* imageHolder_ptr, float alpha, float beta, float iterations, float contour_center_x, float contour_center_y, float contour_radius, int contour_points)
+SnakeController* setupSnake(ImageHolder<float>* imageHolder_ptr, float alpha, float beta, float iterations, float contour_center_x, float contour_center_y, float contour_radius_x, float contour_radius_y, int contour_points)
 {
     auto imageProcessor = std::make_unique<ImageProcessorFacade>(std::make_unique<NaiveConvolve>(), std::make_unique<IntensityManipulator>());
 
-    Contour contour(contour_radius, Point(contour_center_x, contour_center_y), contour_points);
+    Contour contour(contour_radius_x, contour_radius_y, Point(contour_center_x, contour_center_y), contour_points);
     std::unique_ptr<ISnakeEngine> engine = std::make_unique<GreedySnakeEngine>(*imageProcessor, *imageHolder_ptr, contour, alpha, beta);
 
     SnakeController* snakeInterface = new SnakeController(*imageHolder_ptr, std::move(imageProcessor), contour, std::move(engine), alpha, beta);

@@ -20,9 +20,9 @@ EXPORT_API void runSnake(ImageInfo const* imageInfo, SnakeParams const* params, 
                                                                      params->iterations, 
                                                                      params->contour_center_x, 
                                                                      params->contour_center_y, 
-                                                                     params->contour_radius, 
+                                                                     params->contour_radius_x, 
+                                                                     params->contour_radius_y,
                                                                      params->contour_points);
-
      
     if (out_count_ptr) 
     {
