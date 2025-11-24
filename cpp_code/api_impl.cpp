@@ -3,7 +3,7 @@
 #include "ImageProcessing/NaiveConvolve.hpp"
 #include "ImageProcessing/IntensityManipulator.hpp"
 #include "DataObjects/Contour.hpp"
-#include "DataObjects/Point.cpp"
+#include "DataObjects/Point.hpp"
 #include "IO/WriteImage.hpp"
 #include "Algorithm/GreedySnakeEngine.hpp"
 #include "SnakeInterface.hpp"

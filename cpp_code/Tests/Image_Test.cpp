@@ -2,7 +2,7 @@
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "ImageProcessing/NaiveConvolve.hpp"
 #include "ImageProcessing/IntensityManipulator.hpp"
-#include "DataObjects/Point.cpp"
+#include "DataObjects/Point.hpp"
 #include "DataObjects/ImageHolder.hpp"
 #include <vector>
 #include <cstdint>

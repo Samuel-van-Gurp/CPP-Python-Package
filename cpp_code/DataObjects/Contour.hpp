@@ -1,7 +1,7 @@
 #ifndef CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
 #define CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
 
-#include "Point.cpp"
+#include "Point.hpp"
 #include <vector>
 #include <cmath>
 

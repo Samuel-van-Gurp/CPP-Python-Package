@@ -2,7 +2,7 @@
 #define ICONVOLVE_HPP
 
 #include "DataObjects/ImageHolder.hpp"
-#include "DataObjects/Point.cpp"
+#include "DataObjects/Point.hpp"
 
 
 class IConvolver {

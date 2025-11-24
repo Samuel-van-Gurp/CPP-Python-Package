@@ -3,7 +3,7 @@
 
 #include <cstdint>
 #include <vector>
-#include "Point.cpp"
+#include "Point.hpp"
 
 template <typename T>
 class ImageHolder
