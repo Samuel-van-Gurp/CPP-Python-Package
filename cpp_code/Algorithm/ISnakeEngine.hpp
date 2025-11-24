@@ -7,7 +7,7 @@ class ISnakeEngine
         ISnakeEngine() {}
 
         virtual Point* RunSnake(int iterations) = 0;
-        virtual void EvolveContour() = 0;
+        virtual bool EvolveContour() = 0;
 };
 
 #endif // ISNAKEENGINE_HPP

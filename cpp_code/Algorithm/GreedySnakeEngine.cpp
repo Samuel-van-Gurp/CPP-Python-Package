@@ -10,16 +10,20 @@ Point* GreedySnakeEngine::RunSnake(int iterations)
 {
     for (int i = 0; i < iterations; ++i)
     {
-        EvolveContour();
+        if (!EvolveContour()) {
+            std::cout << "Contour stabilized after " << i << " iterations.\n";
+            break; 
+        }
     }
 
     return m_contour.getContourPoints_ptr();
 }
 
-void GreedySnakeEngine::EvolveContour()
+bool GreedySnakeEngine::EvolveContour()
 {
     //copy current contour to new contour
     Contour newContour = m_contour;
+    int iterationsPerRound = 0;
 
     int contourSize = m_contour.Size();
     for (int i = 0; i < contourSize; ++i)
@@ -28,13 +32,24 @@ void GreedySnakeEngine::EvolveContour()
 
         Point nextStep = getNextStep(i, p);
         newContour[i] = nextStep;
+        
+        // check if point has moved
+        if (nextStep.X != p.X || nextStep.Y != p.Y)
+        {
+            iterationsPerRound++;
+        }
 
-        std::cout << "Point " << i << ": (" << p.X << ", " << p.Y << ") -> ("
-                  << nextStep.X << ", " << nextStep.Y << ")\n";
-
+    }
+    std::cout << "Points moved in this iteration: " << iterationsPerRound << "\n";
+    if (iterationsPerRound == stopCriterion)
+    {
+        std::cout << "No points moved in this iteration. Stopping evolution.\n";
+        m_contour = std::move(newContour);
+        return false;
     }
     // move new contour to the old contour
     m_contour = std::move(newContour);
+    return true;
 }
 
 Point GreedySnakeEngine::getNextStep(int index, Point& p)

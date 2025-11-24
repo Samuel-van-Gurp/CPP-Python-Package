@@ -13,10 +13,12 @@ public:
 
         Point* RunSnake(int iterations);
 
-        void EvolveContour();
+        bool EvolveContour();
         
         private:
-        
+
+        static constexpr int stopCriterion = 5;
+
         const float alpha;    
         const float beta;
         
