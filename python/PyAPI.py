@@ -24,13 +24,14 @@ class PyAPI:
         self.imageInfo.data = img.ctypes.data_as(POINTER(c_uint8))
 
 
-    def setSnakeParams(self, alpha : float, beta: float, iterations: int, center_x: float, center_y: float, radius: float, points: int) -> None:
+    def setSnakeParams(self, alpha : float, beta: float, iterations: int, center_x: float, center_y: float, radius_x: float, radius_y: float, points: int) -> None:
         self.snakeParams.alpha = c_float(alpha)
         self.snakeParams.beta = c_float(beta)
         self.snakeParams.iterations = c_int(iterations)
         self.snakeParams.contour_center_x = c_float(center_x)
         self.snakeParams.contour_center_y = c_float(center_y)
-        self.snakeParams.contour_radius = c_float(radius)
+        self.snakeParams.contour_radius_x = c_float(radius_x)
+        self.snakeParams.contour_radius_y = c_float(radius_y)
         self.snakeParams.contour_points = c_int(points)
 
     def reconstructCountours(self, contour_ptr, size_contours: c_int) -> np.ndarray:

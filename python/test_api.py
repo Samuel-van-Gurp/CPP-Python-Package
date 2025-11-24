@@ -11,11 +11,7 @@ from UI import UI
 
 ui = UI()
 
-
 # CoinImage = Image.Image("StarImage.png")
-
-
-
 CoinImage = Image.Image("coin.jpg")
 CoinImage.downsampleImage(6)
 # CoinImage.show_image()
@@ -27,24 +23,25 @@ ui.selectInitContour(CoinArray)
 print("Size of CoinArray:", CoinArray.shape)
 pyAPI = PyAPI.PyAPI(SnakeParams(), ImageInfo())
 
-# pyAPI.setImageInfo(CoinArray)
+pyAPI.setImageInfo(CoinArray)
 
-# pyAPI.setSnakeParams(alpha= 0.5, 
-#                     beta=0.4, 
-#                     iterations=100, 
-#                     center_x=140.0, 
-#                     center_y=100.0, 
-#                     radius=50.0, 
-#                     points=50)
+pyAPI.setSnakeParams(alpha= 0.5, 
+                    beta=0.4, 
+                    iterations=100, 
+                    center_x=ui.xy[0], 
+                    center_y=ui.xy[1], 
+                    radius_x=ui.width / 2, 
+                    radius_y=ui.height / 2, 
+                    points=50)
 
-# contour = pyAPI.callApi(CoinArray)
+contour = pyAPI.callApi(CoinArray)
 
-# # print all points in the contour
+# print all points in the contour
 
-# for point in contour:
-#     print(f"Point: x={point[0]}, y={point[1]}")
+for point in contour:
+    print(f"Point: x={point[0]}, y={point[1]}")
 
-# ui.displayImageWithContour(CoinArray, contour)
+ui.displayImageWithContour(CoinArray, contour)
 
 
 

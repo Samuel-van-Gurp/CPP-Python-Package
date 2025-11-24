@@ -8,7 +8,8 @@ class SnakeParams(Structure):
         ("iterations", c_int),
         ("contour_center_x", c_float),
         ("contour_center_y", c_float),
-        ("contour_radius", c_float),
+        ("contour_radius_x", c_float),
+        ("contour_radius_y", c_float),
         ("contour_points", c_int),
     ]
 

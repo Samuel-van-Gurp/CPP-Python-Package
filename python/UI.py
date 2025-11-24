@@ -8,6 +8,9 @@ class UI:
     def __init__(self):
         self.selector = None
         self.ellipse_patch = None 
+        self.xy = None
+        self.width = None
+        self.height = None
 
     def displayImageWithContour(self, image: np.ndarray, contour: np.ndarray):
         plt.imshow(image, cmap='gray')
@@ -25,16 +28,18 @@ class UI:
 
         self.selector = EllipseSelector(ax, self.onSelect)
         button_ax = fig.add_axes([0.4, 0.05, 0.2, 0.075])
-        btn = Button(button_ax, 'My Button')
+        btn = Button(button_ax, 'Confirm Selection')
         btn.on_clicked(self.on_button_clicked)
-        # plt.axis('off')
-        plt.show()  # This keeps the window open until closed by the user
+        plt.show()
 
     def on_button_clicked(self, event):
         print("button clicked,")
-        xy = self.ellipse_patch.get_center()
-        width = self.ellipse_patch.get_width()
-        height = self.ellipse_patch.get_height()
+        self.xy = self.ellipse_patch.get_center()
+        self.width = self.ellipse_patch.get_width()
+        self.height = self.ellipse_patch.get_height()
+
+        # Close the figure window after selection
+        plt.close()
 
     def onSelect(self, eclick, erelease):
         ax = eclick.inaxes
