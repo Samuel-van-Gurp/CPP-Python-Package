@@ -32,9 +32,9 @@ class UI:
 
     def on_button_clicked(self, event):
         print("button clicked,")
-        xy = self.ellipse_patch.xy()
-        width = self.ellipse_patch.width()
-        height = self.ellipse_patch.height()
+        xy = self.ellipse_patch.get_center()
+        width = self.ellipse_patch.get_width()
+        height = self.ellipse_patch.get_height()
 
     def onSelect(self, eclick, erelease):
         ax = eclick.inaxes
