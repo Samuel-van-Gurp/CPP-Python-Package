@@ -1,8 +1,6 @@
 #ifndef CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGE_HPP
 #define CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGE_HPP
 
-#include "DataObjects/Contour.hpp"
-#include "DataObjects/Point.hpp"
 #include "DataObjects/ImageHolder.hpp"
 #include "ImageProcessing/IConvolve.hpp"
 #include "ImageProcessing/IIntensityManipulator.hpp"

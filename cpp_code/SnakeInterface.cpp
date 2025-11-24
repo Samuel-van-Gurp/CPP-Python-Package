@@ -1,4 +1,6 @@
 #include "SnakeInterface.hpp"
+#include "Algorithm/GreedySnakeEngine.hpp"
+#include <memory>
 
 SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta)
     : m_imageHolder(imageHolder)

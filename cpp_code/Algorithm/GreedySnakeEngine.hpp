@@ -1,8 +1,11 @@
 #ifndef SNAKEENGINE_HPP
 #define SNAKEENGINE_HPP
+
+#include <vector>
+#include <algorithm>
+#include <iostream>
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/Contour.hpp"
-#include "IO/WriteImage.hpp"
 #include "Algorithm/ISnakeEngine.hpp"
 
 class GreedySnakeEngine : public ISnakeEngine

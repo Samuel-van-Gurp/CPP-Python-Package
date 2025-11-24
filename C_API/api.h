@@ -1,6 +1,5 @@
 #pragma once
 #include <stdint.h>
-#include "cpp_code/SnakeInterface.hpp"
 
 #ifdef __cplusplus // if this is compiled by a C++ compiler
   extern "C" { // tell the C++ compiler to treat the following code as C code

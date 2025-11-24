@@ -1,12 +1,8 @@
 #include "api_impl.hpp"
-#include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "ImageProcessing/NaiveConvolve.hpp"
 #include "ImageProcessing/IntensityManipulator.hpp"
 #include "DataObjects/Contour.hpp"
-#include "DataObjects/Point.hpp"
-#include "IO/WriteImage.hpp"
 #include "Algorithm/GreedySnakeEngine.hpp"
-#include "SnakeInterface.hpp"
 
 #include <memory>
 

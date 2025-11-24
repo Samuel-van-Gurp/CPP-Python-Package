@@ -2,13 +2,11 @@
 #define SNAKEINTERFACE_HPP
 
 #include <cstdint>
-#include <cassert>
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/Contour.hpp"
 #include "Algorithm/ISnakeEngine.hpp"
 #include "IO/WriteImage.hpp"
 #include "DataObjects/ImageHolder.hpp"
-#include "Algorithm/GreedySnakeEngine.hpp"
 #include <memory>
 
 class SnakeController
