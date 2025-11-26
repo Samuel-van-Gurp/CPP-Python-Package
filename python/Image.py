@@ -10,20 +10,11 @@ class Image:
     def __load_image(self):
         try:
             img = PILImage.open(self.image_path)
-            img = img.convert("L")  # convert to grayscale
+            img = img.convert("L")  #to grayscale
             self.image = img
-            print(f"Loaded image: size={self.image.size} mode={self.image.mode}")
         except Exception as e:
+            print(f"Failed to load image from {self.image_path}: {e}")
             self.image = None
-            print(f"Failed to load image: {self.image_path} ({e})")
-
-    def __process_image(self):
-        # Example processing: convert to grayscale (override as needed)
-        if self.image is None:
-            print("No image loaded to process")
-            return
-        self.image = self.image.convert("L")
-        print("Processed image: converted to grayscale")
 
     def downsampleImage(self, factor):
         if self.image is None:

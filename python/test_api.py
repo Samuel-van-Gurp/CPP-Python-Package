@@ -1,24 +1,33 @@
-import queue
-import threading
+import Params
 import Image
 import PyAPI
 from DataClasses.DataClasses import SnakeParams, ImageInfo
 from UI import UI
-import matplotlib.pyplot as plt
+import json
 
 def main():
-    CoinImage = Image.Image("StarImage.png")
-
-    ImageArray = CoinImage.convert_to_numpy()
-
+    # create instances
     ui = UI()
-
     pyAPI = PyAPI.PyAPI(SnakeParams(), ImageInfo())
+    params = Params.Params()
 
+    # load image
+    CoinImage = Image.Image("Images/StarImage.png")
+    ImageArray = CoinImage.convert_to_numpy()
+    # load params from json
+    pyAPI.setSnakeParams(alpha=params.alpha, 
+                        beta=params.beta,
+                        iterations=params.max_iterations,
+                        center_x=0.0,
+                        center_y=0.0,
+                        radius_x=0.0,
+                        radius_y=0.0,
+                        points=params.contour_points
+                        )
+
+    ui.selectInitContour(ImageArray, alpha_init=params.alpha, beta_init=params.beta)
+    
     pyAPI.setImageInfo(ImageArray)
-    
-    ui.selectInitContour(ImageArray)
-    
     pyAPI.setSnakeParams(alpha = ui.alphaUserInput.val, 
                         beta = ui.betaUserInput.val, 
                         iterations=500, 
@@ -32,6 +41,7 @@ def main():
 
     ui.displayImageWithContour(ImageArray, contour)
 
-    
+    params.saveParamsAsJson(ui.alphaUserInput.val, ui.betaUserInput.val, 500, 50)
 
 main()
+

@@ -22,7 +22,7 @@ class UI:
         self.result_contour = contour
 
 
-    def selectInitContour(self, image: np.ndarray):
+    def selectInitContour(self, image: np.ndarray, alpha_init=0.5, beta_init=0.5):
         self.fig, self.ax = plt.subplots()
         ax = self.ax
         fig = self.fig
@@ -37,26 +37,22 @@ class UI:
         button_ax = fig.add_axes([0.4, 0.05, 0.2, 0.075])
         slider_alpha_ax = fig.add_axes([0.1, 0.05, 0.2, 0.075])
         slider_beta_ax = fig.add_axes([0.1, 0.1, 0.2, 0.075])
-        self.alphaUserInput = Slider(slider_alpha_ax, 'α', valmin=0, valmax=1, valinit=0.5)
-        self.betaUserInput = Slider(slider_beta_ax, 'β', valmin=0, valmax=1, valinit=0.5)
+        self.alphaUserInput = Slider(slider_alpha_ax, 'α', valmin=0, valmax=1, valinit=alpha_init)
+        self.betaUserInput = Slider(slider_beta_ax, 'β', valmin=0, valmax=1, valinit=beta_init)
         btn = Button(button_ax, 'Confirm Selection')
         btn.on_clicked(self.onButtonClicked)
 
         plt.show()
 
     def onButtonClicked(self, event):
-        print("onButtonClicked::self.ellipse_patch.get_center())",self.ellipse_patch.get_center())
-
         if self.ellipse_patch is not None:
             self.xy = self.ellipse_patch.get_center()
             self.width = self.ellipse_patch.get_width() 
             self.height = self.ellipse_patch.get_height()
-
-            # self.ellipse_patch = None
+            plt.close(self.fig)
         else:
             print("No ellipse selected!")
 
-        plt.close(self.fig)
 
     def displayImageWithContour(self, image : np.ndarray, contour: np.ndarray):
         plt.imshow(image, cmap='gray')
@@ -86,5 +82,3 @@ class UI:
         self.ellipse_patch = ellipse
         
         plt.draw()
-        print("self.ellipse_patch.get_center())",self.ellipse_patch.get_center())
-        print("onselect")
