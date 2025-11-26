@@ -59,10 +59,11 @@ class PyAPI:
                                       POINTER(c_int)]
 
         self.lib.runSnake.restype = None
+        
         contour_ptr = self.lib.runSnake(byref(self.imageInfo), byref(self.snakeParams), 
                                                                out_contour,
                                                                byref(self.outSizeContours))
-
+   
         return self.reconstructCountours(out_contour, self.outSizeContours.value)
 
 

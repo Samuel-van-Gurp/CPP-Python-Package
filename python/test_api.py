@@ -1,32 +1,37 @@
+import queue
+import threading
 import Image
 import PyAPI
 from DataClasses.DataClasses import SnakeParams, ImageInfo
 from UI import UI
+import matplotlib.pyplot as plt
 
-ui = UI()
+def main():
+    CoinImage = Image.Image("StarImage.png")
 
-CoinImage = Image.Image("StarImage.png")
-# CoinImage = Image.Image("coin.jpg")
-# CoinImage.downsampleImage(6)
-# CoinImage.show_image()
+    ImageArray = CoinImage.convert_to_numpy()
 
-CoinArray = CoinImage.convert_to_numpy()
+    ui = UI()
 
-ui.selectInitContour(CoinArray)
+    pyAPI = PyAPI.PyAPI(SnakeParams(), ImageInfo())
 
-print("Size of CoinArray:", CoinArray.shape)
-pyAPI = PyAPI.PyAPI(SnakeParams(), ImageInfo())
+    pyAPI.setImageInfo(ImageArray)
+    
+    ui.selectInitContour(ImageArray)
+    
+    pyAPI.setSnakeParams(alpha = ui.alphaUserInput.val, 
+                        beta = ui.betaUserInput.val, 
+                        iterations=500, 
+                        center_x=ui.xy[0], 
+                        center_y=ui.xy[1], 
+                        radius_x=ui.width / 2, 
+                        radius_y=ui.height / 2, 
+                        points=50)
 
-pyAPI.setImageInfo(CoinArray)
+    contour = pyAPI.callApi(ImageArray)
 
-pyAPI.setSnakeParams(alpha= 0.5, 
-                    beta=0.4, 
-                    iterations=500, 
-                    center_x=ui.xy[0], 
-                    center_y=ui.xy[1], 
-                    radius_x=ui.width / 2, 
-                    radius_y=ui.height / 2, 
-                    points=50)
+    ui.displayImageWithContour(ImageArray, contour)
 
-contour = pyAPI.callApi(CoinArray)
-ui.displayImageWithContour(CoinArray, contour)
+    
+
+main()
