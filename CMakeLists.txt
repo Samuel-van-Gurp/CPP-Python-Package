@@ -15,7 +15,6 @@ enable_testing()
 add_library(hello_c_api SHARED C_API/api.cpp
                             cpp_code/api_impl.cpp
                             
-                            cpp_code/IO/WriteImage.cpp
                             cpp_code/SnakeInterface.cpp
                             
                             cpp_code/DataObjects/Point.hpp

@@ -12,14 +12,11 @@ SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr
     m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
 
     m_imageProcessor->PrepImage(m_imageHolder);
-    m_writer.saveImage(m_imageHolder);
 }
 
 Point* SnakeController::run(int iterations, int* out_count_ptr)
 {
-    Point* contourPoints = m_engine->RunSnake(iterations);
-    m_writer.ContourOverLay(m_contour, m_imageHolder, *m_imageProcessor);
-    
+    Point* contourPoints = m_engine->RunSnake(iterations);    
     if (out_count_ptr) 
     {
         *out_count_ptr = m_contour.Size();
