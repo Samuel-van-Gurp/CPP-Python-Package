@@ -5,6 +5,7 @@
 #include <vector>
 #include <cmath>
 
+
 class Contour
 {
 public:
@@ -15,13 +16,21 @@ public:
     int Size() const;
     Point* getContourPoints_ptr();
 
+    std::tuple<float, float> secondDiff(int index);
+
+    std::tuple<float, float> fourthdDiff(int index);
+
+    
+    std::tuple<float, float> CurveForce(int index);
     
     float TensionEnergyAtPoint(int idx, Point newPoint) const;
     float CurveEnergyAtPoint(int idx, Point newPoint) const;
     
-    Point &operator[](std::size_t idx);
-    const Point &operator[](std::size_t idx) const;
+    float secondDiff(const Contour contour, int index);
     
+    
+    Point &operator[](int idx);
+    const Point &operator[](int idx) const;
     private:
     static constexpr double PI = 3.14159265358979323846;
     

@@ -22,6 +22,7 @@ Point *Contour::getContourPoints_ptr()
     return m_ContourPoints.data();
 }
 
+
 void Contour::FillEllipseContourPoints(int radius_x, int radius_y,  Point center)
 {
     for (int i = 0; i < m_numPoints; ++i)
@@ -58,5 +59,40 @@ float Contour::CurveEnergyAtPoint(int idx, Point newPoint) const
     return (fx * fx) + (fy * fy);
 }
 
-Point& Contour::operator[](std::size_t idx) { return m_ContourPoints.at(idx); }
-const Point& Contour::operator[](std::size_t idx) const { return m_ContourPoints.at(idx); }
+std::tuple<float, float> Contour::secondDiff(int index)
+{
+    float h = 1.0;
+    
+    float dx2 = (1/(h*h)) * ((*this)[index+1].X - 2*(*this)[index].X + (*this)[index-1].X);
+    float dy2 = (1/(h*h)) * ((*this)[index+1].Y - 2*(*this)[index].Y + (*this)[index-1].Y);
+    
+    return std::make_tuple(dx2, dy2);
+}
+
+std::tuple<float, float> Contour::fourthdDiff(int index){
+    float h = 1.0;
+    float dx4 = ((*this)[index+2].X + 4 * (*this)[index+1].X + 6 * (*this)[index].X - 4 * (*this)[index-1].X + (*this)[index-2].X) / pow(h,4);
+    float dy4 = ((*this)[index+2].Y + 4 * (*this)[index+1].Y + 6 * (*this)[index].Y - 4 * (*this)[index-1].Y + (*this)[index-2].Y) / pow(h,4);
+
+    return std::make_tuple(dx4, dy4);
+}
+
+Point& Contour::operator[](int idx) 
+{
+    int wrapped_idx = idx % Size();
+    if (wrapped_idx < 0) 
+    {
+        wrapped_idx += Size();
+    }
+    return m_ContourPoints.at(static_cast<std::size_t>(wrapped_idx)); 
+}
+
+const Point& Contour::operator[](int idx) const 
+{
+    int wrapped_idx = idx % Size();
+    if (wrapped_idx < 0) 
+    {
+        wrapped_idx += Size();
+    }
+    return m_ContourPoints.at(static_cast<std::size_t>(wrapped_idx)); 
+}
