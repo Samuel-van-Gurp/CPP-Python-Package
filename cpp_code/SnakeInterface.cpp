@@ -1,5 +1,6 @@
 #include "SnakeInterface.hpp"
 #include "Algorithm/GreedySnakeEngine.hpp"
+#include "Algorithm/ELSnakeEngine.hpp"
 #include <memory>
 
 SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta)
@@ -9,7 +10,8 @@ SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr
     , m_engine(std::move(engine))
 {
     
-    m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
+    // m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
+    m_engine = std::make_unique<ELSnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
 
     m_imageProcessor->PrepImage(m_imageHolder);
 }

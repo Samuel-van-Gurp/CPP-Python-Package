@@ -1,5 +1,6 @@
 #ifndef ISNAKEENGINE_HPP
 #define ISNAKEENGINE_HPP
+#include "DataObjects/Point.hpp"
 
 class ISnakeEngine
 {
