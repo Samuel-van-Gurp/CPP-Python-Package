@@ -9,9 +9,9 @@ ImageProcessorFacade::ImageProcessorFacade(std::unique_ptr<IConvolver> convolver
 
 void ImageProcessorFacade::PrepImage(ImageHolder<float>& image)
 {
-    BlurImage(BlurType::Medium, image);
+    // BlurImage(BlurType::Large, image);
     auto gradientMagnitude = ComputeGradientMagnitude(image);
-    BlurImage(BlurType::Medium, gradientMagnitude);
+    BlurImage(BlurType::Large, gradientMagnitude);
     m_intensityManipulator->normaliseImageIntensity(gradientMagnitude);
     m_intensityManipulator->invertImageIntensity(gradientMagnitude);
 
