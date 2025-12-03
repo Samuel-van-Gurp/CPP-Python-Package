@@ -22,6 +22,7 @@ add_library(hello_c_api SHARED C_API/api.cpp
                             
                             cpp_code/Algorithm/ISnakeEngine.hpp
                             cpp_code/Algorithm/GreedySnakeEngine.cpp
+                            cpp_code/Algorithm/ELSnakeEngine.cpp
 
                             cpp_code/ImageProcessing/ImageProcessorFacade.cpp
                             cpp_code/ImageProcessing/NaiveConvolve.cpp
@@ -36,12 +37,14 @@ add_executable(runTests
     cpp_code/Tests/Image_Test.cpp
     cpp_code/Tests/ImageHolderTest.cpp
     cpp_code/Tests/SnakeEngine_Test.cpp
+    cpp_code/Tests/ELSnakeEngine_Test.cpp
     cpp_code/ImageProcessing/ImageProcessorFacade.cpp
     cpp_code/ImageProcessing/NaiveConvolve.cpp
     cpp_code/DataObjects/Point.hpp
     cpp_code/DataObjects/Contour.cpp
     cpp_code/Algorithm/GreedySnakeEngine.cpp
     cpp_code/ImageProcessing/IntensityManipulator.cpp
+    cpp_code/Algorithm/ELSnakeEngine.cpp
 )
 
 target_link_libraries(runTests
