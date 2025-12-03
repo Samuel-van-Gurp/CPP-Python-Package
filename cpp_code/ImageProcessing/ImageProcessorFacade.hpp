@@ -26,6 +26,10 @@ class ImageProcessorFacade
     void scaleIntensity(int factor, ImageHolder<float> &image) const;
     void invertImageIntensity(ImageHolder<float> &image) const;
 
+    ImageHolder<float> CalculateGradientX(const ImageHolder<float> &image) const;
+
+    ImageHolder<float> CalculateGradientY(const ImageHolder<float> &image) const;
+
     // ImageHolder<float> ConvolveImage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
 
     ImageHolder<float> ComputeGradientMagnitude(const ImageHolder<float> &image);
@@ -33,6 +37,10 @@ class ImageProcessorFacade
     void BlurImage(BlurType blurType, ImageHolder<float> &image);
 
 private:
+
+    static const std::vector<std::vector<float>> SobelX;
+    static const std::vector<std::vector<float>> SobelY;
+
     std::unique_ptr<IConvolver> m_convolver;
     std::unique_ptr<IIntensityManipulator> m_intensityManipulator;
 };

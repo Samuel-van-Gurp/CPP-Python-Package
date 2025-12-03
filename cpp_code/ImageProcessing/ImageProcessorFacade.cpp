@@ -1,5 +1,15 @@
 #include "ImageProcessorFacade.hpp"
 
+const std::vector<std::vector<float>> ImageProcessorFacade::SobelX = {
+    { -1, 0, 1 },
+    { -2, 0, 2 },
+    { -1, 0, 1 }
+};
+const std::vector<std::vector<float>> ImageProcessorFacade::SobelY = {
+    {  1,  2,  1 },
+    {  0,  0,  0 },
+    { -1, -2, -1 }
+};
 
 ImageProcessorFacade::ImageProcessorFacade(std::unique_ptr<IConvolver> convolver, std::unique_ptr<IIntensityManipulator> intensityManipulator)
     : m_convolver(std::move(convolver))
@@ -33,27 +43,25 @@ void ImageProcessorFacade::invertImageIntensity(ImageHolder<float> &image) const
     m_intensityManipulator->invertImageIntensity(image);
 }
 
+ImageHolder<float> ImageProcessorFacade::CalculateGradientX(const ImageHolder<float> &image) const
+{
+    return m_convolver->Convolve(SobelX, image);
+}
+
+ImageHolder<float> ImageProcessorFacade::CalculateGradientY(const ImageHolder<float> &image) const
+{
+    return m_convolver->Convolve(SobelY, image);
+}
+
 ImageHolder<float> ImageProcessorFacade::ComputeGradientMagnitude(const ImageHolder<float> &image)
 {
-    // compute signed Sobel gradients directly into vector buffers (preserve sign)
-    static const std::vector<std::vector<float>> kx = {
-        { -1, 0, 1 },
-        { -2, 0, 2 },
-        { -1, 0, 1 }
-    };
-    static const std::vector<std::vector<float>> ky = {
-        {  1,  2,  1 },
-        {  0,  0,  0 },
-        { -1, -2, -1 }
-    };
-
     int w = image.getWidth();
     int h = image.getHeight();
 
     ImageHolder<float> gradMagHolder(std::vector<float>(w * h, 0), w, h);
 
-    ImageHolder<float> gradXHolder = m_convolver->Convolve(kx, image); 
-    ImageHolder<float> gradYHolder = m_convolver->Convolve(ky, image); 
+    ImageHolder<float> gradXHolder = CalculateGradientX(image);
+    ImageHolder<float> gradYHolder = CalculateGradientY(image);
 
     // combine signed gradients into magnitude
     for (int y = 0; y < h; ++y)
