@@ -34,7 +34,7 @@ public:
     void setPixel(int x, int y, T value);
 
     T getPixel(const Point) const;
-    T getPixel(int x, int y) const;
+    T getPixel(float x, float y) const;
 
     bool empty() const;
 };
@@ -161,14 +161,15 @@ T ImageHolder<T>::getPixel(const Point p) const
 }
 
 template<typename T>
-T ImageHolder<T>::getPixel(int x, int y) const
+T ImageHolder<T>::getPixel(float x, float y) const
 {
     // bounds check
+
     if (x < 0 || x >= m_width || y < 0 || y >= m_height) {
         return T(0); 
     }
-
-    return m_data[y * m_stride + x];
+    // round to nearest integer pixel coordinates
+    return m_data[static_cast<int>(round(y)) * m_stride + static_cast<int>(round(x))];
 }
 
 #endif // CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_IMAGEHOLDER_HPP
