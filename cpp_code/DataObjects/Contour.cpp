@@ -61,18 +61,19 @@ float Contour::CurveEnergyAtPoint(int idx, Point newPoint) const
 
 std::tuple<float, float> Contour::secondDiff(int index)
 {
-    float h = 1.0;
+    float h = 1.0f;
     
-    float dx2 = (1/(h*h)) * ((*this)[index+1].X - 2*(*this)[index].X + (*this)[index-1].X);
-    float dy2 = (1/(h*h)) * ((*this)[index+1].Y - 2*(*this)[index].Y + (*this)[index-1].Y);
+    float dx2 = (1.0f/(h*h)) * ((*this)[index+1].X - 2.0f*(*this)[index].X + (*this)[index-1].X);
+    float dy2 = (1.0f/(h*h)) * ((*this)[index+1].Y - 2.0f*(*this)[index].Y + (*this)[index-1].Y);
     
     return std::make_tuple(dx2, dy2);
 }
 
 std::tuple<float, float> Contour::fourthdDiff(int index){
-    float h = 1.0;
-    float dx4 = ((*this)[index+2].X + 4 * (*this)[index+1].X + 6 * (*this)[index].X - 4 * (*this)[index-1].X + (*this)[index-2].X) / pow(h,4);
-    float dy4 = ((*this)[index+2].Y + 4 * (*this)[index+1].Y + 6 * (*this)[index].Y - 4 * (*this)[index-1].Y + (*this)[index-2].Y) / pow(h,4);
+    float h = 1.0f;
+    float inv_h4 = 1.0f / (h * h * h * h);
+    float dx4 = inv_h4 * ((*this)[index-2].X - 4.0f * (*this)[index-1].X + 6.0f * (*this)[index].X - 4.0f * (*this)[index+1].X + (*this)[index+2].X);
+    float dy4 = inv_h4 * ((*this)[index-2].Y - 4.0f * (*this)[index-1].Y + 6.0f * (*this)[index].Y - 4.0f * (*this)[index+1].Y + (*this)[index+2].Y);
 
     return std::make_tuple(dx4, dy4);
 }
