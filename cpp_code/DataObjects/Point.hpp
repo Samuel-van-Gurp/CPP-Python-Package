@@ -8,8 +8,8 @@ extern "C" {
 #endif
 
 struct Point {
-    std::int32_t X;
-    std::int32_t Y;
+    float X;
+    float Y;
 };
 
 
@@ -17,4 +17,4 @@ struct Point {
 }
 #endif
 
-#endif // POINT_HPP
+#endif // POINT_HPP 

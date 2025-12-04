@@ -28,8 +28,8 @@ void Contour::FillEllipseContourPoints(int radius_x, int radius_y,  Point center
     for (int i = 0; i < m_numPoints; ++i)
     {
         double angle = 2.0 * PI * static_cast<double>(i) / static_cast<double>(m_numPoints);
-        int x = static_cast<int>(m_center.X + radius_x * cos(angle));
-        int y = static_cast<int>(m_center.Y + radius_y * sin(angle));
+        float x = m_center.X + radius_x * cos(angle);
+        float y = m_center.Y + radius_y * sin(angle);
         m_ContourPoints.emplace_back(x, y);
     }
 }

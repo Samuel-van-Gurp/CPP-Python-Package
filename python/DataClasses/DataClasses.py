@@ -23,6 +23,6 @@ class ImageInfo(Structure):
 
 class Point(Structure):
     _fields_ = [
-        ("X", c_int32),
-        ("Y", c_int32),
+        ("X", c_float),
+        ("Y", c_float),
     ]
