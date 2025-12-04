@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <cmath>
 #include "Point.hpp"
 
 template <typename T>
@@ -152,19 +153,13 @@ bool ImageHolder<T>::empty() const
 template<typename T>
 T ImageHolder<T>::getPixel(const Point p) const
 {
-    // bounds check
-    if (p.X < 0 || p.X >= m_width || p.Y < 0 || p.Y >= m_height) {
-        return T(0); // or throw an exception
-    }
-
-    return m_data[p.Y * m_stride + p.X];
+    return getPixel(p.X, p.Y);
 }
 
 template<typename T>
 T ImageHolder<T>::getPixel(float x, float y) const
 {
     // bounds check
-
     if (x < 0 || x >= m_width || y < 0 || y >= m_height) {
         return T(0); 
     }

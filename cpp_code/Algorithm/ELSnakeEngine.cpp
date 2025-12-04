@@ -53,20 +53,27 @@ bool ELSnakeEngine::EvolveContour()
     return true;
 }
 
+std::tuple<float, float> ELSnakeEngine::combineForces(const std::tuple<float, float>& internalForce, const std::tuple<float, float>& externalForce)
+{
+    std::tuple<float, float> combinedForce;
+    std::get<0>(combinedForce) = std::get<0>(internalForce) + std::get<0>(externalForce);
+    std::get<1>(combinedForce) = std::get<1>(internalForce) + std::get<1>(externalForce);
+    return combinedForce;
+}
+
 Point ELSnakeEngine::getNextStep(int index, Point& p)
 {
-    float stepSize = 0.10f;
+    float stepSize = 1.0f;
 
-    auto internalForce = getInternalForce(index);
-    auto externalForce = getExternalForce(p);
+    auto internalForce = std::make_tuple(0.0f, 0.0f); //getInternalForce(index);// TODO: enable external force
+    auto externalForce =  getExternalForce(p); 
 
-    // todo remove
-    // std::cout<<"internalForce" << get<0>(internalForce) << "," << get<1>(internalForce) << "\n";
-    // std::cout<<"externalForce" << get<0>(externalForce) << "," << get<1>(externalForce)<< "\n";
 
-    float new_x = p.X + stepSize * (get<0>(internalForce) + get<0>(externalForce));
-    float new_y = p.Y + stepSize * (get<1>(internalForce) + get<1>(externalForce));
+    float new_x = p.X + stepSize * std::get<0>(combineForces(internalForce, externalForce));
+    float new_y = p.Y + stepSize * std::get<1>(combineForces(internalForce, externalForce));
+
     // print external and internal forces
+    
     std::cout << "externalForce" << get<0>(externalForce) <<"," << get<1>(externalForce)<< "\n";; 
     std::cout << " internalForce" << get<0>(internalForce) <<"," << get<1>(internalForce) << "\n";
     // Print old and new point
@@ -86,7 +93,7 @@ std::tuple<float, float> ELSnakeEngine::getExternalForce(const Point &p)
 std::tuple<float, float> ELSnakeEngine::getInternalForce(int ContourIndex)
 {
     std::tuple<float, float> tentionForce = m_contour.secondDiff(ContourIndex);
-    std::tuple<float, float> CurveForce = m_contour.fourthdDiff(ContourIndex); 
+    std::tuple<float, float> CurveForce = m_contour.fourthDiff(ContourIndex); 
 
     // Combine forces
     std::tuple<float, float> internalForce;

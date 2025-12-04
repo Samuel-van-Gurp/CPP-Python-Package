@@ -1,5 +1,5 @@
 #include "Contour.hpp"
-
+#include <iostream>
 Contour::Contour(int radius, Point center, int numPoints) // circle contour
     : m_center(center), m_numPoints(numPoints)
 {
@@ -22,7 +22,6 @@ Point *Contour::getContourPoints_ptr()
     return m_ContourPoints.data();
 }
 
-
 void Contour::FillEllipseContourPoints(int radius_x, int radius_y,  Point center)
 {
     for (int i = 0; i < m_numPoints; ++i)
@@ -30,6 +29,7 @@ void Contour::FillEllipseContourPoints(int radius_x, int radius_y,  Point center
         double angle = 2.0 * PI * static_cast<double>(i) / static_cast<double>(m_numPoints);
         float x = m_center.X + radius_x * cos(angle);
         float y = m_center.Y + radius_y * sin(angle);
+
         m_ContourPoints.emplace_back(x, y);
     }
 }
@@ -69,7 +69,7 @@ std::tuple<float, float> Contour::secondDiff(int index)
     return std::make_tuple(dx2, dy2);
 }
 
-std::tuple<float, float> Contour::fourthdDiff(int index){
+std::tuple<float, float> Contour::fourthDiff(int index){
     float h = 1.0f;
     float inv_h4 = 1.0f / (h * h * h * h);
     float dx4 = inv_h4 * ((*this)[index-2].X - 4.0f * (*this)[index-1].X + 6.0f * (*this)[index].X - 4.0f * (*this)[index+1].X + (*this)[index+2].X);

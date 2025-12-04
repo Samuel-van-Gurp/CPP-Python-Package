@@ -30,7 +30,7 @@ def main():
     pyAPI.setImageInfo(ImageArray)
     pyAPI.setSnakeParams(alpha = ui.alphaUserInput.val, 
                         beta = ui.betaUserInput.val, 
-                        iterations=1, 
+                        iterations=10, 
                         center_x=ui.xy[0], 
                         center_y=ui.xy[1], 
                         radius_x=ui.width / 2, 

@@ -15,14 +15,15 @@
 
 class ELSnakeEngine : public ISnakeEngine
 {
-    public:
+public:
 
     ELSnakeEngine(const ImageProcessorFacade & image, const ImageHolder<float>& imageHolder, Contour & contour, float alpha, float beta);
 
     Point* RunSnake(int iterations);
 
-    private:
     bool EvolveContour();
+
+    std::tuple<float, float> combineForces(const std::tuple<float, float> &internalForce, const std::tuple<float, float> &externalForce);
 
     Point getNextStep(int index, Point &p);
 
@@ -31,7 +32,6 @@ class ELSnakeEngine : public ISnakeEngine
     std::tuple<float, float> getInternalForce(int ContourIndex);
 
 private:
-
     static constexpr int stopCriterion = 5;
 
     Contour m_contour;
@@ -40,8 +40,6 @@ private:
 
     const float alpha;    
     const float beta;
-
-    
 };
 
 #endif ELSAKESNAKEENGINE_HPP
