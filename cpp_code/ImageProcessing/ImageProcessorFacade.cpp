@@ -17,9 +17,8 @@ ImageProcessorFacade::ImageProcessorFacade(std::unique_ptr<IConvolver> convolver
 {    
 }
 
-void ImageProcessorFacade::PrepImage(ImageHolder<float>& image)
+void ImageProcessorFacade::PrepareImageForGreedySnake(ImageHolder<float>& image)
 {
-    // BlurImage(BlurType::Large, image);
     auto gradientMagnitude = ComputeGradientMagnitude(image);
     BlurImage(BlurType::Large, gradientMagnitude);
     m_intensityManipulator->normaliseImageIntensity(gradientMagnitude);
@@ -27,6 +26,16 @@ void ImageProcessorFacade::PrepImage(ImageHolder<float>& image)
 
     image = std::move(gradientMagnitude);
 }
+
+void ImageProcessorFacade::PrepareImageForELSnake(ImageHolder<float>& image)
+{
+    BlurImage(BlurType::Large, image);
+    m_intensityManipulator->normaliseImageIntensity(image);
+    m_intensityManipulator->invertImageIntensity(image);
+
+    image = std::move(image);
+}
+
 
 void ImageProcessorFacade::normaliseImageIntensity(ImageHolder<float>& img)
 {

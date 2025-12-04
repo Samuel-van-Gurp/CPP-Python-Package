@@ -10,10 +10,11 @@ SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr
     , m_engine(std::move(engine))
 {
     
-    m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
-    // m_engine = std::make_unique<ELSnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
+    // m_imageProcessor->PrepareImageForGreedySnake(m_imageHolder);
+    // m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
+    m_imageProcessor->PrepareImageForELSnake(m_imageHolder);
+    m_engine = std::make_unique<ELSnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
 
-    m_imageProcessor->PrepImage(m_imageHolder);
 }
 
 Point* SnakeController::run(int iterations, int* out_count_ptr)

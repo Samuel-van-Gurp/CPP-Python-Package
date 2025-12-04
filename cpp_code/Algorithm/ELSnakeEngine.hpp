@@ -26,9 +26,9 @@ class ELSnakeEngine : public ISnakeEngine
 
     Point getNextStep(int index, Point &p);
 
-    std::tuple<float, float> getInternalForce(const Point &p);
+    std::tuple<float, float> getExternalForce(const Point &p);
 
-    std::tuple<float, float> getExternalForce(int ContourIndex);
+    std::tuple<float, float> getInternalForce(int ContourIndex);
 
 private:
 

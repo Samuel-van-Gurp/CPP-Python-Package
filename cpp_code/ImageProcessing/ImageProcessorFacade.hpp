@@ -20,8 +20,11 @@ class ImageProcessorFacade
 
     ImageProcessorFacade(std::unique_ptr<IConvolver> convolver, std::unique_ptr<IIntensityManipulator> intensityManipulator);
 
-    void PrepImage(ImageHolder<float> &image);
-    
+    // todo, it is realy crappy to have two different prepare functions for the different snake types, this should be orcestrated from the snake engine class i think
+    void PrepareImageForGreedySnake(ImageHolder<float> &image);
+
+    void PrepareImageForELSnake(ImageHolder<float> &image);
+
     void normaliseImageIntensity(ImageHolder<float> &img);
     void scaleIntensity(int factor, ImageHolder<float> &image) const;
     void invertImageIntensity(ImageHolder<float> &image) const;
