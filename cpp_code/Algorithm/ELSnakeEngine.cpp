@@ -1,56 +1,10 @@
 #include "ELSnakeEngine.hpp"
 #include <iomanip> // todo remove
 
-ELSnakeEngine::ELSnakeEngine(const ImageProcessorFacade &imageProcessor, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
+ELSnakeEngine::ELSnakeEngine(ImageProcessorFacade &imageProcessor, ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
     : m_imageProcessor(imageProcessor), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
-
-}
-
-Point* ELSnakeEngine::RunSnake(int iterations)
-{
-    for (int i = 0; i < iterations; ++i)
-    {
-        if (!EvolveContour()) {
-            std::cout << "Contour stabilized after " << i << " iterations.\n";
-            break; 
-        }
-    }
-
-    return m_contour.getContourPoints_ptr();
-}
-
-bool ELSnakeEngine::EvolveContour()
-{
-    //copy current contour to new contour
-    Contour newContour = m_contour;
-    int iterationsPerRound = 0;
-
-    int contourSize = m_contour.Size();
-    for (int i = 0; i < contourSize; ++i)
-    {
-        Point& p = m_contour[i];
-
-        Point nextStep = getNextStep(i, p);
-        newContour[i] = nextStep;
-        
-        // check if point has moved
-        if (nextStep.X != p.X || nextStep.Y != p.Y)
-        {
-            iterationsPerRound++;
-        }
-
-    }
-    std::cout << "Points moved in this iteration: " << iterationsPerRound << "\n";
-    if (iterationsPerRound == stopCriterion)
-    {
-        std::cout << "No points moved in this iteration. Stopping evolution.\n";
-        m_contour = std::move(newContour);
-        return false;
-    }
-    // move new contour to the old contour
-    m_contour = std::move(newContour);
-    return true;
+    m_imageProcessor.PrepareImageForELSnake(m_imageHolder);
 }
 
 std::tuple<float, float> ELSnakeEngine::combineForces(const std::tuple<float, float>& internalForce, const std::tuple<float, float>& externalForce)

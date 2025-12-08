@@ -1,56 +1,23 @@
 #include "GreedySnakeEngine.hpp"
 
-GreedySnakeEngine::GreedySnakeEngine(const ImageProcessorFacade &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
-    : m_image(image), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
+GreedySnakeEngine::GreedySnakeEngine(ImageProcessorFacade &imageProcessor, ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
+    : m_imageProcessor(imageProcessor), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
-
+    m_imageProcessor.PrepareImageForGreedySnake(m_imageHolder);
 }
 
-Point* GreedySnakeEngine::RunSnake(int iterations)
-{
-    for (int i = 0; i < iterations; ++i)
-    {
-        if (!EvolveContour()) {
-            std::cout << "Contour stabilized after " << i << " iterations.\n";
-            break; 
-        }
-    }
+// Point* GreedySnakeEngine::RunSnake(int iterations)
+// {
+//     for (int i = 0; i < iterations; ++i)
+//     {
+//         if (!EvolveContour(m_contour)) {
+//             std::cout << "Contour stabilized after " << i << " iterations.\n";
+//             break; 
+//         }
+//     }
 
-    return m_contour.getContourPoints_ptr();
-}
-
-bool GreedySnakeEngine::EvolveContour()
-{
-    //copy current contour to new contour
-    Contour newContour = m_contour;
-    int iterationsPerRound = 0;
-
-    int contourSize = m_contour.Size();
-    for (int i = 0; i < contourSize; ++i)
-    {
-        Point& p = m_contour[i];
-
-        Point nextStep = getNextStep(i, p);
-        newContour[i] = nextStep;
-        
-        // check if point has moved
-        if (nextStep.X != p.X || nextStep.Y != p.Y)
-        {
-            iterationsPerRound++;
-        }
-
-    }
-    std::cout << "Points moved in this iteration: " << iterationsPerRound << "\n";
-    if (iterationsPerRound == stopCriterion)
-    {
-        std::cout << "No points moved in this iteration. Stopping evolution.\n";
-        m_contour = std::move(newContour);
-        return false;
-    }
-    // move new contour to the old contour
-    m_contour = std::move(newContour);
-    return true;
-}
+//     return m_contour.getContourPoints_ptr();
+// }
 
 Point GreedySnakeEngine::getNextStep(int index, Point& p)
 {

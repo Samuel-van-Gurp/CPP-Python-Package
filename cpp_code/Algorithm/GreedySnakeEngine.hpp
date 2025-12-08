@@ -12,11 +12,9 @@ class GreedySnakeEngine : public ISnakeEngine
 {
 public:
 
-        GreedySnakeEngine(const ImageProcessorFacade &image, const ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta);
+        GreedySnakeEngine(ImageProcessorFacade &image, ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta);
 
         Point* RunSnake(int iterations);
-
-        bool EvolveContour();
         
         private:
 
@@ -59,8 +57,8 @@ public:
             return normMatrix;
         }
 
-        const ImageProcessorFacade &m_image;
-        const ImageHolder<float> &m_imageHolder;
+        ImageProcessorFacade &m_imageProcessor;
+        ImageHolder<float> &m_imageHolder;
         Contour &m_contour;
 };
 #endif // SNAKEENGINE_HPP
