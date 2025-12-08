@@ -10,8 +10,8 @@ ELSnakeEngine::ELSnakeEngine(ImageProcessorFacade &imageProcessor, ImageHolder<f
 std::tuple<float, float> ELSnakeEngine::combineForces(const std::tuple<float, float>& internalForce, const std::tuple<float, float>& externalForce)
 {
     std::tuple<float, float> combinedForce;
-    std::get<0>(combinedForce) = std::get<0>(internalForce) + std::get<0>(externalForce);
-    std::get<1>(combinedForce) = std::get<1>(internalForce) + std::get<1>(externalForce);
+    std::get<0>(combinedForce) = std::get<0>(internalForce) - std::get<0>(externalForce);
+    std::get<1>(combinedForce) = std::get<1>(internalForce) - std::get<1>(externalForce);
     return combinedForce;
 }
 
