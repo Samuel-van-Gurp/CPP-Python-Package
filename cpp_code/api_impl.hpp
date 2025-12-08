@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include "cpp_code/ImageProcessing/ImageProcessorFacade.hpp"
-#include "cpp_code/SnakeInterface.hpp"
+#include "cpp_code/SnakeController.hpp"
 
 #ifdef __cplusplus
 extern "C" {

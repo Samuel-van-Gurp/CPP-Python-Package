@@ -19,7 +19,7 @@ SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr
 
 Point* SnakeController::run(int iterations, int* out_count_ptr)
 {
-    Point* contourPoints = m_engine->RunSnake(iterations);
+    Point* contourPoints = m_engine->RunSnake(iterations, m_contour);
     m_writer.ContourOverLay(m_contour, m_imageHolder, *m_imageProcessor);
     
     if (out_count_ptr) 
