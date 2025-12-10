@@ -1,15 +1,23 @@
 #include "Contour.hpp"
 #include <iostream>
+
+Contour::Contour(int numPoints) // empty contour
+    : m_center(Point{0.0f, 0.0f}), m_numPoints(numPoints)
+{
+    m_ContourPoints.reserve(m_numPoints);
+}
+
+
 Contour::Contour(int radius, Point center, int numPoints) // circle contour
     : m_center(center), m_numPoints(numPoints)
 {
-    FillEllipseContourPoints(radius, radius, center);
+    FillEllipseContourPoints(radius, radius);
 }
 
 Contour::Contour(int radius_x, int radius_y, Point center, int numPoints) // ellipse contour
     : m_center(center), m_numPoints(numPoints)
 {
-    FillEllipseContourPoints(radius_x, radius_y, center);
+    FillEllipseContourPoints(radius_x, radius_y);
 }
 
 int Contour::Size() const
@@ -22,7 +30,7 @@ Point *Contour::getContourPoints_ptr()
     return m_ContourPoints.data();
 }
 
-void Contour::FillEllipseContourPoints(int radius_x, int radius_y,  Point center)
+void Contour::FillEllipseContourPoints(int radius_x, int radius_y)
 {
     for (int i = 0; i < m_numPoints; ++i)
     {

@@ -2,6 +2,7 @@
 #define ISNAKEENGINE_HPP
 #include "DataObjects/Point.hpp"
 #include "DataObjects/Contour.hpp"
+#include "ContourResampler.hpp"
 #include <iostream>
 
 class ISnakeEngine

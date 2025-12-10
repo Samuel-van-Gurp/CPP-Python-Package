@@ -44,7 +44,12 @@ bool ISnakeEngine::EvolveContour(Contour &contour)
         contour = std::move(newContour);
         return false;
     }
+    
+    auto resampledContour = ContourResampler::resampleContour(newContour);
+
     // move new contour to the old contour
-    contour = std::move(newContour);
+    contour = std::move(resampledContour);
+
+
     return true;
 }

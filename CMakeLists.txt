@@ -24,6 +24,7 @@ add_library(hello_c_api SHARED C_API/api.cpp
                             cpp_code/Algorithm/ISnakeEngine.cpp
                             cpp_code/Algorithm/GreedySnakeEngine.cpp
                             cpp_code/Algorithm/ELSnakeEngine.cpp
+                            cpp_code/Algorithm/ContourResampler.cpp
 
                             cpp_code/ImageProcessing/ImageProcessorFacade.cpp
                             cpp_code/ImageProcessing/NaiveConvolve.cpp
