@@ -19,6 +19,7 @@ public:
     std::tuple<float, float> secondDiff(int index);
     std::tuple<float, float> fourthDiff(int index);
 
+    
     float TensionEnergyAtPoint(int idx, Point newPoint) const;
     float CurveEnergyAtPoint(int idx, Point newPoint) const;
     float secondDiff(const Contour contour, int index);
@@ -34,6 +35,8 @@ public:
     int m_numPoints;
     std::vector<Point> m_ContourPoints;
     
+    float averagePointDistance(int centerIndex, int width) const;
+    float distanceBetweenPoints(const Point &p1, const Point &p2) const;
     void FillCircleContourPoints(int radius, Point center);
     void FillEllipseContourPoints(int radius_x, int radius_y, Point center);
 };
