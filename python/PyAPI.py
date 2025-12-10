@@ -40,10 +40,10 @@ class PyAPI:
         contours = np.zeros((size_contours, 2), dtype=np.int32)
 
         n = int(size_contours)                    # ensure plain int
-        contours = np.zeros((n, 2), dtype=np.int32)
+        contours = np.zeros((n, 2), dtype=np.float32)
         for i in range(n):
-            contours[i, 0] = int(contour_ptr[i].X)
-            contours[i, 1] = int(contour_ptr[i].Y)
+            contours[i, 0] = contour_ptr[i].X
+            contours[i, 1] = contour_ptr[i].Y
         return contours
     
 
@@ -60,7 +60,7 @@ class PyAPI:
 
         self.lib.runSnake.restype = None
         
-        contour_ptr = self.lib.runSnake(byref(self.imageInfo), byref(self.snakeParams), 
+        self.lib.runSnake(byref(self.imageInfo), byref(self.snakeParams), 
                                                                out_contour,
                                                                byref(self.outSizeContours))
    
