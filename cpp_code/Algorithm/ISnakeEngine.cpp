@@ -28,7 +28,10 @@ bool ISnakeEngine::EvolveContour(Contour &contour)
         newContour[i] = nextStep;
         
         // check if point has moved
-        if (nextStep.X != p.X || nextStep.Y != p.Y)
+        const float moveEpsilon = 1e-3f;
+        float dx = nextStep.X - p.X;
+        float dy = nextStep.Y - p.Y;
+        if (std::sqrt(dx*dx + dy*dy) > moveEpsilon)
         {
             iterationsPerRound++;
         }
