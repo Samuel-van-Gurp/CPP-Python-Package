@@ -2,7 +2,6 @@
 #include "cpp_code/api_impl.hpp"
 #include "api.h"
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,9 +30,6 @@ EXPORT_API void runSnake(ImageInfo const* imageInfo, SnakeParams const* params, 
                 contour_ptr + (*out_count_ptr), 
                 out_contour);
     }   
-    
-
-
 
     delete imageHolder_ptr;
     delete snakeInterface_ptr;
