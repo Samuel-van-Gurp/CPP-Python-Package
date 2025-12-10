@@ -4,6 +4,7 @@
 #include <vector>
 #include <iostream>
 #include <tuple>
+#include <algorithm>
 #include "Algorithm/ISnakeEngine.hpp"
 #include "DataObjects/Point.hpp"
 #include "Algorithm/ELSnakeEngine.hpp"
@@ -32,7 +33,7 @@ public:
 private:
     static constexpr int stopCriterion = 5;
 
-    Contour m_contour;
+    Contour &m_contour;
     ImageHolder<float> m_imageHolder;
     ImageProcessorFacade &m_imageProcessor;
 
