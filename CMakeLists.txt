@@ -51,6 +51,7 @@ add_executable(runTests
     cpp_code/Tests/SnakeEngine_Test.cpp
     cpp_code/Tests/ELSnakeEngine_Test.cpp
     cpp_code/Tests/ContourResampler_Test.cpp
+    cpp_code/Tests/InternalForceTest.cpp
 )
 
 target_include_directories(runTests
