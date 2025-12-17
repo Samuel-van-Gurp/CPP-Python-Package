@@ -37,10 +37,10 @@ bool ISnakeEngine::EvolveContour(Contour &contour)
         }
 
     }
-    std::cout << "Points moved in this iteration: " << iterationsPerRound << "\n";
+    // std::cout << "Points moved in this iteration: " << iterationsPerRound << "\n";
     if (iterationsPerRound < stopCriterion)
     {
-        std::cout << "No points moved in this iteration. Stopping evolution.\n";
+        // std::cout << "No points moved in this iteration. Stopping evolution.\n";
         contour = std::move(newContour);
         return false;
     }
