@@ -4,7 +4,7 @@
 Contour::Contour(int numPoints) // empty contour
     : m_center(Point{0.0f, 0.0f}), m_numPoints(numPoints)
 {
-    m_ContourPoints.reserve(m_numPoints);
+    m_ContourPoints.resize(static_cast<std::size_t>(m_numPoints), Point{0.0f, 0.0f});
 }
 
 
@@ -67,7 +67,7 @@ float Contour::CurveEnergyAtPoint(int idx, Point newPoint) const
     return (fx * fx) + (fy * fy);
 }
 
-std::tuple<float, float> Contour::secondDiff(int index)
+std::tuple<float, float> Contour::secondDiff(int index) const
 {
     float h1 = distanceBetweenPoints((*this)[index+1], (*this)[index]);
     float h2 = distanceBetweenPoints((*this)[index], (*this)[index-1]);
@@ -78,25 +78,15 @@ std::tuple<float, float> Contour::secondDiff(int index)
     return std::make_tuple(dx2, dy2);
 }
 
-std::tuple<float, float> Contour::fourthDiff(int index)
+std::tuple<float, float> Contour::fourthDiff(int index) const
 {
-    float h1 = distanceBetweenPoints((*this)[index-2], (*this)[index-1]);
-    float h2 = distanceBetweenPoints((*this)[index-1], (*this)[index]);
-    float h3 = distanceBetweenPoints((*this)[index], (*this)[index+1]);
-    float h4 = distanceBetweenPoints((*this)[index+1], (*this)[index+2]);
-    
-    float A_minus2 = 24.0f / (h1 * (h1 + h2) * (h1 + h2 + h3) * (h1 + h2 + h3 + h4));
-    float A_minus1 = 24.0f / (h1 * h2 * (h2 + h3) * (h2 + h3 + h4)); 
-    float A_0      = 24.0f / ( (h1+h2) * h2 * h3 * (h3+h4) );
-    float A_plus1  = 24.0f / ((h1+h2+h3) * (h2+h3) * h3 * h4);
-    float A_plus2  = 24.0f / (h4 * (h3 + h4) * (h2 + h3 + h4) * (h1 + h2 + h3 + h4));
-
-    float dx4 = A_minus2 * (*this)[index-2].X - A_minus1 * (*this)[index-1].X + A_0 * (*this)[index].X - A_plus1 * (*this)[index+1].X + A_plus2 * (*this)[index+2].X;
-    float dy4 = A_minus2 * (*this)[index-2].Y - A_minus1 * (*this)[index-1].Y + A_0 * (*this)[index].Y - A_plus1 * (*this)[index+1].Y + A_plus2 * (*this)[index+2].Y;
+    float h = distanceBetweenPoints((*this)[index+1], (*this)[index]); // assuming uniform sampling
+    float inv_h4 = 1.0f / (h * h * h * h);
+    float dx4 = inv_h4 * ((*this)[index-2].X - 4.0f * (*this)[index-1].X + 6.0f * (*this)[index].X - 4.0f * (*this)[index+1].X + (*this)[index+2].X);
+    float dy4 = inv_h4 * ((*this)[index-2].Y - 4.0f * (*this)[index-1].Y + 6.0f * (*this)[index].Y - 4.0f * (*this)[index+1].Y + (*this)[index+2].Y);
 
     return std::make_tuple(dx4, dy4);
 }
-
 
 float Contour::distanceBetweenPoints(const Point& p1, const Point& p2) const
 {

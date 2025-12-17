@@ -17,16 +17,13 @@ public:
 
     int Size() const;
     Point* getContourPoints_ptr();
-
-    
-    std::tuple<float, float> secondDiff(int index);
-    std::tuple<float, float> fourthDiff(int index);
-    
-    
+        
     float TensionEnergyAtPoint(int idx, Point newPoint) const;
     float CurveEnergyAtPoint(int idx, Point newPoint) const;
-    float secondDiff(const Contour contour, int index);
-    
+
+    std::tuple<float, float> secondDiff(int index) const;
+    std::tuple<float, float> fourthDiff(int index) const;
+
     Point &operator[](int idx);
     const Point &operator[](int idx) const;
     
@@ -37,6 +34,7 @@ public:
     Point m_center;
     int m_numPoints;
     std::vector<Point> m_ContourPoints;
+    float m_averagePointSpaceing;
     
     float averagePointDistance(int centerIndex, int width) const;
     float distanceBetweenPoints(const Point &p1, const Point &p2) const;
