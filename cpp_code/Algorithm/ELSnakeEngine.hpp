@@ -28,7 +28,7 @@ public:
 
     std::tuple<float, float> getExternalForce(const Point &p);
 
-    std::tuple<float, float> getInternalForce(int ContourIndex);
+    std::tuple<float, float> getInternalForce(int ContourIndex, const Contour &contour);
 
 private:
     static constexpr int stopCriterion = 5;
