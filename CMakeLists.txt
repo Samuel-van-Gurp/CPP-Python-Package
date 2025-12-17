@@ -11,9 +11,9 @@ FetchContent_Declare(
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
 
 enable_testing()
-
 
 # OBJECT library with core implementation
 add_library(core_impl OBJECT
@@ -65,4 +65,10 @@ target_link_libraries(runTests
     gtest_main
     core_impl
     hello_c_api 
+)
+
+
+gtest_discover_tests(runTests
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
