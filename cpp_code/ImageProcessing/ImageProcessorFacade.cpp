@@ -32,10 +32,7 @@ void ImageProcessorFacade::PrepareImageForELSnake(ImageHolder<float>& image)
     BlurImage(BlurType::Large, image);
     m_intensityManipulator->normaliseImageIntensity(image);
     m_intensityManipulator->invertImageIntensity(image);
-
-    image = std::move(image);
 }
-
 
 void ImageProcessorFacade::normaliseImageIntensity(ImageHolder<float>& img)
 {
