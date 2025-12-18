@@ -5,9 +5,10 @@
 #include <vector>
 #include <cmath>
 #include "Point.hpp"
+#include "ImageHolderBase.hpp"
 
 template <typename T>
-class ImageHolder
+class ImageHolder : public ImageHolderBase<T>
 {
 private:
     int m_width;
