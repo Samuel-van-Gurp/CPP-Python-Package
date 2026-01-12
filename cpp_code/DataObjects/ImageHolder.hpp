@@ -32,6 +32,7 @@ public:
     Point getCenter() const;
     const std::vector<T>& getDataVector() const;
     T getMaxIntensityInImage() const;
+    T getMinIntesityInImage() const;
     void setPixel(int x, int y, T value);
 
     T getPixel(const Point) const;
@@ -133,6 +134,22 @@ inline T ImageHolder<T>::getMaxIntensityInImage() const
         }
     }
     return maxIntensity;
+}
+
+template <typename T>
+inline T ImageHolder<T>::getMinIntesityInImage() const
+{
+    if (m_data.empty())
+        return T();
+    T minIntensity = m_data[0];
+    for (const T& value : m_data)
+    {
+        if (value < minIntensity)
+        {
+            minIntensity = value;
+        }
+    }
+    return minIntensity;
 }
 
 template<typename T>
