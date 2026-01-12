@@ -27,11 +27,14 @@ void ImageProcessorFacade::PrepareImageForGreedySnake(ImageHolder<float>& image)
     image = std::move(gradientMagnitude);
 }
 
-void ImageProcessorFacade::PrepareImageForELSnake(ImageHolder<float>& image)
+ImageProcessorFacade::Gradients ImageProcessorFacade::PrepareImageForELSnake(ImageHolder<float>& image)
 {
     BlurImage(BlurType::Large, image);
     m_intensityManipulator->normaliseImageIntensity(image);
     m_intensityManipulator->invertImageIntensity(image);
+
+    // Calculate gradients, and put them in struct to return
+    return { CalculateGradientX(image), CalculateGradientY(image) };
 }
 
 void ImageProcessorFacade::normaliseImageIntensity(ImageHolder<float>& img)

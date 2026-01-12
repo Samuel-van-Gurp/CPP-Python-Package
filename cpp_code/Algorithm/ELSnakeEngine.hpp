@@ -5,6 +5,7 @@
 #include <iostream>
 #include <tuple>
 #include <algorithm>
+#include <optional>
 #include "Algorithm/ISnakeEngine.hpp"
 #include "DataObjects/Point.hpp"
 #include "Algorithm/ELSnakeEngine.hpp"
@@ -36,6 +37,7 @@ private:
     Contour &m_contour;
     ImageHolder<float> m_imageHolder;
     ImageProcessorFacade &m_imageProcessor;
+    std::optional<ImageProcessorFacade::Gradients> m_gradients;
 
     const float alpha;    
     const float beta;

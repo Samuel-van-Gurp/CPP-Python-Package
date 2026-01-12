@@ -3,7 +3,8 @@
 ELSnakeEngine::ELSnakeEngine(ImageProcessorFacade &imageProcessor, ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
     : m_imageProcessor(imageProcessor), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
-    m_imageProcessor.PrepareImageForELSnake(m_imageHolder);
+    
+    m_gradients = m_imageProcessor.PrepareImageForELSnake(m_imageHolder);
 }
 
 std::tuple<float, float> ELSnakeEngine::combineForces(const std::tuple<float, float>& internalForce, const std::tuple<float, float>& externalForce)
@@ -26,10 +27,6 @@ Point ELSnakeEngine::getNextStep(int index, Point& p)
     float new_x = p.X + std::clamp(stepSize * std::get<0>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
     float new_y = p.Y + std::clamp(stepSize * std::get<1>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
 
-    // print external and internal forces
-    // std::cout << "externalForce" << get<0>(externalForce) <<"," << get<1>(externalForce)<< "\n";; 
-    // std::cout << " internalForce" << get<0>(internalForce) <<"," << get<1>(internalForce) << "\n";
-    // Print old and new point
     std::cout << "Point " << index << ": (" << p.X << ", " << p.Y << ") -> (" << new_x << ", " << new_y << ")\n";    
 
     return Point(new_x,new_y);
@@ -37,8 +34,8 @@ Point ELSnakeEngine::getNextStep(int index, Point& p)
 
 std::tuple<float, float> ELSnakeEngine::getExternalForce(const Point &p)
 {
-    float fx = m_imageProcessor.CalculateGradientX(m_imageHolder).getPixel(p);
-    float fy = m_imageProcessor.CalculateGradientY(m_imageHolder).getPixel(p);
+    float fx = m_gradients->gx.getPixel(p);
+    float fy = m_gradients->gy.getPixel(p);
 
     return std::make_tuple(fx, fy);
 }

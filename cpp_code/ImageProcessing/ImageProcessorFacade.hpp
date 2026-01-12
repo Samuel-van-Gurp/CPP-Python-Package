@@ -16,14 +16,18 @@ enum class BlurType { Small, Medium, Large };
 
 class ImageProcessorFacade
 {
-    public:    
+    public:
+
+    struct Gradients {
+        ImageHolder<float> gx;
+        ImageHolder<float> gy;
+    };
 
     ImageProcessorFacade(std::unique_ptr<IConvolver> convolver, std::unique_ptr<IIntensityManipulator> intensityManipulator);
 
-    // todo, it is realy crappy to have two different prepare functions for the different snake types, this should be orcestrated from the snake engine class i think
     void PrepareImageForGreedySnake(ImageHolder<float> &image);
 
-    void PrepareImageForELSnake(ImageHolder<float> &image);
+    Gradients PrepareImageForELSnake(ImageHolder<float> &image);
 
     void normaliseImageIntensity(ImageHolder<float> &img);
     void scaleIntensity(int factor, ImageHolder<float> &image) const;
@@ -32,8 +36,6 @@ class ImageProcessorFacade
     ImageHolder<float> CalculateGradientX(const ImageHolder<float> &image) const;
 
     ImageHolder<float> CalculateGradientY(const ImageHolder<float> &image) const;
-
-    // ImageHolder<float> ConvolveImage(const std::vector<std::vector<float>> &kernel, const ImageHolder<float> &image) const;
 
     ImageHolder<float> ComputeGradientMagnitude(const ImageHolder<float> &image);
 
