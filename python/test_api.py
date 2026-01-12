@@ -12,7 +12,7 @@ def main():
     params = Params.Params()
 
     # load image
-    CoinImage = Image.Image("Images/starImage.png")
+    CoinImage = Image.Image("Images/coin.jpg")
     ImageArray = CoinImage.convert_to_numpy()
     # load params from json
     pyAPI.setSnakeParams(alpha=params.alpha, 
