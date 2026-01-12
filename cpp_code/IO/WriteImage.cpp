@@ -5,9 +5,9 @@ WriteImage::WriteImage()
 {
 }
 
-void WriteImage::saveImage(const ImageHolder<float> &image)
+void WriteImage::saveImage(const ImageHolder<float> &image, const std::string &filename)
 {
-    SaveAsPGM(image);
+    SaveAsPGM(image, filename);
 }
 
 void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<float> &image, const ImageProcessorFacade &processor) 
@@ -25,14 +25,14 @@ void WriteImage::ContourOverLay(const Contour& contour, const ImageHolder<float>
         }
     }
 
-    SaveAsPGM(ImageCopy);
+    SaveAsPGM(ImageCopy , "contour_overlay");
     std::cout << "Contour overlay image saved as contour_overlay.pgm\n";
 }
 
 // function save intermediate image as PGM file, for debugging purpose
-void WriteImage::SaveAsPGM(const ImageHolder<float>& image)
+void WriteImage::SaveAsPGM(const ImageHolder<float>& image, const std::string& fname)
 {
-    std::string filename = "C:\\Users\\svangurp\\Desktop\\CPP_PY_package\\DebugImage\\gradient.pgm";
+    std::string filename = "C:\\Users\\svangurp\\Desktop\\CPP_PY_package\\DebugImage\\" + fname + ".pgm";
     // Validate input image
     if (image.empty()) {
         std::cerr << "SaveAsPGM error: image is empty\n";

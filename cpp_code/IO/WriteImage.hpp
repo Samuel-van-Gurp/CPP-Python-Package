@@ -9,14 +9,13 @@ class WriteImage
 {
     public:
         WriteImage();
-        void saveImage(const ImageHolder<float> &image);
+        void saveImage(const ImageHolder<float> &image, const std::string &filename);
 
         void ContourOverLay(const Contour &contour, const ImageHolder<float> &image, const ImageProcessorFacade &processor);
 
         
         private:
-        void SaveAsPGM(const ImageHolder<float> &image);
-        // void SaveAsPGM(const std::vector<std::vector<uint8_t>> &image);
+        void SaveAsPGM(const ImageHolder<float> &image, const std::string &filename);
 };
 
 #endif // WRITE_IMAGE_HPP
