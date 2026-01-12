@@ -5,10 +5,11 @@ const std::vector<std::vector<float>> ImageProcessorFacade::SobelX = {
     { -2, 0, 2 },
     { -1, 0, 1 }
 };
+
 const std::vector<std::vector<float>> ImageProcessorFacade::SobelY = {
-    {  1,  2,  1 },
+    { -1, -2, -1 },
     {  0,  0,  0 },
-    { -1, -2, -1 }
+    {  1,  2,  1 }
 };
 
 ImageProcessorFacade::ImageProcessorFacade(std::unique_ptr<IConvolver> convolver, std::unique_ptr<IIntensityManipulator> intensityManipulator)
@@ -30,11 +31,16 @@ void ImageProcessorFacade::PrepareImageForGreedySnake(ImageHolder<float>& image)
 ImageProcessorFacade::Gradients ImageProcessorFacade::PrepareImageForELSnake(ImageHolder<float>& image)
 {
     BlurImage(BlurType::Large, image);
-    m_intensityManipulator->normaliseImageIntensity(image);
-    m_intensityManipulator->invertImageIntensity(image);
+    // m_intensityManipulator->invertImageIntensity(image);
+
+    ImageHolder<float> Xgrad = CalculateGradientX(image);
+    BlurImage(BlurType::Large, Xgrad);
+
+    ImageHolder<float> Ygrad = CalculateGradientY(image);
+    BlurImage(BlurType::Large, Ygrad);
 
     // Calculate gradients, and put them in struct to return
-    return { CalculateGradientX(image), CalculateGradientY(image) };
+    return { Xgrad, Ygrad };
 }
 
 void ImageProcessorFacade::normaliseImageIntensity(ImageHolder<float>& img)
