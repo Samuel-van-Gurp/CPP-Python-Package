@@ -33,7 +33,7 @@ public:
 
 private:
     static constexpr int stopCriterion = 5;
-
+    static constexpr float INTERNAL_FORCE_SCALE = 100.0f; // Scale factor to match external force magnitude
     Contour &m_contour;
     ImageHolder<float> m_imageHolder;
     ImageProcessorFacade &m_imageProcessor;
