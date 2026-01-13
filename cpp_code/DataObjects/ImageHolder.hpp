@@ -180,6 +180,7 @@ T ImageHolder<T>::getPixel(float x, float y) const
     if (x < 0 || x >= m_width || y < 0 || y >= m_height) {
         return T(0); 
     }
+    // TODO: use interpolation instead of rounding
     // round to nearest integer pixel coordinates
     return m_data[static_cast<int>(round(y)) * m_stride + static_cast<int>(round(x))];
 }
