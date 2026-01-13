@@ -1,6 +1,6 @@
 {
-    "alpha": 1,
-    "beta": 0.14374999999999993,
+    "alpha": 0.3437499999999999,
+    "beta": 0.35,
     "Contourpoints": 50,
     "max_iterations": 500
 }
