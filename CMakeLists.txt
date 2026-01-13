@@ -15,8 +15,8 @@ include(GoogleTest)
 
 enable_testing()
 
-# OBJECT library with core implementation
-add_library(core_impl OBJECT
+# STATIC library with core implementation
+add_library(core_impl STATIC
     cpp_code/api_impl.cpp
     cpp_code/IO/WriteImage.cpp
     cpp_code/SnakeController.cpp
@@ -35,13 +35,13 @@ target_include_directories(core_impl PRIVATE
                                         ${CMAKE_SOURCE_DIR}
                                         ${CMAKE_SOURCE_DIR}/cpp_code)
 
-add_library(hello_c_api SHARED
+add_library(c_api SHARED
     C_API/api.cpp
 )
 
-target_link_libraries(hello_c_api PRIVATE core_impl)
-target_include_directories(hello_c_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(hello_c_api PRIVATE BUILDING_API)
+target_link_libraries(c_api PRIVATE core_impl)
+target_include_directories(c_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_compile_definitions(c_api PRIVATE BUILDING_API)
 
 
 add_executable(runTests
@@ -65,7 +65,7 @@ target_link_libraries(runTests
     PRIVATE
     gtest_main
     core_impl
-    hello_c_api 
+    c_api 
 )
 
 
