@@ -14,7 +14,7 @@ SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr
     // m_imageProcessor->PrepareImageForELSnake(m_imageHolder);
     m_engine = std::make_unique<ELSnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
 
-    m_writer.saveImage(m_imageHolder);
+    m_writer.saveImage(m_imageHolder, "SnakeTestImage");
 }
 
 Point* SnakeController::run(int iterations, int* out_count_ptr)
