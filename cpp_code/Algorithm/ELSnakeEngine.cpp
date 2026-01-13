@@ -23,7 +23,6 @@ Point ELSnakeEngine::getNextStep(int index, Point& p)
     auto internalForce = getInternalForce(index, m_contour);
     auto externalForce = getExternalForce(p); 
 
-
     float new_x = p.X + std::clamp(stepSize * std::get<0>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
     float new_y = p.Y + std::clamp(stepSize * std::get<1>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
 

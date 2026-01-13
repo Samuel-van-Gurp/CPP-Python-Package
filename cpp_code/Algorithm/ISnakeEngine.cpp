@@ -9,7 +9,7 @@ Point *ISnakeEngine::RunSnake(int iterations, Contour &contour)
             break; 
         }
     }
-
+    std::cout << "Cut-off iterations reached.\n";
     return contour.getContourPoints_ptr();
 }
 
@@ -37,10 +37,8 @@ bool ISnakeEngine::EvolveContour(Contour &contour)
         }
 
     }
-    // std::cout << "Points moved in this iteration: " << iterationsPerRound << "\n";
     if (iterationsPerRound < stopCriterion)
     {
-        // std::cout << "No points moved in this iteration. Stopping evolution.\n";
         contour = std::move(newContour);
         return false;
     }
@@ -49,7 +47,6 @@ bool ISnakeEngine::EvolveContour(Contour &contour)
 
     // move new contour to the old contour
     contour = std::move(resampledContour);
-
 
     return true;
 }

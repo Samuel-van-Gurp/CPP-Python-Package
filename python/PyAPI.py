@@ -12,7 +12,7 @@ class PyAPI:
 
         self.outSizeContours = c_int(0)
         
-        dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../build/Debug/hello_c_api.dll"))
+        dll_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../build/Debug/c_api.dll"))
 
         self.lib = cdll.LoadLibrary(dll_path)
 
