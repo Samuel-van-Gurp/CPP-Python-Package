@@ -9,7 +9,7 @@ class ISnakeEngine
 {
     public:
         ISnakeEngine() {}
-
+        virtual ~ISnakeEngine() = default;
         Point *RunSnake(int iterations, Contour &contour);
         virtual Point getNextStep(int index, Point &p) = 0;
         static constexpr int stopCriterion = 5;
