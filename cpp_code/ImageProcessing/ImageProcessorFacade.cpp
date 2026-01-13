@@ -31,7 +31,7 @@ void ImageProcessorFacade::PrepareImageForGreedySnake(ImageHolder<float>& image)
 ImageProcessorFacade::Gradients ImageProcessorFacade::PrepareImageForELSnake(ImageHolder<float>& image)
 {
     BlurImage(BlurType::Large, image);
-    // m_intensityManipulator->invertImageIntensity(image);
+    m_intensityManipulator->normaliseImageIntensity(image);
 
     ImageHolder<float> Xgrad = CalculateGradientX(image);
     BlurImage(BlurType::Large, Xgrad);
