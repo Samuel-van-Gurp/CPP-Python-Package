@@ -6,19 +6,6 @@ GreedySnakeEngine::GreedySnakeEngine(ImageProcessorFacade &imageProcessor, Image
     m_imageProcessor.PrepareImageForGreedySnake(m_imageHolder);
 }
 
-// Point* GreedySnakeEngine::RunSnake(int iterations)
-// {
-//     for (int i = 0; i < iterations; ++i)
-//     {
-//         if (!EvolveContour(m_contour)) {
-//             std::cout << "Contour stabilized after " << i << " iterations.\n";
-//             break; 
-//         }
-//     }
-
-//     return m_contour.getContourPoints_ptr();
-// }
-
 Point GreedySnakeEngine::getNextStep(int index, Point& p)
 {
     // get internal and external energy matrices
