@@ -16,8 +16,8 @@ public:
     Contour(int radius_x, int radius_y, Point center, int numPoints); // ellipse contour
 
     int Size() const;
-    Point* getContourPoints_ptr();
-        
+    std::vector<Point> getContourPoints();
+
     float TensionEnergyAtPoint(int idx, Point newPoint) const;
     float CurveEnergyAtPoint(int idx, Point newPoint) const;
 

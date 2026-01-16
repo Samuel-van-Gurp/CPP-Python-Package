@@ -1,6 +1,6 @@
 #include "ISnakeEngine.hpp"
 
-Point *ISnakeEngine::RunSnake(int iterations, Contour &contour)
+std::vector<Point> ISnakeEngine::RunSnake(int iterations, Contour &contour)
 {
     for (int i = 0; i < iterations; ++i)
     {
@@ -10,7 +10,7 @@ Point *ISnakeEngine::RunSnake(int iterations, Contour &contour)
         }
     }
     std::cout << "Cut-off iterations reached.\n";
-    return contour.getContourPoints_ptr();
+    return contour.getContourPoints();
 }
 
 bool ISnakeEngine::EvolveContour(Contour &contour)

@@ -25,9 +25,9 @@ int Contour::Size() const
     return m_numPoints;
 }
 
-Point *Contour::getContourPoints_ptr()
+std::vector<Point> Contour::getContourPoints()
 {
-    return m_ContourPoints.data();
+    return m_ContourPoints;
 }
 
 void Contour::FillEllipseContourPoints(int radius_x, int radius_y)

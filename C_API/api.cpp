@@ -25,7 +25,9 @@ EXPORT_API void runSnake(ImageInfo const* imageInfo, SnakeParams const* params, 
      
     if (out_count_ptr) 
     {
-        Point* contour_ptr = snakeInterface_ptr->run(params->iterations, out_count_ptr);            
+        std::vector<Point> contour_vec = snakeInterface_ptr->run(params->iterations, out_count_ptr);
+        Point* contour_ptr = contour_vec.data();
+        *out_count_ptr = static_cast<int>(contour_vec.size());
         std::copy(contour_ptr, 
                 contour_ptr + (*out_count_ptr), 
                 out_contour);
