@@ -12,7 +12,7 @@ def main():
     params = Params.Params()
 
     # load image
-    CoinImage = Image.Image("Images/starImage.png")
+    CoinImage = Image.Image("Images/astronaut.png")
     ImageArray = CoinImage.convert_to_numpy()
     # load params from json
     pyAPI.setSnakeParams(alpha=params.alpha, 
@@ -31,14 +31,14 @@ def main():
     pyAPI.setSnakeParams(alpha = ui.alphaUserInput.val, 
                         beta = ui.betaUserInput.val, 
                         iterations=1000, 
-                        center_x=130, 
-                        center_y=100, 
-                        radius_x=40, 
-                        radius_y=40, 
-                        # center_x=ui.xy[0], 
-                        # center_y=ui.xy[1], 
-                        # radius_x=ui.width / 2, 
-                        # radius_y=ui.height / 2, 
+                        # center_x=111, 
+                        # center_y=111, 
+                        # radius_x=100, 
+                        # radius_y=100, 
+                        center_x=ui.xy[0], 
+                        center_y=ui.xy[1], 
+                        radius_x=ui.width / 2, 
+                        radius_y=ui.height / 2, 
                         points=100)
 
     contour = pyAPI.callApi(ImageArray)
