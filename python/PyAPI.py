@@ -50,20 +50,23 @@ class PyAPI:
     def callApi(self, img: np.ndarray) -> np.ndarray:
 
         img = np.ascontiguousarray(img, dtype=np.uint8)
+		
+        # init output parameter
+        out_contour = (Point * self.snakeParams.contour_points)() 
 
-        out_contour = (Point * self.snakeParams.contour_points)() # allocate array for output contour points
-
+        # Define function signature 
         self.lib.runSnake.argtypes = [POINTER(ImageInfo),    
                                       POINTER(SnakeParams),
                                       POINTER(Point),
                                       POINTER(c_int)]
-
         self.lib.runSnake.restype = None
         
+        # Call 
         self.lib.runSnake(byref(self.imageInfo), byref(self.snakeParams), 
-                                                               out_contour,
-                                                               byref(self.outSizeContours))
-   
+                          out_contour,
+                          byref(self.outSizeContours))
+        
+        # convert to python container and return
         return self.reconstructCountours(out_contour, self.outSizeContours.value)
 
 
