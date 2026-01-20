@@ -3,8 +3,19 @@ set(CMAKE_CXX_STANDARD 20)
 project(C_API LANGUAGES C CXX)
 
 
-# inclucde GoogleTest
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+
+
 include(FetchContent)
+#  include pybind11
+FetchContent_Declare(
+    pybind11
+    GIT_REPOSITORY https://github.com/pybind/pybind11.git
+    GIT_TAG        v3.0.1 
+    )
+FetchContent_MakeAvailable(pybind11)
+
+# inclucde GoogleTest
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/heads/main.zip
@@ -31,19 +42,40 @@ add_library(core_impl STATIC
     cpp_code/ImageProcessing/NaiveConvolve.cpp
     cpp_code/ImageProcessing/IntensityManipulator.cpp
 )
-target_include_directories(core_impl PRIVATE 
-                                        ${CMAKE_SOURCE_DIR}
-                                        ${CMAKE_SOURCE_DIR}/cpp_code)
 
-add_library(c_api SHARED
-    C_API/api.cpp
+pybind11_add_module(pybindings cpp_code/bindings.cpp)  # create pybindings module
+
+# Include directories from cpp_code for pybindings target
+target_include_directories(pybindings PRIVATE
+    ${PROJECT_SOURCE_DIR}/cpp_code
 )
 
-target_link_libraries(c_api PRIVATE core_impl)
-target_include_directories(c_api PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_compile_definitions(c_api PRIVATE BUILDING_API)
+# Link core_impl to pybindings target
+target_link_libraries(pybindings PRIVATE core_impl)
 
+#  Link core_impl and pybind11::module to pybindings target
+target_link_libraries(pybindings PRIVATE core_impl pybind11::module)
 
+# Include directories for core_impl and pybindings
+target_include_directories(core_impl PUBLIC 
+                                        ${CMAKE_SOURCE_DIR}
+                                        ${CMAKE_SOURCE_DIR}/cpp_code
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/DataObjects
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/Algorithm
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/IO
+                                        ${Python3_INCLUDE_DIRS})
+target_include_directories(pybindings PRIVATE
+                                        ${CMAKE_SOURCE_DIR}
+                                        ${CMAKE_SOURCE_DIR}/cpp_code
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/DataObjects
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/Algorithm
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
+                                        ${CMAKE_SOURCE_DIR}/cpp_code/IO
+                                        ${Python3_INCLUDE_DIRS}
+)
+
+# Build test executable
 add_executable(runTests
     cpp_code/Tests/DataObjects_Test.cpp
     cpp_code/Tests/Image_Test.cpp
@@ -54,18 +86,19 @@ add_executable(runTests
     cpp_code/Tests/InternalForceTest.cpp
 )
 
+# include directories for test executable (tells compiler where to find header files)
 target_include_directories(runTests
     PRIVATE
         ${CMAKE_SOURCE_DIR}          
         ${CMAKE_SOURCE_DIR}/cpp_code 
-        ${CMAKE_SOURCE_DIR}/C_API    
 )
 
+# link test executable with core_impl()
 target_link_libraries(runTests
     PRIVATE
     gtest_main
     core_impl
-    c_api 
+
 )
 
 
