@@ -14,26 +14,11 @@ In this project I wanted to gain experience in a multi-language project, mixing 
 
 ## Installation
 
-Describe how to install your project:
-
-```bash
-# Example
-git clone https://github.com/yourusername/yourproject.git
-cd yourproject
-pip install -r requirements.txt
-```
-
-## Usage
-
-Provide examples of how to use your project:
-
-```python
-import yourmodule
-
-yourmodule.do_something()
-```
+Build the C++ library as defined in the CMakeLists.txt. This way you can call the .dll/.so file
 
 ## Multi-language
+
+Currently this project is based on a C++ core together with a python UI, that makes it easy to load images and draw initial shapes.
 
 ## Active Contour Model
 
