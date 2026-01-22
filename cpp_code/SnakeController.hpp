@@ -19,7 +19,7 @@ public:
                                                     float alpha, 
                                                     float beta);
 
-    std::vector<Point> run(int iterations, int* out_count_ptr);
+    std::vector<Point> run(int iterations);
 
 private:
     ImageHolder<float> m_imageHolder;
