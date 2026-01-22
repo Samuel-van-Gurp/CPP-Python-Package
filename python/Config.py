@@ -1,5 +1,3 @@
-# place to store configuration variables such as file paths
-
 import os
 from pathlib import Path
 
