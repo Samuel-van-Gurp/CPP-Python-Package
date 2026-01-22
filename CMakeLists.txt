@@ -28,11 +28,13 @@ enable_testing()
 
 # STATIC library with core implementation
 add_library(core_impl STATIC
+    cpp_code/api.cpp                                                         
     cpp_code/api_impl.cpp
     cpp_code/IO/WriteImage.cpp
     cpp_code/SnakeController.cpp
 
     cpp_code/DataObjects/Contour.cpp
+    cpp_code/DataObjects/SnakeParams.hpp
     cpp_code/Algorithm/ContourResampler.cpp
     cpp_code/Algorithm/ELSnakeEngine.cpp
     cpp_code/Algorithm/GreedySnakeEngine.cpp
