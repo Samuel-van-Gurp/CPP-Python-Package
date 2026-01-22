@@ -3,12 +3,10 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/numpy.h>
-#include "api_impl.hpp"
-#include "api.hpp"
 #include "DataObjects/SnakeParams.hpp"
 #include "DataObjects/ImageInfo.hpp"
 #include "DataObjects/Point.hpp"
-
+#include "SnakeController.hpp" 
 
 namespace py = pybind11;
     
@@ -29,13 +27,15 @@ std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams&
     size_t size = buf.shape[0] * buf.shape[1];  // assuming 2D array
     std::vector<float> vec(ptr, ptr + size);    // copy data into a std::vector
 
-    // construct ImageInfo
+    // Construct ImageInfo
     ImageInfo imageInfo;
     imageInfo.data = vec; 
     imageInfo.width = buf.shape[1];
     imageInfo.height = buf.shape[0];
 
-    return runSnake(&imageInfo, params);
+    auto snakeController = SnakeController::createSnakeController(ImageHolder<float>(imageInfo.data, imageInfo.width, imageInfo.height), params, SnakeSolver::EULER_LAGRANGE);
+
+    return snakeController.run(params.iterations);
 }
 
 PYBIND11_MODULE(pybindings, m) {
@@ -52,6 +52,7 @@ PYBIND11_MODULE(pybindings, m) {
         .def_readwrite("contour_radius_x", &SnakeParams::contour_radius_x)
         .def_readwrite("contour_radius_y", &SnakeParams::contour_radius_y)
         .def_readwrite("contour_points", &SnakeParams::contour_points);
+
     // expose the Point struct to Python
     py::class_<Point>(m, "Point")
         .def(py::init<>())
@@ -61,6 +62,5 @@ PYBIND11_MODULE(pybindings, m) {
 
     m.def("RunSnake", &RunSnakeAPI, "Run the snake algorithm",
           py::arg("inputImage"), py::arg("params"));
-
 }
 

@@ -5,21 +5,23 @@
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 #include "DataObjects/Contour.hpp"
 #include "Algorithm/ISnakeEngine.hpp"
+#include "MagicNumbers.hpp"
 #include "IO/WriteImage.hpp"
 #include "DataObjects/ImageHolder.hpp"
+#include "DataObjects/SnakeParams.hpp"
+#include "ImageProcessing/NaiveConvolve.hpp"
+#include "ImageProcessing/IntensityManipulator.hpp"
 #include <memory>
 
 class SnakeController
 {
 public:
-    
-    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, 
-                                                    Contour contour, 
-                                                    std::unique_ptr<ISnakeEngine> engine, 
-                                                    float alpha, 
-                                                    float beta);
+
+    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, SnakeSolver solver);
 
     std::vector<Point> run(int iterations);
+
+    static SnakeController createSnakeController(ImageHolder<float> imageHolder, SnakeParams snakeParams, SnakeSolver solver);
 
 private:
     ImageHolder<float> m_imageHolder;

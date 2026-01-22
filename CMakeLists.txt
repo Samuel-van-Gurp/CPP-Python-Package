@@ -28,8 +28,7 @@ enable_testing()
 
 # STATIC library with core implementation
 add_library(core_impl STATIC
-    cpp_code/api.cpp                                                         
-    cpp_code/api_impl.cpp
+    cpp_code/MagicNumbers.hpp
     cpp_code/IO/WriteImage.cpp
     cpp_code/SnakeController.cpp
 

@@ -3,17 +3,15 @@
 #include "Algorithm/ELSnakeEngine.hpp"
 #include <memory>
 
-SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, float alpha, float beta)
+SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, 
+                                                                 Contour contour, 
+                                                                 std::unique_ptr<ISnakeEngine> engine, 
+                                                                 SnakeSolver solver)
     : m_imageHolder(imageHolder)
     , m_imageProcessor(std::move(imageProcessor))
     , m_contour(contour)
     , m_engine(std::move(engine))
 {
-    
-    // m_engine = std::make_unique<GreedySnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
-    // m_imageProcessor->PrepareImageForELSnake(m_imageHolder);
-    m_engine = std::make_unique<ELSnakeEngine>(*m_imageProcessor, m_imageHolder, m_contour, alpha, beta);
-
     m_writer.saveImage(m_imageHolder, "SnakeTestImage");
 }
 
@@ -22,15 +20,30 @@ std::vector<Point> SnakeController::run(int iterations)
     return m_engine->RunSnake(iterations, m_contour);
 }
 
-    // std::vector<Point> SnakeController::run(int iterations, int* out_count_ptr)
-    // {
-    //     std::vector<Point> contourPoints = m_engine->RunSnake(iterations, m_contour);
-    //     m_writer.ContourOverLay(m_contour, m_imageHolder, *m_imageProcessor);
-        
-    //     if (out_count_ptr) 
-    //     {
-    //         *out_count_ptr = m_contour.Size();
-    //     }
+SnakeController SnakeController::createSnakeController(ImageHolder<float> imageHolder, SnakeParams snakeParams, enum SnakeSolver solver)
+{
+    // make ImageProcessorFacade and inject helper classes
+    auto imageProcessor = std::make_unique<ImageProcessorFacade>(std::make_unique<NaiveConvolve>(), std::make_unique<IntensityManipulator>());
 
-    //     return contourPoints;
-    // }
+    // make initial contour (TODO: make a factory method that only takes SnakeParams)
+    Contour contour(snakeParams.contour_radius_x, snakeParams.contour_radius_y, Point(snakeParams.contour_center_x, snakeParams.contour_center_y), snakeParams.contour_points);
+
+    std::unique_ptr<ISnakeEngine> engine;
+
+    switch(solver) {
+        case SnakeSolver::GREEDY_ALGORITHM:
+            engine = std::make_unique<GreedySnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
+            break;  
+        case SnakeSolver::EULER_LAGRANGE:
+            engine = std::make_unique<ELSnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
+            break;
+        default:
+            engine = std::make_unique<ELSnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
+            std::cout << "Unknown SnakeSolver enum value, defaulting to EULER_LAGRANGE." << std::endl;
+            break;
+    }
+
+    auto snakeController =  SnakeController(imageHolder, std::move(imageProcessor), contour, std::move(engine), solver);
+
+    return snakeController;
+}
