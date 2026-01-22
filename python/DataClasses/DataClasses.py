@@ -1,28 +1,25 @@
-from ctypes import Structure, c_float, c_int, POINTER, c_uint8, c_int32
+from dataclasses import dataclass
+import numpy as np
 
+@dataclass
+class SnakeParams:
+    alpha: float
+    beta: float
+    iterations: int
+    contour_center_x: float
+    contour_center_y: float
+    contour_radius_x: float
+    contour_radius_y: float
+    contour_points: int
 
-class SnakeParams(Structure):
-    _fields_ = [
-        ("alpha", c_float),
-        ("beta", c_float),
-        ("iterations", c_int),
-        ("contour_center_x", c_float),
-        ("contour_center_y", c_float),
-        ("contour_radius_x", c_float),
-        ("contour_radius_y", c_float),
-        ("contour_points", c_int),
-    ]
+@dataclass
+class ImageInfo:
+    data: np.ndarray
+    width: int
+    height: int
+    stride: int
 
-class ImageInfo(Structure):
-    _fields_ = [
-        ("data", POINTER(c_uint8)),
-        ("width", c_int),
-        ("height", c_int),
-        ("stride", c_int),
-    ]
-
-class Point(Structure):
-    _fields_ = [
-        ("X", c_float),
-        ("Y", c_float),
-    ]
+@dataclass
+class Point:
+    X: float
+    Y: float
