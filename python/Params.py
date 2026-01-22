@@ -9,7 +9,7 @@ class Params:
         try:
             self.loadparams_from_json(path)
         except Exception as e:
-            print(f"Failed to load params from {path}: {e}")
+            print(f"Failed to load params from {path}: {e}, reverted to default params.")
             self.alpha = 0.5
             self.beta = 0.5
             self.max_iterations = 500
