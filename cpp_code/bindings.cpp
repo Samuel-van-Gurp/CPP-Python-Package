@@ -10,7 +10,7 @@
 
 namespace py = pybind11;
     
-std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams& params) {
+std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams& params, SnakeSolver solver = SnakeSolver::EULER_LAGRANGE) {
 
     // check dimensions 
     try {
@@ -33,7 +33,7 @@ std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams&
     imageInfo.width = buf.shape[1];
     imageInfo.height = buf.shape[0];
 
-    auto snakeController = SnakeController::createSnakeController(ImageHolder<float>(imageInfo.data, imageInfo.width, imageInfo.height), params, SnakeSolver::EULER_LAGRANGE);
+    auto snakeController = SnakeController::createSnakeController(ImageHolder<float>(imageInfo.data, imageInfo.width, imageInfo.height), params, solver);
 
     return snakeController.run(params.iterations);
 }
@@ -58,6 +58,12 @@ PYBIND11_MODULE(pybindings, m) {
         .def(py::init<>())
         .def_readwrite("x", &Point::X)
         .def_readwrite("y", &Point::Y); 
+
+    // expose the solver setting enum to Python
+    py::enum_<SnakeSolver>(m, "SnakeSolver")
+        .value("GREEDY", SnakeSolver::GREEDY_ALGORITHM)
+        .value("EULER_LAGRANGE", SnakeSolver::EULER_LAGRANGE)
+        .export_values();
     
 
     m.def("RunSnake", &RunSnakeAPI, "Run the snake algorithm",
