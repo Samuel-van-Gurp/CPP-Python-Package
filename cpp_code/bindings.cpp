@@ -67,6 +67,6 @@ PYBIND11_MODULE(pybindings, m) {
     
 
     m.def("RunSnake", &RunSnakeAPI, "Run the snake algorithm",
-          py::arg("inputImage"), py::arg("params"));
+          py::arg("inputImage"), py::arg("params"), py::arg("solver") = SnakeSolver::EULER_LAGRANGE);
 }
 
