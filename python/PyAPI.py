@@ -3,7 +3,7 @@ import numpy as np
 import Config
 sys.path.insert(0, str(Config.PYBINDINGS_DIR))
 import pybindings
-from pybindings import SnakeParams, Point
+from pybindings import SnakeParams
 
 class Pybind11_API:
 
