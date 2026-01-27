@@ -15,7 +15,7 @@ FetchContent_Declare(
     )
 FetchContent_MakeAvailable(pybind11)
 
-# inclucde GoogleTest
+# include GoogleTest
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/heads/main.zip
@@ -47,9 +47,9 @@ add_library(core_impl STATIC
 pybind11_add_module(pybindings cpp_code/bindings.cpp)  # create pybindings module
 
 # Include directories from cpp_code for pybindings target
-target_include_directories(pybindings PRIVATE
-    ${PROJECT_SOURCE_DIR}/cpp_code
-)
+# target_include_directories(pybindings PRIVATE
+#     ${PROJECT_SOURCE_DIR}/cpp_code
+# )
 
 # Link core_impl to pybindings target
 target_link_libraries(pybindings PRIVATE core_impl)
@@ -66,15 +66,15 @@ target_include_directories(core_impl PUBLIC
                                         ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
                                         ${CMAKE_SOURCE_DIR}/cpp_code/IO
                                         ${Python3_INCLUDE_DIRS})
-target_include_directories(pybindings PRIVATE
-                                        ${CMAKE_SOURCE_DIR}
-                                        ${CMAKE_SOURCE_DIR}/cpp_code
-                                        ${CMAKE_SOURCE_DIR}/cpp_code/DataObjects
-                                        ${CMAKE_SOURCE_DIR}/cpp_code/Algorithm
-                                        ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
-                                        ${CMAKE_SOURCE_DIR}/cpp_code/IO
-                                        ${Python3_INCLUDE_DIRS}
-)
+# target_include_directories(pybindings PRIVATE
+#                                         ${CMAKE_SOURCE_DIR}
+#                                         ${CMAKE_SOURCE_DIR}/cpp_code
+#                                         ${CMAKE_SOURCE_DIR}/cpp_code/DataObjects
+#                                         ${CMAKE_SOURCE_DIR}/cpp_code/Algorithm
+#                                         ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
+#                                         ${CMAKE_SOURCE_DIR}/cpp_code/IO
+#                                         ${Python3_INCLUDE_DIRS}
+# )
 
 # Build test executable
 add_executable(runTests
