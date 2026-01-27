@@ -1,12 +1,12 @@
 #include "Contour.hpp"
 #include <iostream>
+#include <stdexcept>
 
 Contour::Contour(int numPoints) // empty contour
     : m_center(Point{0.0f, 0.0f}), m_numPoints(numPoints)
 {
     m_ContourPoints.resize(static_cast<std::size_t>(m_numPoints), Point{0.0f, 0.0f});
 }
-
 
 Contour::Contour(int radius, Point center, int numPoints) // circle contour
     : m_center(center), m_numPoints(numPoints)
@@ -32,6 +32,11 @@ std::vector<Point> Contour::getContourPoints()
 
 void Contour::FillEllipseContourPoints(int radius_x, int radius_y)
 {
+    m_ContourPoints.clear();
+    if (m_numPoints > 0) {
+        m_ContourPoints.reserve(static_cast<std::size_t>(m_numPoints));
+    }
+
     for (int i = 0; i < m_numPoints; ++i)
     {
         double angle = 2.0 * PI * static_cast<double>(i) / static_cast<double>(m_numPoints);
@@ -44,10 +49,8 @@ void Contour::FillEllipseContourPoints(int radius_x, int radius_y)
 
 float Contour::TensionEnergyAtPoint(int idx, Point newPoint) const
 {
-    int left_index = (idx - 1 + m_numPoints) % m_numPoints;
-    int right_index = (idx + 1) % m_numPoints;
-    Point leftPoint = m_ContourPoints[left_index];
-    Point rightPoint = m_ContourPoints[right_index];
+    Point leftPoint = (*this)[idx - 1];
+    Point rightPoint = (*this)[idx + 1];
     
     float fx = (leftPoint.X - 2 * newPoint.X + rightPoint.X);
     float fy = (leftPoint.Y - 2 * newPoint.Y + rightPoint.Y);
@@ -56,11 +59,8 @@ float Contour::TensionEnergyAtPoint(int idx, Point newPoint) const
 
 float Contour::CurveEnergyAtPoint(int idx, Point newPoint) const
 {
-    int left_index = (idx - 1 + m_numPoints) % m_numPoints;
-    int right_index = (idx + 1) % m_numPoints;
-
-    Point leftPoint = m_ContourPoints[left_index];
-    Point rightPoint = m_ContourPoints[right_index];
+    Point leftPoint = (*this)[idx - 1];
+    Point rightPoint = (*this)[idx + 1];
 
     float fx = (leftPoint.X - newPoint.X) - (newPoint.X - rightPoint.X);
     float fy = (leftPoint.Y - newPoint.Y) - (newPoint.Y - rightPoint.Y);
