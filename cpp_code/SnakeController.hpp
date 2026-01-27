@@ -17,7 +17,7 @@ class SnakeController
 {
 public:
 
-    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine, SnakeSolver solver);
+    SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, Contour contour, std::unique_ptr<ISnakeEngine> engine);
 
     std::vector<Point> run(int iterations);
 

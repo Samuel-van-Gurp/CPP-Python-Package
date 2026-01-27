@@ -5,14 +5,12 @@
 
 SnakeController::SnakeController(ImageHolder<float> imageHolder, std::unique_ptr<ImageProcessorFacade> imageProcessor, 
                                                                  Contour contour, 
-                                                                 std::unique_ptr<ISnakeEngine> engine, 
-                                                                 SnakeSolver solver)
+                                                                 std::unique_ptr<ISnakeEngine> engine)
     : m_imageHolder(imageHolder)
     , m_imageProcessor(std::move(imageProcessor))
     , m_contour(contour)
     , m_engine(std::move(engine))
 {
-    m_writer.saveImage(m_imageHolder, "SnakeTestImage");
 }
 
 std::vector<Point> SnakeController::run(int iterations)
@@ -33,17 +31,18 @@ SnakeController SnakeController::createSnakeController(ImageHolder<float> imageH
     switch(solver) {
         case SnakeSolver::GREEDY_ALGORITHM:
             engine = std::make_unique<GreedySnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
-            break;  
+            break;
         case SnakeSolver::EULER_LAGRANGE:
-            engine = std::make_unique<ELSnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
+            {
+            auto gradients = imageProcessor->PrepareImageForELSnake(imageHolder);
+            engine = std::make_unique<ELSnakeEngine>(gradients, snakeParams.alpha, snakeParams.beta);
+            }
             break;
         default:
-            engine = std::make_unique<ELSnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
-            std::cout << "Unknown SnakeSolver enum value, defaulting to EULER_LAGRANGE." << std::endl;
+            engine = std::make_unique<GreedySnakeEngine>(*imageProcessor, imageHolder, contour, snakeParams.alpha, snakeParams.beta);
             break;
     }
 
-    auto snakeController =  SnakeController(imageHolder, std::move(imageProcessor), contour, std::move(engine), solver);
-
-    return snakeController;
+    return SnakeController(imageHolder, std::move(imageProcessor), contour, std::move(engine));
 }
+
