@@ -13,7 +13,7 @@ namespace py = pybind11;
 std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams& params, SnakeSolver solver = SnakeSolver::EULER_LAGRANGE) {
 
     // check dimensions
-        try {
+    try {
         if (inputImage.ndim() != 2) {
             throw std::runtime_error("Input image must be a 2D array");
         }
@@ -21,7 +21,8 @@ std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams&
         std::cerr << "Error: " << e.what() << std::endl;
         throw;
     }
-        py::buffer_info buf = inputImage.request(); // request metadata of the array
+    
+    py::buffer_info buf = inputImage.request(); // request metadata of the array
     float* ptr = static_cast<float*>(buf.ptr);  // get the pointer to the first element in the array
     size_t size = buf.shape[0] * buf.shape[1];  // assuming 2D array
     std::vector<float> vec(ptr, ptr + size);    // copy data into a std::vector
