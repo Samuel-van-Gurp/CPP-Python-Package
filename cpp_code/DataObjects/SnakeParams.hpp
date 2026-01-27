@@ -3,13 +3,13 @@
 
 // Define the SnakeParams struct
 struct SnakeParams {
-    double alpha;
-    double beta;
+    float alpha;
+    float beta;
     int iterations;
-    double contour_center_x;
-    double contour_center_y;
-    double contour_radius_x;
-    double contour_radius_y;
+    float contour_center_x;
+    float contour_center_y;
+    float contour_radius_x;
+    float contour_radius_y;
     int contour_points;
 };
 
