@@ -18,8 +18,10 @@ TEST(ELSnakeEngineTest, combineForces) {
     auto convolver = std::make_unique<NaiveConvolve>();
     auto intensityManipulator = std::make_unique<IntensityManipulator>();
     ImageProcessorFacade imageProcessor(std::move(convolver), std::move(intensityManipulator));
+    auto gradients = imageProcessor.PrepareImageForELSnake(imageHolder);
 
-    ELSnakeEngine snakeEngine(imageProcessor, imageHolder, contour, 0.5f, 0.5f);
+    ELSnakeEngine snakeEngine(gradients, 0.5f, 0.5f);
+
 
     std::tuple<float, float> internalForce = std::make_tuple(2.0f, 4.0f);
     std::tuple<float, float> externalForce = std::make_tuple(6.0f, 8.0f);
