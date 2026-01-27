@@ -12,8 +12,8 @@ namespace py = pybind11;
     
 std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams& params, SnakeSolver solver = SnakeSolver::EULER_LAGRANGE) {
 
-    // check dimensions 
-    try {
+    // check dimensions
+        try {
         if (inputImage.ndim() != 2) {
             throw std::runtime_error("Input image must be a 2D array");
         }
@@ -21,8 +21,7 @@ std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams&
         std::cerr << "Error: " << e.what() << std::endl;
         throw;
     }
-
-    py::buffer_info buf = inputImage.request(); // request metadata of the array
+        py::buffer_info buf = inputImage.request(); // request metadata of the array
     float* ptr = static_cast<float*>(buf.ptr);  // get the pointer to the first element in the array
     size_t size = buf.shape[0] * buf.shape[1];  // assuming 2D array
     std::vector<float> vec(ptr, ptr + size);    // copy data into a std::vector
@@ -34,12 +33,13 @@ std::vector<Point> RunSnakeAPI(py::array_t<float> inputImage, const SnakeParams&
     imageInfo.height = buf.shape[0];
 
     auto snakeController = SnakeController::createSnakeController(ImageHolder<float>(imageInfo.data, imageInfo.width, imageInfo.height), params, solver);
+    auto contour = snakeController.run(params.iterations);
 
-    return snakeController.run(params.iterations);
+    return contour;
 }
-
+ 
 PYBIND11_MODULE(pybindings, m) {
-    m.doc() = "pybind11 bindings for C++ API";
+    m.doc() = "pybind11 bindings for C++ API"; // TODO, i saw you can link this to the README.md
 
     // expose the snakeParams struct to Python
     py::class_<SnakeParams>(m, "SnakeParams")
@@ -65,7 +65,6 @@ PYBIND11_MODULE(pybindings, m) {
         .value("EULER_LAGRANGE", SnakeSolver::EULER_LAGRANGE)
         .export_values();
     
-
     m.def("RunSnake", &RunSnakeAPI, "Run the snake algorithm",
           py::arg("inputImage"), py::arg("params"), py::arg("solver") = SnakeSolver::EULER_LAGRANGE);
 }
