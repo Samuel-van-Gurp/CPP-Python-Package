@@ -1,43 +1,32 @@
 #include "ISnakeEngine.hpp"
+#include <cmath>
 
 std::vector<Point> ISnakeEngine::RunSnake(int iterations, Contour &contour)
 {
     for (int i = 0; i < iterations; ++i)
     {
         if (!EvolveContour(contour)) {
-            std::cout << "Contour stabilized after " << i << " iterations.\n";
             break; 
         }
     }
-    std::cout << "Cut-off iterations reached.\n";
     return contour.getContourPoints();
 }
 
 bool ISnakeEngine::EvolveContour(Contour &contour)
 {
-    //copy current contour to new contour
+    // copy current contour to new contour
     Contour newContour = contour;
     int iterationsPerRound = 0;
-
     int contourSize = contour.Size();
+    
     for (int i = 0; i < contourSize; ++i)
     {
         Point& p = contour[i];
-
-        Point nextStep = getNextStep(i, p);
-        newContour[i] = nextStep;
-        
-        // check if point has moved
-        const float moveEpsilon = 1e-3f;
-        float dx = nextStep.X - p.X;
-        float dy = nextStep.Y - p.Y;
-        if (std::sqrt(dx*dx + dy*dy) > moveEpsilon)
-        {
-            iterationsPerRound++;
-        }
-
+        newContour[i] = getNextStep(i, p, contour);
+        iterationsPerRound = hasPointMoved(iterationsPerRound, p, newContour[i]);
     }
-    if (iterationsPerRound < stopCriterion)
+
+    if (iterationsPerRound < STOP_CRITERION)
     {
         contour = std::move(newContour);
         return false;
@@ -47,6 +36,17 @@ bool ISnakeEngine::EvolveContour(Contour &contour)
 
     // move new contour to the old contour
     contour = std::move(resampledContour);
-
     return true;
+}
+
+int ISnakeEngine::hasPointMoved(int iterationsPerRound, const Point & oldPoint, const Point & newPoint)
+{
+    const float moveEpsilon = 1e-3f;
+    float dx = newPoint.X - oldPoint.X;
+    float dy = newPoint.Y - oldPoint.Y;
+    if (std::sqrt(dx*dx + dy*dy) > moveEpsilon)
+    {
+        iterationsPerRound++;
+    }
+    return iterationsPerRound;
 }

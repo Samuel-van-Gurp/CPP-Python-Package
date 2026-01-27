@@ -9,35 +9,27 @@
 #include "Algorithm/ISnakeEngine.hpp"
 #include "DataObjects/Point.hpp"
 #include "Algorithm/ELSnakeEngine.hpp"
-#include "DataObjects/Contour.hpp"
 #include "ImageProcessing/ImageProcessorFacade.hpp"
-#include "DataObjects/Contour.hpp"
-#include "Algorithm/ISnakeEngine.hpp"
 
 
 class ELSnakeEngine : public ISnakeEngine
 {
 public:
 
-    ELSnakeEngine(ImageProcessorFacade & imageProcessor, ImageHolder<float>& imageHolder, Contour & contour, float alpha, float beta);
-
-    Point* RunSnake(int iterations);
+    ELSnakeEngine(ImageProcessorFacade::Gradients gradients, float alpha, float beta);
 
     std::tuple<float, float> combineForces(const std::tuple<float, float> &internalForce, const std::tuple<float, float> &externalForce);
 
-    Point getNextStep(int index, Point &p);
+    Point getNextStep(int index, Point &p, const Contour &contour);
 
     std::tuple<float, float> getExternalForce(const Point &p);
 
     std::tuple<float, float> getInternalForce(int ContourIndex, const Contour &contour);
 
 private:
-    static constexpr int stopCriterion = 5;
     static constexpr float INTERNAL_FORCE_SCALE = 100.0f; // Scale factor to match external force magnitude
-    Contour &m_contour;
-    ImageHolder<float> m_imageHolder;
-    ImageProcessorFacade &m_imageProcessor;
-    std::optional<ImageProcessorFacade::Gradients> m_gradients;
+    // std::optional<ImageProcessorFacade::Gradients> m_gradients;
+    ImageProcessorFacade::Gradients m_gradients;
 
     const float alpha;    
     const float beta;
