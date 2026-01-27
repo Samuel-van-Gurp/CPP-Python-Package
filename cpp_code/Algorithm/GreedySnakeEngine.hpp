@@ -18,13 +18,12 @@ public:
         
         private:
 
-        static constexpr int stopCriterion = 5;
-
         const float alpha;    
         const float beta;
         
         Point constructEnergyMatrix();
-        Point getNextStep(int index, Point &p);
+        Point getNextStep(int index, Point &p, const Contour &contour);
+
         std::vector<std::vector<float>> constructExternalEnergyMatrix(Point& p);
         std::vector<std::vector<float>> constructInternalEnergyMatrix(int index, const Point &p);
 

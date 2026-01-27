@@ -1,12 +1,13 @@
 #include "GreedySnakeEngine.hpp"
 
+// TODO: see if the ownership of contour here could be removed. such that snakecontroller owns it and passes reference only.
 GreedySnakeEngine::GreedySnakeEngine(ImageProcessorFacade &imageProcessor, ImageHolder<float> &imageHolder, Contour &contour, float alpha, float beta)
     : m_imageProcessor(imageProcessor), m_imageHolder(imageHolder), m_contour(contour), alpha(alpha), beta(beta)
 {
     m_imageProcessor.PrepareImageForGreedySnake(m_imageHolder);
 }
 
-Point GreedySnakeEngine::getNextStep(int index, Point& p)
+Point GreedySnakeEngine::getNextStep(int index, Point &p, const Contour &contour)
 {
     // get internal and external energy matrices
     auto InternalEnergyMatrix = constructInternalEnergyMatrix(index, p);
