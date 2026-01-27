@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 # path to the C++ pybindings build directory

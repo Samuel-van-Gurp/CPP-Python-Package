@@ -2,7 +2,6 @@ import Params
 import Image
 import PyAPI
 import Config
-import pybindings
 from UI import UI
 
 def main():
@@ -35,6 +34,5 @@ def main():
     ui.displayImageWithContour(ImageArray, contour)
 
     params.saveParamsAsJson(ui.alphaUserInput.val, ui.betaUserInput.val, 500, 50)
-
 main()
 
