@@ -1,14 +1,9 @@
 #ifndef ELSAKESNAKEENGINE_HPP
 #define ELSAKESNAKEENGINE_HPP
 
-#include <vector>
-#include <iostream>
 #include <tuple>
-#include <algorithm>
-#include <optional>
 #include "Algorithm/ISnakeEngine.hpp"
 #include "DataObjects/Point.hpp"
-#include "Algorithm/ELSnakeEngine.hpp"
 #include "ImageProcessing/ImageProcessorFacade.hpp"
 
 
@@ -28,11 +23,10 @@ public:
     std::tuple<float, float> getInternalForce(int ContourIndex, const Contour &contour);
 
 private:
-    // std::optional<ImageProcessorFacade::Gradients> m_gradients;
     ImageProcessorFacade::Gradients m_gradients;
 
     const float alpha;    
     const float beta;
 };
 
-#endif ELSAKESNAKEENGINE_HPP
+#endif // ELSAKESNAKEENGINE_HPP

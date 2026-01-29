@@ -4,6 +4,7 @@
 #include "DataObjects/Contour.hpp"
 #include "DataObjects/Point.hpp"
 #include <vector>
+#include <algorithm>
 
 class ContourResampler {
 
