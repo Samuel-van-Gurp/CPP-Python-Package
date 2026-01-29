@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 set(CMAKE_CXX_STANDARD 20)
 project(C_API LANGUAGES C CXX)
 
-
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
-
 
 include(FetchContent)
 #  include pybind11
@@ -78,6 +76,9 @@ add_executable(runTests
     cpp_code/Tests/ELSnakeEngine_Test.cpp
     cpp_code/Tests/ContourResampler_Test.cpp
     cpp_code/Tests/InternalForceTest.cpp
+    cpp_code/Tests/GreedySnakeTest.cpp
+
+    cpp_code/Tests/Test_Classes/GreedySnakeTestWrapper.cpp
 )
 
 # include directories for test executable (tells compiler where to find header files)
@@ -87,12 +88,12 @@ target_include_directories(runTests
         ${CMAKE_SOURCE_DIR}/cpp_code 
 )
 
-# link test executable with core_impl()
+# link test and mock executables with core_impl
 target_link_libraries(runTests
     PRIVATE
     gtest_main
+    gmock_main
     core_impl
-
 )
 
 gtest_discover_tests(runTests
