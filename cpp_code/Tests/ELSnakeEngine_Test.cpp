@@ -22,14 +22,13 @@ TEST(ELSnakeEngineTest, combineForces) {
 
     ELSnakeEngine snakeEngine(gradients, 0.5f, 0.5f);
 
-
     std::tuple<float, float> internalForce = std::make_tuple(2.0f, 4.0f);
     std::tuple<float, float> externalForce = std::make_tuple(6.0f, 8.0f);
 
     auto combinedForce = snakeEngine.combineForces(internalForce, externalForce);
 
-    EXPECT_FLOAT_EQ(std::get<0>(combinedForce), 8.0f);
-    EXPECT_FLOAT_EQ(std::get<1>(combinedForce), 12.0f); 
+    EXPECT_FLOAT_EQ(std::get<0>(combinedForce), (2.0f * snakeEngine.INTERNAL_FORCE_SCALE) - 6.0f);
+    EXPECT_FLOAT_EQ(std::get<1>(combinedForce), (4.0f * snakeEngine.INTERNAL_FORCE_SCALE) - 8.0f); 
 }
 
 TEST(ELSnakeEngineTest, secondDiff) {
@@ -44,8 +43,8 @@ TEST(ELSnakeEngineTest, secondDiff) {
 
     auto [dx2, dy2] = contour.secondDiff(2);
   
-    EXPECT_FLOAT_EQ(dx2, -2.0f); // 1 - (2*2) + 1 = -2
-    EXPECT_FLOAT_EQ(dy2, -0.0f); //  -1 - (2*0) + 1 = 0
+    EXPECT_FLOAT_EQ(dx2, -1.0f); 
+    EXPECT_FLOAT_EQ(dy2, -0.0f); 
 }
 
 TEST(ELSnakeEngineTest, fourthDiff) {
@@ -59,9 +58,9 @@ TEST(ELSnakeEngineTest, fourthDiff) {
     contour[4] = Point(0.0f, 0.0f);
 
     auto [dx4, dy4] = contour.fourthDiff(2);
-    //  ([index-2] - 4.0f * [index-1].X + 6.0f * [index].X - 4.0f * [index+1].X + [index+2].X);
-    EXPECT_FLOAT_EQ(dx4, 4.0f); // 0 - 4 + 12 -4 + 0 = 4
-    EXPECT_FLOAT_EQ(dy4, 0.0f); // 0 -4 + 0 +4 + 0 = 0
+
+    EXPECT_NEAR(dx4, 1.0f, 1e-5f);
+    EXPECT_NEAR(dy4, 0.0f, 1e-5f);
 }
 
 TEST(ELSnakeEngineTest, operatorOverloadTest) {

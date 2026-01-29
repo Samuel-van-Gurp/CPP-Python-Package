@@ -15,6 +15,7 @@
 class ELSnakeEngine : public ISnakeEngine
 {
 public:
+    static constexpr float INTERNAL_FORCE_SCALE = 100.0f; // Scale factor to match external force magnitude
 
     ELSnakeEngine(ImageProcessorFacade::Gradients gradients, float alpha, float beta);
 
@@ -27,7 +28,6 @@ public:
     std::tuple<float, float> getInternalForce(int ContourIndex, const Contour &contour);
 
 private:
-    static constexpr float INTERNAL_FORCE_SCALE = 100.0f; // Scale factor to match external force magnitude
     // std::optional<ImageProcessorFacade::Gradients> m_gradients;
     ImageProcessorFacade::Gradients m_gradients;
 

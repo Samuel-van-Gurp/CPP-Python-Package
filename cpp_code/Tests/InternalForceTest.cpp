@@ -69,20 +69,27 @@ TEST(internalForceTest, testforce) {
     auto secondDiff50 = contour.secondDiff(50);
     auto secondDiff75 = contour.secondDiff(75);
 
-    std::cerr << "Second Diff at index 0: (" << std::get<0>(secondDiff0) << ", " << std::get<1>(secondDiff0) << ")\n";
-    std::cerr << "Second Diff at index 25: (" << std::get<0>(secondDiff25) << ", " << std::get<1>(secondDiff25) << ")\n";
-    std::cerr << "Second Diff at index 50: (" << std::get<0>(secondDiff50) << ", " << std::get<1>(secondDiff50) << ")\n";
-    std::cerr << "Second Diff at index 75: (" << std::get<0>(secondDiff75) << ", " << std::get<1>(secondDiff75) << ")\n";
+    EXPECT_FLOAT_EQ(std::get<0>(secondDiff0), -2.3916016f);
+    EXPECT_FLOAT_EQ(std::get<1>(secondDiff0), -3.0517578e-05f);
+    EXPECT_FLOAT_EQ(std::get<0>(secondDiff25), 0.0f);
+    EXPECT_FLOAT_EQ(std::get<1>(secondDiff25), -0.00041723251f);
+    EXPECT_FLOAT_EQ(std::get<0>(secondDiff50), 2.3917999f);
+    EXPECT_FLOAT_EQ(std::get<1>(secondDiff50), 0.0f);
+    EXPECT_FLOAT_EQ(std::get<0>(secondDiff75), 0.0f);
+    EXPECT_FLOAT_EQ(std::get<1>(secondDiff75), 0.00041723251f);  
 
     // print the fourth diff at index 0,25,50,75
     auto fourthDiff0 = contour.fourthDiff(0);
     auto fourthDiff25 = contour.fourthDiff(25); 
     auto fourthDiff50 = contour.fourthDiff(50);
     auto fourthDiff75 = contour.fourthDiff(75);
-    std::cerr << "Fourth Diff at index 0: (" << std::get<0>(fourthDiff0) << ", " << std::get<1>(fourthDiff0) << ")\n";
-    std::cerr << "Fourth Diff at index 25: (" << std::get<0>(fourthDiff25) << ", " << std::get<1>(fourthDiff25) << ")\n";
-    std::cerr << "Fourth Diff at index 50: (" << std::get<0>(fourthDiff50) << ", " << std::get<1>(fourthDiff50) << ")\n";
-    std::cerr << "Fourth Diff at index 75: (" << std::get<0>(fourthDiff75) << ", " << std::get<1>(fourthDiff75) << ")\n";
-    
-    ASSERT_TRUE(false);
+
+    EXPECT_FLOAT_EQ(std::get<0>(fourthDiff0), 0.046705723f);
+    EXPECT_FLOAT_EQ(std::get<1>(fourthDiff0), -0.0005838215f);
+    EXPECT_FLOAT_EQ(std::get<0>(fourthDiff25), -4.7338631e-09f);
+    EXPECT_FLOAT_EQ(std::get<1>(fourthDiff25), 2.8403178e-08f);
+    EXPECT_FLOAT_EQ(std::get<0>(fourthDiff50), -0.047871608f);
+    EXPECT_FLOAT_EQ(std::get<1>(fourthDiff50), -0.00058380014f);
+    EXPECT_FLOAT_EQ(std::get<0>(fourthDiff75), 4.7338631e-09f);
+    EXPECT_FLOAT_EQ(std::get<1>(fourthDiff75), -3.6687439e-08f);
 }

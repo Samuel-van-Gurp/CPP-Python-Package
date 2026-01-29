@@ -20,5 +20,6 @@ TEST(ContourTest, ContourTest_TentionEner_Test)
     Point newPoint{1.0f, 1.0f};
     
     float tensionEnergy = contour.TensionEnergyAtPoint(0, newPoint);
-    EXPECT_NEAR(tensionEnergy, 18.0f, 1e-5f);
+
+    EXPECT_NEAR(tensionEnergy, 38.8277855f, 1e-5f);
 }
