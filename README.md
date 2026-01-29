@@ -1,5 +1,5 @@
-
-# Project Title
+[![C/C++ CI](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/c-cpp.yml)
+# Active Contour Segmentation
 ![alt text](image.png)
 In this project I wanted to gain experience in a multi-language project, mixing a Python front-end with a C++ calculation core. For this project I chose Active Contour segmentation also known as Snakes. This lends itself especially well as we need to load images and initialize a contour which is easily done in Python and an iterative optimization that can be done efficiently in C++.
 
