@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: C++ Tests
 
 on:
   push:
@@ -19,3 +19,8 @@ jobs:
       run: cmake --build build
     - name: Run tests
       run: ctest --test-dir build --output-on-failure
+    - name: Upload coverage reports to Codecov
+          uses: codecov/codecov-action@v5
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            fail_ci_if_error: true

@@ -26,6 +26,12 @@ include(GoogleTest)
 
 enable_testing()
 
+# for code coverage
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+endif()
+
 # STATIC library with core implementation
 add_library(core_impl STATIC
     cpp_code/MagicNumbers.hpp
