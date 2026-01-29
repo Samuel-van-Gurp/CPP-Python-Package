@@ -43,13 +43,9 @@ add_library(core_impl STATIC
     cpp_code/ImageProcessing/NaiveConvolve.cpp
     cpp_code/ImageProcessing/IntensityManipulator.cpp
 )
+set_target_properties(core_impl PROPERTIES POSITION_INDEPENDENT_CODE ON) # for linux build, necessary for shared libs
 
 pybind11_add_module(pybindings cpp_code/bindings.cpp)  # create pybindings module
-
-# Include directories from cpp_code for pybindings target
-# target_include_directories(pybindings PRIVATE
-#     ${PROJECT_SOURCE_DIR}/cpp_code
-# )
 
 # Link core_impl to pybindings target
 target_link_libraries(pybindings PRIVATE core_impl)
@@ -66,15 +62,6 @@ target_include_directories(core_impl PUBLIC
                                         ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
                                         ${CMAKE_SOURCE_DIR}/cpp_code/IO
                                         ${Python3_INCLUDE_DIRS})
-# target_include_directories(pybindings PRIVATE
-#                                         ${CMAKE_SOURCE_DIR}
-#                                         ${CMAKE_SOURCE_DIR}/cpp_code
-#                                         ${CMAKE_SOURCE_DIR}/cpp_code/DataObjects
-#                                         ${CMAKE_SOURCE_DIR}/cpp_code/Algorithm
-#                                         ${CMAKE_SOURCE_DIR}/cpp_code/ImageProcessing
-#                                         ${CMAKE_SOURCE_DIR}/cpp_code/IO
-#                                         ${Python3_INCLUDE_DIRS}
-# )
 
 # Build test executable
 add_executable(runTests
@@ -101,7 +88,6 @@ target_link_libraries(runTests
     core_impl
 
 )
-
 
 gtest_discover_tests(runTests
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
