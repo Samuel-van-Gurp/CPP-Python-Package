@@ -33,7 +33,6 @@ endif()
 # STATIC library with core implementation
 add_library(core_impl STATIC
     cpp_code/MagicNumbers.hpp
-    cpp_code/IO/WriteImage.cpp
     cpp_code/SnakeController.cpp
 
     cpp_code/DataObjects/Contour.cpp

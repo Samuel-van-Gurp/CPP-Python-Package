@@ -6,7 +6,6 @@
 #include "DataObjects/Contour.hpp"
 #include "Algorithm/ISnakeEngine.hpp"
 #include "MagicNumbers.hpp"
-#include "IO/WriteImage.hpp"
 #include "DataObjects/ImageHolder.hpp"
 #include "DataObjects/SnakeParams.hpp"
 #include "ImageProcessing/NaiveConvolve.hpp"
@@ -28,7 +27,6 @@ private:
     std::unique_ptr<ImageProcessorFacade> m_imageProcessor;
     Contour m_contour;
     std::unique_ptr<ISnakeEngine> m_engine;
-    WriteImage m_writer;
 };
 
 #endif // SNAKECONTROLLER_HPP
