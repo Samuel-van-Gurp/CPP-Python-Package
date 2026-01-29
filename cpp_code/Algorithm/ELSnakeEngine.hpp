@@ -18,13 +18,14 @@ public:
 
     Point getNextStep(int index, Point &p, const Contour &contour);
 
+    private:
+
     std::tuple<float, float> getExternalForce(const Point &p);
 
     std::tuple<float, float> getInternalForce(int ContourIndex, const Contour &contour);
-
-private:
+    
     ImageProcessorFacade::Gradients m_gradients;
-
+    
     const float alpha;    
     const float beta;
 };

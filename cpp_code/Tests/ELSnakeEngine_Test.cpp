@@ -5,7 +5,11 @@
 #include "ImageProcessing/NaiveConvolve.hpp"    
 #include "ImageProcessing/IntensityManipulator.hpp"
 
-TEST(ELSnakeEngineTest, combineForces) {
+// public methods that need to be tested:
+// getNextStep
+TEST(ELSnakeEngineTest, getNextStep) {
+
+    // arrange
     std::vector<float> data = {
         0.0f, 0.5f, 1.0f, 1.5f,
         2.0f, 2.5f, 3.0f, 3.5f,
@@ -25,8 +29,42 @@ TEST(ELSnakeEngineTest, combineForces) {
     std::tuple<float, float> internalForce = std::make_tuple(2.0f, 4.0f);
     std::tuple<float, float> externalForce = std::make_tuple(6.0f, 8.0f);
 
+    // act
+    Point currentPoint(2.0f,2.0f);
+    auto PointNew = snakeEngine.getNextStep(0, currentPoint, contour);
+
+    // assert
+
+    EXPECT_NEAR(PointNew.X, 1, 1e-5f);
+    EXPECT_NEAR(PointNew.Y, 1.52503741, 1e-5f);
+}
+
+TEST(ELSnakeEngineTest, combineForces) {
+
+    // arrange
+    std::vector<float> data = {
+        0.0f, 0.5f, 1.0f, 1.5f,
+        2.0f, 2.5f, 3.0f, 3.5f,
+        4.0f, 4.5f, 5.0f, 5.5f,
+        6.0f, 6.5f, 7.0f, 7.5f
+    };
+    ImageHolder<float> imageHolder(data, 4, 4);
+    Contour contour(1, Point(2,2), 5);
+
+    auto convolver = std::make_unique<NaiveConvolve>();
+    auto intensityManipulator = std::make_unique<IntensityManipulator>();
+    ImageProcessorFacade imageProcessor(std::move(convolver), std::move(intensityManipulator));
+    auto gradients = imageProcessor.PrepareImageForELSnake(imageHolder);
+
+    ELSnakeEngine snakeEngine(gradients, 0.5f, 0.5f);
+
+    std::tuple<float, float> internalForce = std::make_tuple(2.0f, 4.0f);
+    std::tuple<float, float> externalForce = std::make_tuple(6.0f, 8.0f);
+    
+    // act
     auto combinedForce = snakeEngine.combineForces(internalForce, externalForce);
 
+    // assert
     EXPECT_FLOAT_EQ(std::get<0>(combinedForce), (2.0f * snakeEngine.INTERNAL_FORCE_SCALE) - 6.0f);
     EXPECT_FLOAT_EQ(std::get<1>(combinedForce), (4.0f * snakeEngine.INTERNAL_FORCE_SCALE) - 8.0f); 
 }

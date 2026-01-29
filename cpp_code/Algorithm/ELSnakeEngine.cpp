@@ -13,16 +13,16 @@ std::tuple<float, float> ELSnakeEngine::combineForces(const std::tuple<float, fl
     return combinedForce;
 }
 
-Point ELSnakeEngine::getNextStep(int index, Point& p, const Contour& contour)
+Point ELSnakeEngine::getNextStep(int index, Point& currentPoint, const Contour& contour)
 {
     const float stepSize = 0.1f;
     const float maxDisp = 1.0f;
 
     auto internalForce = getInternalForce(index, contour);
-    auto externalForce = getExternalForce(p); 
+    auto externalForce = getExternalForce(currentPoint); 
 
-    float new_x = p.X + std::clamp(stepSize * std::get<0>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
-    float new_y = p.Y + std::clamp(stepSize * std::get<1>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
+    float new_x = currentPoint.X + std::clamp(stepSize * std::get<0>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
+    float new_y = currentPoint.Y + std::clamp(stepSize * std::get<1>(combineForces(internalForce, externalForce)), -maxDisp, maxDisp);
 
     return Point(new_x,new_y);
 }
