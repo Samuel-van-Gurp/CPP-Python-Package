@@ -25,7 +25,7 @@ Currently this project is based on a C++ core together with a python UI, that ma
 
 The active contour model states the segmentation problem as an energy minimization. Where we have a contour $s$ where $s \mapsto v(s) = (x(s), y(s))$ (with periodic boundary conditions, $v(1) = v(0)$).
 
-$$E(s)=\int_{0}^{1}E_{int}(s) + E_{ext}(s)ds$$
+$$E(s)=\oint E_{int}(s) + E_{ext}(s)ds$$
 
 Here, $E_{int}$ represents the internal energy, and $E_{ext}$ represents the external energy (note that the contour is assumed to be closed over the interval of integration). $E_{ext}$ can also be called the image energy; this can be seen as a potential field as we know it from mechanics. If we want to find the edge of an object we can state the external energy as the gradient of the original image, which can be stated as,
 
@@ -35,11 +35,11 @@ In practice this is calculated using a Sobel or Canny edge detection filter.
 
 The internal energy $E_{int}$ can be seen as a regularization term that keeps the contour a "physical" line instead of a loose collection of points, and can be written as
 
-$$E_{int}(s) = \frac{1}{2} (\alpha ||v^{,}(s)||^2 + \beta ||v(s)^{''}||^2)$$
+$$E_{int}(s) = \frac{1}{2} (\alpha ||v^{,}(s)||^2 + \beta ||v(s)^{,,}||^2)$$
 
 Combining all this we can write the problem as such,
 
-$$\underset{s}{\min} \int_{0}^{1} G(s,v^{,}(s),v^{,,}(s)) ds $$
+$$\underset{s}{\min} \oint G(s,v^{,}(s),v^{,,}(s)) ds $$
 
 where $G(s)$ is the combined internal and external energy.
 
@@ -52,7 +52,7 @@ The greedy snake is the most naive implementation to solve the energy minimizati
 A more advanced way to solve this energy minimization problem is to borrow the Euler-Lagrange equation from the field of classical mechanics. 
 Using the Euler-Lagrange equation we can restate our energy minimization problem as such.
 
-$$\min_{v} \int_{0}^{1} G(s, v, v', v'') \, ds \iff \frac{\partial G}{\partial v} - \frac{\partial}{\partial s} \frac{\partial G}{\partial v'} + \frac{\partial^2}{\partial s^2} \frac{\partial^2 G}{\partial v''} = 0$$
+$$\min_{v} \oint G(s, v, v^{,}, v^{,,}) \, ds \iff \frac{\partial G}{\partial v} - \frac{\partial}{\partial s} \frac{\partial G}{\partial v'} + \frac{\partial^2}{\partial s^2} \frac{\partial^2 G}{\partial v''} = 0$$
 
 So for our problem this results in the following components.
 
