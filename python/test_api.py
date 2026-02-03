@@ -1,9 +1,9 @@
 import Params
-import Image
 import PyAPI
 import Config
 from UI import UI
 
+import Image
 def main():
     # Create UI instance
     ui = UI()
@@ -21,18 +21,18 @@ def main():
     API = PyAPI.Pybind11_API.Pybind11_API_Factory(
         alpha=ui.alphaUserInput.val,
         beta=ui.betaUserInput.val,
-        iterations=500,
+        iterations=ui.getItrerations(),
         center_x=ui.xy[0],
         center_y=ui.xy[1],
         radius_x=ui.width / 2,
         radius_y=ui.height / 2,
-        points=50
+        points=ui.getPoints()
     )
 
     contour = API.callApi(ImageArray)
     
     ui.displayImageWithContour(ImageArray, contour)
 
-    params.saveParamsAsJson(ui.alphaUserInput.val, ui.betaUserInput.val, 500, 50)
+    params.saveParamsAsJson(ui.alphaUserInput.val, ui.betaUserInput.val, ui.getItrerations(), ui.getPoints())
 main()
 

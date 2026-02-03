@@ -2,6 +2,7 @@ from matplotlib.patches import Ellipse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, EllipseSelector, Slider
 import numpy as np
+from matplotlib.widgets import TextBox
 
 
 class UI:
@@ -13,14 +14,41 @@ class UI:
         self.height = None
         self.alphaUserInput = None
         self.betaUserInput = None
+        self.iterationsInputField = None
+        self.iterations = 100
+        self.pointsInputField = None
+        self.points = 50
         self.fig = None
         self.ax = None
         self.result_contour = None 
+
+    def __validate_points(self, text : str) -> None:
+        try:
+            self.points = int(text)
+            if self.points < 1:
+                raise ValueError
+        except ValueError:
+            print("Invalid points: enter a positive integer")
+            return
         
 
     def setResultContour(self, contour : np.ndarray):
         self.result_contour = contour
-
+        
+    def __validate_iterations(self, text : str) -> None:
+            try:
+                self.iterations = int(text)
+                if self.iterations < 1:
+                    raise ValueError
+            except ValueError:
+                print("Invalid iterations: enter a positive integer")
+                return 
+            
+    def getItrerations(self) -> int:
+        return self.iterations
+    
+    def getPoints(self) -> int:
+        return self.points
 
     def selectInitContour(self, image: np.ndarray, alpha_init=0.5, beta_init=0.5):
         self.fig, self.ax = plt.subplots()
@@ -32,13 +60,28 @@ class UI:
         ax.set_yticks([])      
         ax.set_axis_off()   
 
-
         self.selector = EllipseSelector(ax, self.onSelect)
+        
         button_ax = fig.add_axes([0.4, 0.05, 0.2, 0.075])
+        
+        # add alpha and beta sliders
         slider_alpha_ax = fig.add_axes([0.1, 0.05, 0.2, 0.075])
         slider_beta_ax = fig.add_axes([0.1, 0.1, 0.2, 0.075])
         self.alphaUserInput = Slider(slider_alpha_ax, 'α', valmin=0, valmax=1, valinit=alpha_init)
         self.betaUserInput = Slider(slider_beta_ax, 'β', valmin=0, valmax=1, valinit=beta_init)
+        
+        #set up iterations input field
+        iterations_ax = fig.add_axes([0.7, 0.05, 0.2, 0.075])
+        self.iterationsInputField = TextBox(iterations_ax, 'iterations', initial=str(100))
+        self.iterationsInputField.on_submit(self.__validate_iterations)
+        self.iterationsInputField.set_val(str(self.iterations))
+
+        # set up points input field
+        points_ax = fig.add_axes([0.7, 0.15, 0.2, 0.075])
+        self.pointsInputField = TextBox(points_ax, 'points', initial=str(self.points))
+        self.pointsInputField.on_submit(self.__validate_points)
+        self.pointsInputField.set_val(str(self.points))
+        
         btn = Button(button_ax, 'Confirm Selection')
         btn.on_clicked(self.onButtonClicked)
 

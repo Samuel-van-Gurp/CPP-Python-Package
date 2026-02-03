@@ -29,8 +29,6 @@ class Pybind11_API:
 
         return Pybind11_API(snakeParams)
     
-    
-    
     def callApi(self, img: np.ndarray) -> np.ndarray:
         contour = pybindings.RunSnake(img, self.snakeParams)
         contour_array = np.array([[p.x, p.y] for p in contour], dtype=np.float32)
