@@ -1,0 +1,36 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11", "cmake>=3.15"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "ActiveContour"
+version = "0.1.10"
+description = "Active contour segmentation implemented in C++ with Python bindings and a UI"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "Samuel van Gurp"}]
+requires-python = ">=3.11"
+
+[tool.scikit-build]
+build-dir = "build/{wheel_tag}"
+# wheel.exclude = ["lib/**", "include/**"]
+
+[tool.scikit-build.cmake]
+args = [
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_CXX_STANDARD=17",
+    "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+    "-DCMAKE_CXX_EXTENSIONS=OFF",
+]
+
+[tool.cibuildwheel]
+build = "cp311-* cp312-*"
+skip = "*-win32 *-manylinux_i686 *-musllinux*"
+manylinux-x86_64-image = "manylinux_2_28"
+
+[tool.cibuildwheel.macos]
+environment = { MACOSX_DEPLOYMENT_TARGET = "10.15" }
+
+[tool.cibuildwheel.windows]
+before-build = "pip install delvewheel"
+repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
