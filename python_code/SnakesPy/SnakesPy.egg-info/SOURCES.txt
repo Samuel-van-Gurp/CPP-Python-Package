@@ -1,6 +1,0 @@
-pyproject.toml
-SnakesPy/SnakesPy.egg-info/PKG-INFO
-SnakesPy/SnakesPy.egg-info/SOURCES.txt
-SnakesPy/SnakesPy.egg-info/dependency_links.txt
-SnakesPy/SnakesPy.egg-info/requires.txt
-SnakesPy/SnakesPy.egg-info/top_level.txt
