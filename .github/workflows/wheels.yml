@@ -31,7 +31,7 @@ jobs:
         env:
           # Define which architectures to build for each OS
           CIBW_ARCHS_LINUX: x86_64 aarch64
-          CIBW_ARCHS_MACOS: x86_64 arm64 universal2
+          CIBW_ARCHS_MACOS: universal2
           CIBW_ARCHS_WINDOWS: AMD64 ARM64
 
       - name: Upload artifacts
