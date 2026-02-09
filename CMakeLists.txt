@@ -56,6 +56,14 @@ target_link_libraries(pybindings PRIVATE core_impl)
 #  Link core_impl and pybind11::module to pybindings target
 target_link_libraries(pybindings PRIVATE core_impl pybind11::module)
 
+# copy pybindings to python package directory TODO: this is a bit hacky later do it cross platform 
+add_custom_command(TARGET pybindings POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:pybindings>
+    "${CMAKE_SOURCE_DIR}/python_code/SnakesPy/pybindings.pyd"
+    # "${CMAKE_SOURCE_DIR}/python_code/SnakesPy/$<TARGET_FILE_NAME:pybindings>"
+)
+
 # Include directories for core_impl and pybindings
 target_include_directories(core_impl PUBLIC 
                                         ${CMAKE_SOURCE_DIR}
