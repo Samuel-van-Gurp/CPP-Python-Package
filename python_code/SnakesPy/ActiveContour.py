@@ -1,8 +1,8 @@
-import Image
-import Params
-import Config
-import UI
-import PyAPI
+from . import Image
+from . import Params
+from . import Config
+from . import UI
+from . import PyAPI
 
 class ActiveContour:
     

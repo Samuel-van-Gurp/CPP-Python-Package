@@ -1,10 +1,10 @@
 import sys
 import numpy as np  
-import Config
+from . import Config
 sys.path.insert(0, str(Config.PYBINDINGS_DIR))
-import pybindings
-from pybindings import SnakeParams, Point
-
+from . import pybindings
+from .pybindings import SnakeParams, Point
+print(Config.PYBINDINGS_DIR)
 class Pybind11_API:
 
     def __init__(self, snakeParams : pybindings.SnakeParams):
