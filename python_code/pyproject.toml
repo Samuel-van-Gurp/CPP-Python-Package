@@ -19,4 +19,15 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["SnakesPy"]
+# where = ["SnakesPy"]
+where = ["."]
+
+[tool.setuptools]
+zip-safe = false
+platforms = ["Windows"]
+
+[tool.setuptools.package-data]
+"SnakesPy" = ["pybindings*.pyd"]
+
+[bdist_wheel]
+universal = 0
