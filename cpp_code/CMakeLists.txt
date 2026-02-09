@@ -1,0 +1,116 @@
+cmake_minimum_required(VERSION 3.15)
+set(CMAKE_CXX_STANDARD 20)
+project(C_API LANGUAGES C CXX)
+
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+
+include(FetchContent)
+#  include pybind11
+FetchContent_Declare(
+    pybind11
+    GIT_REPOSITORY https://github.com/pybind/pybind11.git
+    GIT_TAG        v3.0.1 
+    )
+FetchContent_MakeAvailable(pybind11)
+
+# include GoogleTest
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/heads/main.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+include(GoogleTest)
+
+enable_testing()
+
+# for code coverage
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    add_compile_options(--coverage -O0 -g)
+    add_link_options(--coverage)
+endif()
+
+# STATIC library with core implementation
+add_library(core_impl STATIC
+    MagicNumbers.hpp
+    SnakeController.cpp
+
+    DataObjects/Contour.cpp
+    DataObjects/SnakeParams.hpp
+    Algorithm/ContourResampler.cpp
+    Algorithm/ELSnakeEngine.cpp
+    Algorithm/GreedySnakeEngine.cpp
+    Algorithm/ISnakeEngine.cpp
+
+    ImageProcessing/ImageProcessorFacade.cpp
+    ImageProcessing/NaiveConvolve.cpp
+    ImageProcessing/IntensityManipulator.cpp
+)
+set_target_properties(core_impl PROPERTIES POSITION_INDEPENDENT_CODE ON) # for linux build, necessary for shared libs
+
+pybind11_add_module(pybindings bindings.cpp)  # create pybindings module
+
+# Link core_impl to pybindings target
+# target_link_libraries(pybindings PRIVATE core_impl)
+
+#  Link core_impl and pybind11::module to pybindings target
+# target_link_libraries(pybindings PRIVATE core_impl pybind11::module)
+
+# Link core_impl to pybindings target
+target_link_libraries(pybindings PRIVATE core_impl)
+
+#  Link core_impl and pybind11::module to pybindings target
+target_link_libraries(pybindings PRIVATE core_impl pybind11::module)
+
+# copy pybindings to python package directory TODO: this is a bit hacky later do it cross platform 
+add_custom_command(TARGET pybindings POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:pybindings>
+        "${CMAKE_SOURCE_DIR}/python_code/SnakesPy/pybindings.pyd"
+        # "${CMAKE_SOURCE_DIR}/python_code/SnakesPy/$<TARGET_FILE_NAME:pybindings>"
+)
+
+# Include directories for core_impl and pybindings
+## Include directories (use CMAKE_CURRENT_SOURCE_DIR so this subproject is relocatable)
+target_include_directories(core_impl PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects
+    ${CMAKE_CURRENT_SOURCE_DIR}/Algorithm
+    ${CMAKE_CURRENT_SOURCE_DIR}/ImageProcessing
+    ${CMAKE_CURRENT_SOURCE_DIR}/IO
+    ${Python3_INCLUDE_DIRS}
+)
+
+# Build test executable
+add_executable(runTests
+    Tests/DataObjects_Test.cpp
+    Tests/Image_Test.cpp
+    Tests/ImageHolderTest.cpp
+    Tests/SnakeEngine_Test.cpp
+    Tests/ELSnakeEngine_Test.cpp
+    Tests/ContourResampler_Test.cpp
+    Tests/InternalForceTest.cpp
+    Tests/GreedySnakeTest.cpp
+
+    Tests/Test_Classes/GreedySnakeTestWrapper.cpp
+)
+
+# include directories for test executable (tells compiler where to find header files)
+target_include_directories(runTests
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects
+)
+
+# link test and mock executables with core_impl
+target_link_libraries(runTests
+    PRIVATE
+    gtest_main
+    gmock_main
+    core_impl
+)
+
+gtest_discover_tests(runTests
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
