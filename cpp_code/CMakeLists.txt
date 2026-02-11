@@ -20,9 +20,9 @@ FetchContent_Declare(
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-include(GoogleTest)
-
-enable_testing()
+# Disable GoogleTest installation to prevent static libraries from being included in the Python wheel,
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE) 
+include(GoogleTest) 
 
 # for code coverage
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
