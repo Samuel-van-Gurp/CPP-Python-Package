@@ -97,3 +97,6 @@ gtest_discover_tests(runTests
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
+
+# install the pybindings module to the SnakesPy package directory
+install(TARGETS pybindings DESTINATION python_code/SnakesPy)
