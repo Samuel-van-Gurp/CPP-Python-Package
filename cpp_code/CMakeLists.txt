@@ -4,6 +4,11 @@ project(C_API LANGUAGES C CXX)
 
 find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
 
+if(DEFINED ENV{SETUPTOOLS_EXT_SUFFIX})
+    set(CMAKE_SHARED_MODULE_SUFFIX $ENV{SETUPTOOLS_EXT_SUFFIX})
+endif()
+
+
 include(FetchContent)
 #  include pybind11
 FetchContent_Declare(
