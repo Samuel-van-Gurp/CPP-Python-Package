@@ -9,6 +9,11 @@ if(DEFINED ENV{SETUPTOOLS_EXT_SUFFIX})
 endif()
 
 
+if(DEFINED ENV{SETUPTOOLS_EXT_SUFFIX})
+    set_target_properties(pybindings PROPERTIES SUFFIX $ENV{SETUPTOOLS_EXT_SUFFIX})
+endif()
+
+
 include(FetchContent)
 #  include pybind11
 FetchContent_Declare(
