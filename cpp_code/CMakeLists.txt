@@ -65,39 +65,42 @@ target_include_directories(core_impl PUBLIC
     ${Python3_INCLUDE_DIRS}
 )
 
-# Build test executable
-add_executable(runTests
-    Tests/DataObjects_Test.cpp
-    Tests/Image_Test.cpp
-    Tests/ImageHolderTest.cpp
-    Tests/SnakeEngine_Test.cpp
-    Tests/ELSnakeEngine_Test.cpp
-    Tests/ContourResampler_Test.cpp
-    Tests/InternalForceTest.cpp
-    Tests/GreedySnakeTest.cpp
+# only build tests if not building awheel with scikit-build 
+if(NOT SKBUILD)
+    # Build test executable
+    add_executable(runTests
+        Tests/DataObjects_Test.cpp
+        Tests/Image_Test.cpp
+        Tests/ImageHolderTest.cpp
+        Tests/SnakeEngine_Test.cpp
+        Tests/ELSnakeEngine_Test.cpp
+        Tests/ContourResampler_Test.cpp
+        Tests/InternalForceTest.cpp
+        Tests/GreedySnakeTest.cpp
 
-    Tests/Test_Classes/GreedySnakeTestWrapper.cpp
-)
+        Tests/Test_Classes/GreedySnakeTestWrapper.cpp
+    )
 
-# include directories for test executable (tells compiler where to find header files)
-target_include_directories(runTests
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects
-)
+    # include directories for test executable (tells compiler where to find header files)
+    target_include_directories(runTests
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}
+            ${CMAKE_CURRENT_SOURCE_DIR}/DataObjects
+    )
 
-# link test and mock executables with core_impl
-target_link_libraries(runTests
-    PRIVATE
-    gtest_main
-    gmock_main
-    core_impl
-)
+    # link test and mock executables with core_impl
+    target_link_libraries(runTests
+        PRIVATE
+        gtest_main
+        gmock_main
+        core_impl
+    )
 
-gtest_discover_tests(runTests
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-)
+    gtest_discover_tests(runTests
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    )
+endif()
 
 # install the pybindings module to the SnakesPy package directory
 install(TARGETS pybindings DESTINATION python_code/SnakesPy)
