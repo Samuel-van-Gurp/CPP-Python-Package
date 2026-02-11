@@ -50,25 +50,8 @@ set_target_properties(core_impl PROPERTIES POSITION_INDEPENDENT_CODE ON) # for l
 
 pybind11_add_module(pybindings bindings.cpp)  # create pybindings module
 
-# Link core_impl to pybindings target
-# target_link_libraries(pybindings PRIVATE core_impl)
-
-#  Link core_impl and pybind11::module to pybindings target
-# target_link_libraries(pybindings PRIVATE core_impl pybind11::module)
-
-# Link core_impl to pybindings target
+#  Link core_impl and pybindings
 target_link_libraries(pybindings PRIVATE core_impl)
-
-#  Link core_impl and pybind11::module to pybindings target
-target_link_libraries(pybindings PRIVATE core_impl pybind11::module)
-
-# copy pybindings to python package directory TODO: this is a bit hacky later do it cross platform 
-add_custom_command(TARGET pybindings POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        $<TARGET_FILE:pybindings>
-        "${CMAKE_SOURCE_DIR}/python_code/SnakesPy/pybindings.pyd"
-        # "${CMAKE_SOURCE_DIR}/python_code/SnakesPy/$<TARGET_FILE_NAME:pybindings>"
-)
 
 # Include directories for core_impl and pybindings
 ## Include directories (use CMAKE_CURRENT_SOURCE_DIR so this subproject is relocatable)

@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "ActiveContour"
-version = "0.1.10"
+version = "0.1.0"
 description = "Active contour segmentation implemented in C++ with Python bindings and a UI"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -13,12 +13,14 @@ requires-python = ">=3.11"
 
 [tool.scikit-build]
 build-dir = "build/{wheel_tag}"
-# wheel.exclude = ["lib/**", "include/**"]
+
+[tool.setuptools.packages.find]
+where = ["python_code"]
 
 [tool.scikit-build.cmake]
 args = [
     "-DCMAKE_BUILD_TYPE=Release",
-    "-DCMAKE_CXX_STANDARD=17",
+    "-DCMAKE_CXX_STANDARD=20",
     "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
     "-DCMAKE_CXX_EXTENSIONS=OFF",
 ]
