@@ -19,9 +19,10 @@ FetchContent_Declare(
   URL https://github.com/google/googletest/archive/refs/heads/main.zip
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+# Disable GoogleTest installation to prevent static libraries from being included in the Python wheel
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
+set(INSTALL_GMOCK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-# Disable GoogleTest installation to prevent static libraries from being included in the Python wheel,
-set(INSTALL_GTEST OFF CACHE BOOL "" FORCE) 
 include(GoogleTest) 
 
 # for code coverage
