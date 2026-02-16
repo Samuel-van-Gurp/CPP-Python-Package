@@ -14,6 +14,9 @@ jobs:
       id-token: write
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download wheels from release
         run: |
           gh release download ${{ github.event.release.tag_name }} --dir dist/
