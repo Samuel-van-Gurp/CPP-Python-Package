@@ -1,19 +1,24 @@
 import json
+import os
+import sys
 
 
 class Params:
-    def __init__(self, path = "Params/params.json"):
-
+    def __init__(self, path=None):
+        # Always use params.json in the user's current working directory unless a path is given
+        if path is None:
+            path = os.path.join(os.getcwd(), 'params.json')
         self.path = path
 
         try:
-            self.loadparams_from_json(path)
-        except Exception as e:
-            print(f"Failed to load params from {path}: {e}, reverted to default params.")
+            self.loadparams_from_json(self.path)
+        except Exception:
+            # If no params file exists, create one with default params
             self.alpha = 0.5
             self.beta = 0.5
             self.max_iterations = 500
             self.contour_points = 50
+            self.saveParamsAsJson(self.alpha, self.beta, self.max_iterations, self.contour_points)
 
     def loadparams_from_json(self,path: str):
         with open(path, 'r') as json_file:
@@ -30,6 +35,5 @@ class Params:
             "Contourpoints": Contourpoints,
             "max_iterations": max_iterations
         }
-
-        with open('Params/params.json', 'w') as json_file:
+        with open(self.path, 'w') as json_file:
             json.dump(dict, json_file, indent=4)

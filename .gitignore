@@ -2,3 +2,7 @@
 build/
 DebugImage/
 params.json
+dist/
+SnakesPy.egg-info/
+__pycache__/
+*.pyd

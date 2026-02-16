@@ -2,6 +2,7 @@
 #define CPP_PY_PACKAGE_CPP_CODE_DATAOBJECTS_CONTOUR_HPP
 
 #include "Point.hpp"
+#include <tuple>
 #include <vector>
 #include <cmath>
 
