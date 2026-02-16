@@ -1,14 +1,16 @@
 name: Upload Python Package to Test PyPI
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Build Wheels"]
+    types: [completed]
 
 permissions:
   contents: read
 
 jobs:
   pypi-publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -21,7 +23,9 @@ jobs:
 
       - name: Download wheels from release
         run: |
-          gh release download ${{ github.event.release.tag_name }} --dir dist/
+          # Determine tag from the triggering workflow run (head_branch when triggered by a tag or branch)
+          TAG=${{ github.event.workflow_run.head_branch || github.event.workflow_run.head_sha }}
+          gh release download "$TAG" --dir dist/ --repo "${{ github.repository }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
