@@ -48,6 +48,9 @@ jobs:
     needs: build_wheels
     if: github.ref_type == 'tag'  # Only on tag pushes
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download all wheel artifacts
         uses: actions/download-artifact@v4
         with:
