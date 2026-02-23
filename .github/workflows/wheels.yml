@@ -61,16 +61,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: ./all-wheels/
-
-      - name: Flatten all-wheels (move wheels to root)
-        run: |
-          shopt -s nullglob globstar
-          for f in ./all-wheels/**/*.whl; do
-            mv "$f" ./all-wheels/ || true
-          done
+          merge-multiple: true
 
       - name: Upload wheels to release
         run: |
-          gh release upload ${{ github.ref_name }} ./all-wheels/**/*.whl --clobber
+          gh release upload ${{ github.ref_name }} ./all-wheels/*.whl --clobber
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
