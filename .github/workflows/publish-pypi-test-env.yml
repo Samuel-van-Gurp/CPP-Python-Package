@@ -14,20 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write
+      contents: read
+      actions: read
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Download wheels from release
-        run: |
-          # Determine tag from the triggering workflow run (head_branch when triggered by a tag or branch)
-          TAG=${{ github.event.workflow_run.head_branch || github.event.workflow_run.head_sha }}
-          gh release download "$TAG" --dir dist/ --repo "${{ github.repository }}"
+      - name: Download wheels from triggering workflow run artifacts
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p dist
+          gh run download ${{ github.event.workflow_run.id }} \
+            --repo "${{ github.repository }}" \
+            --dir dist
+
+      - name: Show downloaded files
+        run: ls -la dist
 
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
