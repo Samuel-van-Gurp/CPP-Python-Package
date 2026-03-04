@@ -27,11 +27,21 @@ jobs:
             --repo "${{ github.repository }}" \
             --dir dist
 
+      # bit of a hacky way to do it
+      - name: Flatten downloaded artifacts into flat_dist
+        run: |
+          mkdir -p flat_dist
+          find dist -mindepth 2 -type f \( -iname "*.whl" -o -iname "*.tar.gz" -o -iname "*.zip" \) -print0 \
+            | xargs -0 -I{} mv "{}" flat_dist/ || true
+          find dist -maxdepth 1 -type f \( -iname "*.whl" -o -iname "*.tar.gz" -o -iname "*.zip" \) -print0 \
+            | xargs -0 -I{} mv "{}" flat_dist/ || true
+          ls -la flat_dist
+
       - name: Show downloaded files
-        run: ls -la dist
+        run: ls -la flat_dist
 
       - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-          packages-dir: dist/
+          packages-dir: flat_dist/
