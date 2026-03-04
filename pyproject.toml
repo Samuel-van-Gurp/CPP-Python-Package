@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "SnakesPy"
-version = "0.1.7"
+version = "0.1.8"
 description = "Active contour segmentation implemented in C++ with Python bindings and a UI"
 readme = "README.md"
 license = { file = "LICENSE" }
