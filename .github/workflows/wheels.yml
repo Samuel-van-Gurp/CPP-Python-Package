@@ -24,19 +24,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      # Set up QEMU for linux
-      - if: runner.os == 'Linux'
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: all
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.21.3
         env:
           # Define which architectures to build for each OS
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ARCHS_LINUX: x86_64 aarch64
+          CIBW_ARCHS_LINUX: x86_64
           CIBW_ARCHS_MACOS: universal2
           CIBW_ARCHS_WINDOWS: AMD64
 
