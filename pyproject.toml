@@ -17,6 +17,9 @@ build-dir = "build/{wheel_tag}"
 [tool.setuptools]
 packages = ["SnakesPy"]
 
+[tool.setuptools.package-dir]
+"" = "python_code"
+
 [tool.scikit-build.cmake]
 args = [
     "-DCMAKE_BUILD_TYPE=Release",
