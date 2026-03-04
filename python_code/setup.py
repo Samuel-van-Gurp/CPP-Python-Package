@@ -7,7 +7,7 @@ class BinaryDistribution(Distribution):
 
 setup(
     name="SnakesPy",
-    version="0.1.0",
+    version="0.1.2",
     packages=["SnakesPy"],
     include_package_data=True,
     package_data={"SnakesPy": ["pybindings*.pyd", "params.json"]},
