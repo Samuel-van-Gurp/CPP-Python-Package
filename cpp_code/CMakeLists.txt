@@ -113,4 +113,4 @@ if(NOT SKBUILD)
 endif()
 
 # install the pybindings module to the SnakesPy package directory
-install(TARGETS pybindings DESTINATION python_code/SnakesPy)
+install(TARGETS pybindings DESTINATION SnakesPy)
