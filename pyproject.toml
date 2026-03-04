@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "SnakesPy"
-version = "0.1.4"
+version = "0.1.5"
 description = "Active contour segmentation implemented in C++ with Python bindings and a UI"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -14,8 +14,8 @@ requires-python = ">=3.11"
 [tool.scikit-build]
 build-dir = "build/{wheel_tag}"
 
-[tool.setuptools.packages.find]
-where = ["python_code"]
+[tool.setuptools]
+packages = ["SnakesPy"]
 
 [tool.scikit-build.cmake]
 args = [
@@ -36,3 +36,4 @@ environment = { MACOSX_DEPLOYMENT_TARGET = "10.15" }
 [tool.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
+
