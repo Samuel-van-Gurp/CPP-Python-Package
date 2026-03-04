@@ -40,11 +40,16 @@ jobs:
           CIBW_ARCHS_MACOS: universal2
           CIBW_ARCHS_WINDOWS: AMD64
 
+      - name: Collect wheels into dist/  # make the wheels in the format that the publish to pypi expects 
+        run: |
+          mkdir -p dist
+          cp wheelhouse/*.whl dist/
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
-          path: ./wheelhouse/*.whl
+          path: dist/*.whl
 
   upload_to_release:
     runs-on: ubuntu-latest
