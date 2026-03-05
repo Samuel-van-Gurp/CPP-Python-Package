@@ -12,20 +12,9 @@ authors = [{ name = "Samuel van Gurp"}]
 requires-python = ">=3.11"
 
 [tool.scikit-build]
+
 build-dir = "build/{wheel_tag}"
-
-[tool.scikit-build.wheel]
-include = ["python_code/SnakesPy/*.py"]
-
-[tool.setuptools.packages.find]
-where = ["python_code"]
-include = ["SnakesPy*"]
-
-[tool.setuptools.package-dir]
-"" = "python_code"
-
-[tool.setuptools]
-include-package-data = true
+wheel.packages = ["python_code/SnakesPy"]
 
 [tool.scikit-build.cmake]
 args = [
