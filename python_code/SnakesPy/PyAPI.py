@@ -16,7 +16,7 @@ class Pybind11_API:
                                                       center_y: float, 
                                                       radius_x: float, 
                                                       radius_y: float, 
-                                                      points: int) -> Pybind11_API:
+                                                      points: int) -> "Pybind11_API":
         snakeParams = SnakeParams()
         snakeParams.alpha = alpha
         snakeParams.beta = beta
