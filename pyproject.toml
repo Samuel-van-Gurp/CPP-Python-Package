@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "SnakesPy"
-version = "0.1.9"
+version = "0.1.10"
 description = "Active contour segmentation implemented in C++ with Python bindings and a UI"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -17,6 +17,12 @@ build-dir = "build/{wheel_tag}"
 [tool.setuptools.packages.find]
 where = ["python_code"]
 include = ["SnakesPy*"]
+
+[tool.setuptools.package-dir]
+"" = "python_code"
+
+[tool.setuptools]
+include-package-data = true
 
 [tool.scikit-build.cmake]
 args = [
