@@ -35,12 +35,6 @@ set(INSTALL_GMOCK OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest) 
 
-# for code coverage
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    add_compile_options(--coverage -O0 -g)
-    add_link_options(--coverage)
-endif()
-
 # STATIC library with core implementation
 add_library(core_impl STATIC
     MagicNumbers.hpp
@@ -58,6 +52,11 @@ add_library(core_impl STATIC
     ImageProcessing/IntensityManipulator.cpp
 )
 set_target_properties(core_impl PROPERTIES POSITION_INDEPENDENT_CODE ON) # for linux build, necessary for shared libs
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(core_impl PRIVATE --coverage -O0 -g)
+    target_link_options(core_impl PRIVATE --coverage)
+endif()
 
 pybind11_add_module(pybindings bindings.cpp)  # create pybindings module
 
@@ -105,6 +104,11 @@ if(NOT SKBUILD)
         gmock_main
         core_impl
     )
+
+    if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(runTests PRIVATE --coverage -O0 -g)
+        target_link_options(runTests PRIVATE --coverage)
+    endif()
 
     gtest_discover_tests(runTests
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
