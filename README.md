@@ -1,5 +1,7 @@
 [![C++ Tests](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/c-cpp.yml/badge.svg)](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/c-cpp.yml) 
 [![codecov](https://codecov.io/github/Samuel-van-Gurp/CPP-Python-Package/graph/badge.svg?token=NECTUOBU73)](https://codecov.io/github/Samuel-van-Gurp/CPP-Python-Package)
+[![Upload Python Package to Test PyPI](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/publish-pypi-test-env.yml/badge.svg)](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/publish-pypi-test-env.yml)
+[![Build Wheels](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/wheels.yml/badge.svg)](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/wheels.yml)
 # Active Contour Segmentation
 ![alt text](image.png)
 In this project I wanted to gain experience in a multi-language project, mixing a Python front-end with a C++ calculation core. For this project I chose Active Contour segmentation also known as Snakes. This lends itself especially well as we need to load images and initialize a contour which is easily done in Python and an iterative optimization that can be done efficiently in C++.
@@ -19,7 +21,9 @@ Build the C++ library as defined in the CMakeLists.txt. This way you can call th
 
 ## Multi-language
 
-Currently this project is based on a C++ core together with a python UI, that makes it easy to load images and draw initial shapes.
+Currently this project is based on a C++ core together with a python UI, that makes it easy to load images and draw initial shapes. The connection between the Python and C++ is implemented using [Pybind11](https://pybind11.readthedocs.io/en/stable/). This tool compiles the C++ code to a python extention module. This module can then be included in the python project.   
+
+
 
 ## Active Contour Model
 
@@ -62,6 +66,7 @@ Combining all this we can see that the snake that minimizes our energy functiona
 
 $$ \quad \alpha v^{(2)}(s) - \beta v^{(4)}(s) - \nabla(P(v(s))) = 0$$
 
+This equation is solved for uing the Euler method. 
 
 ## References
 
