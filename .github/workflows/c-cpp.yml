@@ -18,7 +18,7 @@ jobs:
     - name: Build
       run: cmake --build build
     - name: Run tests
-      run: ctest --test-dir build --output-on-failure
+      run: ctest --test-dir build --output-on-failure --verbose --no-tests=error
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v5
       with:
