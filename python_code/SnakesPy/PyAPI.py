@@ -3,8 +3,9 @@ import numpy as np
 from . import Config
 sys.path.insert(0, str(Config.PYBINDINGS_DIR))
 from . import pybindings
-from .pybindings import SnakeParams, Point
-print(Config.PYBINDINGS_DIR)
+from .pybindings import SnakeParams
+
+
 class Pybind11_API:
 
     def __init__(self, snakeParams : pybindings.SnakeParams):
@@ -16,7 +17,8 @@ class Pybind11_API:
                                                       center_y: float, 
                                                       radius_x: float, 
                                                       radius_y: float, 
-                                                      points: int) -> "Pybind11_API":
+                                                      points: int,
+                                                      solver: pybindings.SnakeSolver) -> "Pybind11_API":
         snakeParams = SnakeParams()
         snakeParams.alpha = alpha
         snakeParams.beta = beta
@@ -26,10 +28,11 @@ class Pybind11_API:
         snakeParams.contour_radius_x = radius_x
         snakeParams.contour_radius_y = radius_y
         snakeParams.contour_points = points
+        snakeParams.solver = solver
 
         return Pybind11_API(snakeParams)
     
     def callApi(self, img: np.ndarray) -> np.ndarray:
-        contour = pybindings.RunSnake(img, self.snakeParams)
+        contour = pybindings.RunSnake(img, self.snakeParams, self.snakeParams.solver)
         contour_array = np.array([[p.x, p.y] for p in contour], dtype=np.float32)
         return contour_array

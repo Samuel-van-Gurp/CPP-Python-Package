@@ -52,7 +52,8 @@ PYBIND11_MODULE(pybindings, m) {
         .def_readwrite("contour_center_y", &SnakeParams::contour_center_y)
         .def_readwrite("contour_radius_x", &SnakeParams::contour_radius_x)
         .def_readwrite("contour_radius_y", &SnakeParams::contour_radius_y)
-        .def_readwrite("contour_points", &SnakeParams::contour_points);
+        .def_readwrite("contour_points", &SnakeParams::contour_points)
+        .def_readwrite("solver", &SnakeParams::solver);
 
     // expose the Point struct to Python
     py::class_<Point>(m, "Point")

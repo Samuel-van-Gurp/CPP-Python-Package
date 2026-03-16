@@ -1,5 +1,6 @@
 #ifndef E76829F6_A29E_4121_9FCB_EAEB5F351E88
 #define E76829F6_A29E_4121_9FCB_EAEB5F351E88
+#include "MagicNumbers.hpp"
 
 // Define the SnakeParams struct
 struct SnakeParams {
@@ -11,6 +12,7 @@ struct SnakeParams {
     float contour_radius_x;
     float contour_radius_y;
     int contour_points;
+    SnakeSolver solver;
 };
 
 

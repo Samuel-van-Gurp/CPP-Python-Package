@@ -1,9 +1,16 @@
+import sys
+import warnings
+
+from . import Config
 from matplotlib.patches import Ellipse
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button, EllipseSelector, Slider
 import numpy as np
 from matplotlib.widgets import TextBox
+from matplotlib.widgets import RadioButtons
 
+sys.path.insert(0, str(Config.PYBINDINGS_DIR))
+from . import pybindings
 
 class UI:
     def __init__(self):
@@ -74,20 +81,48 @@ class UI:
         self.betaUserInput = Slider(slider_beta_ax, 'β', valmin=0, valmax=1, valinit=beta_init)
         
         # set up iterations input field
-        iterations_ax = fig.add_axes([0.8, 0.05, 0.1, 0.075])  
-        self.iterationsInputField = TextBox(iterations_ax, 'Iterations', initial=str(100))
+        iterations_ax = fig.add_axes([0.8, 0.05, 0.05, 0.075])  
+        self.iterationsInputField = TextBox(iterations_ax, '#Iterations', initial=str(100))
         self.iterationsInputField.on_submit(self.__validate_iterations)
         self.iterationsInputField.set_val(str(self.iterations))
 
         # set up points input field
-        points_ax = fig.add_axes([0.8, 0.15, 0.1, 0.075])  
-        self.pointsInputField = TextBox(points_ax, 'Number of Points', initial=str(self.points))
+        points_ax = fig.add_axes([0.8, 0.15, 0.05, 0.075])  
+        self.pointsInputField = TextBox(points_ax, ' #Points', initial=str(self.points))
         self.pointsInputField.on_submit(self.__validate_points)
         self.pointsInputField.set_val(str(self.points))
+        
+        # set up solver dropdown 
+        solver_ax = fig.add_axes([0.35, 0.15, 0.30, 0.1])
+        self.solver_options = ['Greedy', 'Euler-Lagrange']
+        self.solver_dropdown = RadioButtons(solver_ax, self.solver_options)
+        self.selected_solver = self.setSolverEnum(self.solver_options[0])
+        self.solver_dropdown.on_clicked(
+            lambda label: setattr(self, "selected_solver", self.setSolverEnum(label))
+        )
+        
+        #Set-up confirm button
         btn = Button(button_ax, 'Confirm Selection')
         btn.on_clicked(self.onButtonClicked)
 
+
         plt.show()
+
+    def setSolverEnum(self, label) -> pybindings.SnakeSolver:
+        solver_members = pybindings.SnakeSolver.__members__
+
+        match label:
+            case 'Greedy':
+                solver = solver_members.get('GREEDY_SOLVER') or solver_members.get('GREEDY')
+                if solver is not None:
+                    return solver
+            case 'Euler-Lagrange':
+                solver = solver_members.get('EULER_LAGRANGE_SOLVER') or solver_members.get('EULER_LAGRANGE')
+                if solver is not None:
+                    return solver
+
+        warnings.warn("Unknown solver enum, defaulting to first available pybindings solver")
+        return next(iter(solver_members.values()))
 
     def onButtonClicked(self, event):
         if self.ellipse_patch is not None:

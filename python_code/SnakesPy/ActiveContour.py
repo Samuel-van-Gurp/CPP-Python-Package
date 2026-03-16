@@ -24,8 +24,9 @@ class ActiveContour:
             center_y=self.ui.xy[1],
             radius_x=self.ui.width / 2,
             radius_y=self.ui.height / 2,
-            points=self.ui.getPoints()
-        )
+            points=self.ui.getPoints(),
+            solver=self.ui.selected_solver) # TODO: get this from the UI
+
         contour = api.callApi(self.ImageArray)
         self.ui.displayImageWithContour(self.ImageArray, contour)
         self.params.saveParamsAsJson(self.ui.alphaUserInput.val, self.ui.betaUserInput.val, self.ui.getItrerations(), self.ui.getPoints())
