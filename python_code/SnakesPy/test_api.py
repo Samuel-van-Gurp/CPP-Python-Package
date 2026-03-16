@@ -1,9 +1,8 @@
-from . import ActiveContour
+from .ActiveContour import ActiveContour
 
 def main():
-
-    active_contour = ActiveContour.ActiveContour("Images/astronaut.png")
+    active_contour = ActiveContour("Images/astronaut.png")
     active_contour.run()
 
-main()
-
+if __name__ == "__main__":
+    main()
