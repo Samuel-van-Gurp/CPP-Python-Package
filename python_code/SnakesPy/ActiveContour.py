@@ -13,7 +13,7 @@ class ActiveContour:
         self.params = Params.Params()
         self.params.loadparams_from_json(Config.PARAMETER_JSON_PATH)
         self.ui = UI.UI()
-
+        
     def run(self):
         self.ui.selectInitContour(self.ImageArray, alpha_init=self.params.alpha, beta_init=self.params.beta)
         api = PyAPI.Pybind11_API.Pybind11_API_Factory(
