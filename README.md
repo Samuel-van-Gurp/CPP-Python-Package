@@ -43,22 +43,22 @@ This opens a pop-up window where you can draw an initial shape to evolve and set
 
 This repository uses GitHub Actions for testing, wheel building, release uploads, and TestPyPI publishing.
 
-### 1. C++ test pipeline (`c-cpp.yml`)
+#### 1. C++ test pipeline (`c-cpp.yml`)
 Builds the C++ project and runs the test suite.
 
-### 2. Wheel build pipeline (`wheels.yml`)
+#### 2. Wheel build pipeline (`wheels.yml`)
 - Builds wheels via `cibuildwheel` on:
 	- `ubuntu-latest` (`x86_64`)
 	- `windows-latest` (`AMD64`)
 	- `macos-latest` (`universal2`)
 - Uploads built wheels as GitHub Actions artifacts
 
-### 3. Upload wheels to GitHub Release (`wheels.yml` -> `upload_to_release`)
+#### 3. Upload wheels to GitHub Release (`wheels.yml` -> `upload_to_release`)
 - Runs only after wheel build succeeds
 - Runs only for tag builds or manual dispatch
 - Downloads all wheel artifacts and uploads them to the matching GitHub Release via `gh release upload`
 
-### 4. Publish to TestPyPI (`publish-pypi-test-env.yml`)
+#### 4. Publish to TestPyPI (`publish-pypi-test-env.yml`)
 
 - Triggered by completion of the `Build Wheels` workflow (`workflow_run`)
 - Downloads wheel artifacts from the triggering workflow and publishes them to TestPyPI (`https://test.pypi.org/legacy/`)
