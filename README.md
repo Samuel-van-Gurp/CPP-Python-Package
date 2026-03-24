@@ -3,31 +3,84 @@
 [![Upload Python Package to Test PyPI](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/publish-pypi-test-env.yml/badge.svg)](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/publish-pypi-test-env.yml)
 [![Build Wheels](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/wheels.yml/badge.svg)](https://github.com/Samuel-van-Gurp/CPP-Python-Package/actions/workflows/wheels.yml)
 # Active Contour Segmentation
-![alt text](image.png)
-In this project I wanted to gain experience in a multi-language project, mixing a Python front-end with a C++ calculation core. For this project I chose Active Contour segmentation also known as Snakes. This lends itself especially well as we need to load images and initialize a contour which is easily done in Python and an iterative optimization that can be done efficiently in C++.
+![alt text](image-3.png)
+In this project, I wanted to gain experience with a multi-language codebase, mixing a Python front end with a C++ computational core. I chose Active Contour segmentation, also known as Snakes. This is a good fit because loading images and initializing a contour is easy in Python, while the iterative optimization is efficient in C++.
 
 ## Table of Contents
 
+- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
+- [CI/CD](#cicd)
 - [Multi-language](#multi-language)
-- [Active Contours (Nice Math)](#active-contour-model)
+- [Active Contour Model](#active-contour-model)
 - [References](#references)
-
 
 ## Installation
 
-Build the C++ library as defined in the CMakeLists.txt. This way you can call the .dll/.so file
+The package is hosted on the [TestPyPI environment](https://test.pypi.org/project/SnakesPy/). To install it, run the following command:
+
+```cmd
+pip install -i https://test.pypi.org/simple/ SnakesPy
+```
+
+Please refer to `requirements.txt` for Python dependencies.
+
+Wheels are not built for every platform yet, but some versions are currently available for Windows, macOS, and Linux ([see files](https://test.pypi.org/project/SnakesPy/#files)).
+
+## Usage
+
+To run the program, install the package in your environment and run:
+
+```cmd
+python -m SnakesPy.test_api "path\to\your\image.png"
+```
+
+This opens a pop-up window where you can draw an initial shape to evolve and set the model parameters and solver.
+<img src="image-1.png" alt="UI example" width="500" />
+
+## CI/CD
+
+This repository uses GitHub Actions for testing, wheel building, release uploads, and TestPyPI publishing.
+
+### 1. C++ test pipeline (`c-cpp.yml`)
+Builds the C++ project and runs the test suite.
+
+### 2. Wheel build pipeline (`wheels.yml`)
+- Builds wheels via `cibuildwheel` on:
+	- `ubuntu-latest` (`x86_64`)
+	- `windows-latest` (`AMD64`)
+	- `macos-latest` (`universal2`)
+- Uploads built wheels as GitHub Actions artifacts
+
+### 3. Upload wheels to GitHub Release (`wheels.yml` -> `upload_to_release`)
+- Runs only after wheel build succeeds
+- Runs only for tag builds or manual dispatch
+- Downloads all wheel artifacts and uploads them to the matching GitHub Release via `gh release upload`
+
+### 4. Publish to TestPyPI (`publish-pypi-test-env.yml`)
+
+- Triggered by completion of the `Build Wheels` workflow (`workflow_run`)
+- Downloads wheel artifacts from the triggering workflow and publishes them to TestPyPI (`https://test.pypi.org/legacy/`)
+
+## Project layout
+
+- `cpp_code/`: C++ core implementation, pybind11 bindings, and C++ tests.
+- `python_code/SnakesPy/`: Python package (UI, API wrappers).
+- `.github/workflows/`: CI/CD workflows for tests, wheels, and TestPyPI publish.
+- `pyproject.toml`: Packaging and build configuration (scikit-build + CMake).
 
 ## Multi-language
 
-Currently this project is based on a C++ core together with a python UI, that makes it easy to load images and draw initial shapes. The connection between the Python and C++ is implemented using [Pybind11](https://pybind11.readthedocs.io/en/stable/). This tool compiles the C++ code to a python extention module. This module can then be included in the python project.   
-
-
+Currently, this project is based on a C++ core together with a Python UI, which makes it easy to load images and draw initial shapes. The connection between Python and C++ is implemented using [Pybind11](https://pybind11.readthedocs.io/en/stable/). This tool compiles the C++ code into a Python extension module, which can then be imported by the Python package.
 
 ## Active Contour Model
 
-The active contour model states the segmentation problem as an energy minimization. Where we have a contour $s$ where $s \mapsto v(s) = (x(s), y(s))$ (with periodic boundary conditions, $v(1) = v(0)$).
+The active contour model formulates segmentation as an energy minimization problem. We start with an initial contour that evolves to a (locally) minimum-energy state.
+![alt text](image.png)
+
+
+Let `s` parameterize the contour such that `s -> v(s) = (x(s), y(s))`, with periodic boundary conditions `v(1) = v(0)`.
 
 $$E(s)=\oint E_{int}(s) + E_{ext}(s)ds$$
 
@@ -49,11 +102,11 @@ where $G(s)$ is the combined internal and external energy.
 
 ## Greedy Snake 
 
-The greedy snake is the most naive implementation to solve the energy minimization. For every point in the contour we see how the energy would change if we would move it to one of its neighboring grid points. This is then repeated for every point. This works but is not as fast and is prone to get stuck in a local minimum. 
+The greedy snake is the most naive implementation for solving this energy minimization problem. For each point on the contour, it evaluates how the energy changes if the point moves to one of its neighboring grid points. This process is repeated for every point. It works, but it is slower and more prone to getting stuck in a local minimum.
 
 ## Euler-Lagrange solver  
 
-A more advanced way to solve this energy minimization problem is to borrow the Euler-Lagrange equation from the field of classical mechanics. 
+A more advanced way to solve this energy minimization problem is to use the Euler-Lagrange equation from classical mechanics.
 Using the Euler-Lagrange equation we can restate our energy minimization problem as such.
 
 $$\min_{v} \oint G(s, v, v^{,}, v^{,,}) \, ds \iff \frac{\partial G}{\partial v} - \frac{\partial}{\partial s} \frac{\partial G}{\partial v'} + \frac{\partial^2}{\partial s^2} \frac{\partial^2 G}{\partial v''} = 0$$
@@ -66,7 +119,7 @@ Combining all this we can see that the snake that minimizes our energy functiona
 
 $$ \quad \alpha v^{(2)}(s) - \beta v^{(4)}(s) - \nabla(P(v(s))) = 0$$
 
-This equation is solved for uing the Euler method. 
+This equation is solved numerically using the Euler method.
 
 ## References
 
